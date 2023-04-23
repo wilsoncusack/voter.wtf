@@ -19,7 +19,8 @@ interface Vote {
   id: string;
   vote: number;
   votes: number;
-  support: number;
+  support: boolean;
+  supportDetailed: number;
   reason: string;
   voter: {
     id: string;
@@ -60,7 +61,7 @@ const Home: NextPage = () => {
                   key={vote.id}
                   votes={vote.votes}
                   address={vote.voter.id}
-                  isFor={vote.support}
+                  isFor={vote.supportDetailed}
                   reason={vote.reason}
                   block={vote.blockNumber}
                   proposalTitle={vote.proposal.title}

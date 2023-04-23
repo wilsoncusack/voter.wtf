@@ -98,14 +98,14 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
           <span> voted </span>
           <span
             className={`font-semibold ${
-              isFor
+              isFor == 1
                 ? 'text-green-400'
-                : isFor == 2
+                : isFor == 0
                 ? 'text-red-400'
                 : 'text-gray-500'
             }`}
           >
-            {isFor == 1 ? 'FOR' : isFor == 2 ? 'AGAINST' : 'ABSTAIN'}
+            {isFor == 1 ? 'FOR' : isFor == 0 ? 'AGAINST' : 'ABSTAIN'}
           </span>
           <span>
             {' '}
