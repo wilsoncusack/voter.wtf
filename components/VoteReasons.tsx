@@ -123,7 +123,11 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
             {votes} {votes == 1 ? 'vote' : 'votes'}{' '}
           </span>
         </p>
-        <p className={reason ? 'text-gray-300' : 'text-gray-500'}>
+        <p
+          className={`whitespace-pre-line ${
+            reason ? 'text-gray-300' : 'text-gray-500'
+          }`}
+        >
           {reason ? reason : 'no reason :('}
         </p>
         <p className="text-gray-500 text-sm">{timestamp}</p>
