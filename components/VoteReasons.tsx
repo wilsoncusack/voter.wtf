@@ -71,7 +71,7 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
 
   useEffect(() => {
     getTimestamp();
-  }, []);
+  }, [getTimestamp]);
 
   return (
     <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
