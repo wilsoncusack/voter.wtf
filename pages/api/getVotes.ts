@@ -21,7 +21,7 @@ export default async function handler(
           proposal {
             id
             title
-          },
+          }
           blockNumber
         }
       }
