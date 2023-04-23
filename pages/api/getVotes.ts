@@ -27,6 +27,6 @@ export default async function handler(
       }
     `,
   });
-
+  res.setHeader('Cache-Control', 'no-store');
   res.status(200).json(data.votes);
 }
