@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Address, useEnsName, useEnsAvatar } from 'wagmi';
 import { createPublicClient, http } from 'viem';
 import { mainnet } from 'viem/chains';
@@ -62,12 +62,12 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
     timestamp: bigint;
   }
 
-  const getTimestamp = async () => {
+  const getTimestamp = useCallback(async () => {
     const blockInfo: Block = await client.getBlock({
       blockNumber: BigInt(block),
     });
     setTimestamp(timeAgo(parseInt(blockInfo.timestamp.toString()) * 1000));
-  };
+  }, [block]);
 
   useEffect(() => {
     getTimestamp();

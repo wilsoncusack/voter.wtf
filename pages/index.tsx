@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import VoteReasons from '../components/VoteReasons';
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
@@ -34,18 +34,49 @@ interface Vote {
 
 const Home: NextPage = () => {
   const [votes, setVotes] = useState<Vote[]>([]);
+  const [skip, setSkip] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const fetchVotes = async (skip = 0) => {
+    setLoading(true);
+    const res = await fetch(`/api/getVotes?skip=${skip}`);
+    const data = await res.json();
+    setLoading(false);
+
+    return data;
+  };
 
   useEffect(() => {
-    fetchVotes();
+    (async () => {
+      const initialVotes = await fetchVotes();
+      setVotes(initialVotes);
+    })();
   }, []);
 
-  const fetchVotes = async () => {
-    // Replace the URL below with the actual API URL for the Nouns subgraph.
-    const res = await fetch('/api/getVotes');
-    const data = await res.json();
+  const fetchMoreVotes = useCallback(async () => {
+    const newVotes = await fetchVotes(skip + 20);
+    console.log(newVotes);
+    setVotes(prevVotes => {
+      console.log(prevVotes);
+      return [...prevVotes, ...newVotes];
+    });
+    setSkip(prevSkip => prevSkip + 20);
+  }, [skip]);
 
-    setVotes(data);
-  };
+  const lastVoteElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          fetchMoreVotes();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, fetchMoreVotes]
+  );
 
   return (
     <WagmiConfig client={client}>
@@ -69,6 +100,7 @@ const Home: NextPage = () => {
                 />
               );
             })}
+            <div ref={lastVoteElementRef} className="h-4" />
           </div>
         </div>
       </div>
