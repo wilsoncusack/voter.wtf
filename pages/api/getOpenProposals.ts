@@ -14,6 +14,7 @@ export default async function handler(
           where: { endBlock_gt: $endBlock }
           orderBy: endBlock
           orderDirection: desc
+          limit: 50
         ) {
           id
           title
@@ -26,6 +27,6 @@ export default async function handler(
     variables: { endBlock },
   });
 
-  res.setHeader('Cache-Control', 'max-age=43200');
+  res.setHeader('Cache-Control', 'max-age=60');
   res.status(200).json(data.openProposals);
 }

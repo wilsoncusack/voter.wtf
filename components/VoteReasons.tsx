@@ -88,7 +88,7 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
         </a>
       </div>
       <div>
-        <p className="text-gray-400 font-semibold">
+        <p className="text-gray-400 ">
           <a
             href={`https://etherscan.io/address/${address}`}
             className="hover:underline"
@@ -111,7 +111,7 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
             {' '}
             <a
               href={`https://nouns.wtf/vote/${proposalId}`}
-              className="hover:underline"
+              className="hover:underline font-semibold"
             >
               {' '}
               Proposal {proposalId}: {proposalTitle}
