@@ -177,7 +177,7 @@ const Home: NextPage = () => {
                 mobileVoteType === 'for' ? 'block' : 'hidden'
               }`}
             >
-              {forVotes.map((vote) => (
+              {forVotes.map(vote => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -195,7 +195,7 @@ const Home: NextPage = () => {
                 mobileVoteType === 'against' ? 'block' : 'hidden'
               }`}
             >
-              {againstVotes.map((vote) => (
+              {againstVotes.map(vote => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -212,7 +212,7 @@ const Home: NextPage = () => {
               <h2 className="text-white text-xl mb-4 font-bold">
                 <span className="text-green-400">FOR</span>
               </h2>
-              {forVotes.map((vote) => (
+              {forVotes.map(vote => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -229,7 +229,7 @@ const Home: NextPage = () => {
               <h2 className="text-white text-xl mb-4 font-bold">
                 <span className="text-red-400">AGAINST</span>
               </h2>
-              {againstVotes.map((vote) => (
+              {againstVotes.map(vote => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -245,7 +245,7 @@ const Home: NextPage = () => {
           </>
         ) : (
           <div className="w-full">
-            {votes.map((vote) => (
+            {votes.map(vote => (
               <VoteReasons
                 key={vote.id}
                 votes={vote.votes}
