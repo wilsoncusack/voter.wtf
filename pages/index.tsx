@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import VoteReasons from '../components/VoteReasons';
-import { useBlockNumber } from 'wagmi';
+// import { useBlockNumber } from 'wagmi';
 
 interface Vote {
   id: string;
@@ -33,9 +33,9 @@ const Home: NextPage = () => {
   );
 
   const observer = useRef<IntersectionObserver | null>(null);
-  const block = useBlockNumber({
-    cacheTime: 2_000_000,
-  });
+  // const block = useBlockNumber({
+  //   cacheTime: 2_000_000,
+  // });
 
   const fetchVotes = async (skip = 0) => {
     setLoading(true);
@@ -47,13 +47,13 @@ const Home: NextPage = () => {
   };
 
   const fetchOpenProposals = useCallback(async () => {
-    if (block.data == undefined) return;
+    // if (block.data == undefined) return;
 
     const res = await fetch(`/api/getOpenProposals?endBlock=${0}`);
     const data = await res.json();
 
     setOpenProposals(data);
-  }, [block]);
+  }, []);
 
   const fetchProposalVotes = async (proposalId: string) => {
     const res = await fetch(`/api/getProposalVotes?proposalId=${proposalId}`);
@@ -64,7 +64,6 @@ const Home: NextPage = () => {
 
   const loadProposalVotes = async proposal => {
     const allVotes = await fetchProposalVotes(proposal.id);
-
     const forVotes = allVotes.filter((vote: Vote) => vote.support === true);
     const againstVotes = allVotes.filter(
       (vote: Vote) => vote.support === false
@@ -78,27 +77,25 @@ const Home: NextPage = () => {
     (async () => {
       const initialVotes = await fetchVotes();
       setVotes(initialVotes);
-      await fetchOpenProposals();
+      fetchOpenProposals();
     })();
   }, [fetchOpenProposals]);
 
   const fetchMoreVotes = useCallback(async () => {
     const newVotes = await fetchVotes(skip + 20);
-    console.log(newVotes);
     setVotes(prevVotes => {
-      console.log(prevVotes);
       return [...prevVotes, ...newVotes];
     });
     setSkip(prevSkip => prevSkip + 20);
   }, [skip]);
 
   const lastVoteElementRef = useCallback(
-    (node: HTMLDivElement) => {
+    async (node: HTMLDivElement) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver(entries => {
+      observer.current = new IntersectionObserver(async entries => {
         if (entries[0].isIntersecting) {
-          fetchMoreVotes();
+          await fetchMoreVotes();
         }
       });
       if (node) observer.current.observe(node);
@@ -245,18 +242,20 @@ const Home: NextPage = () => {
           </>
         ) : (
           <div className="w-full">
-            {votes.map(vote => (
-              <VoteReasons
-                key={vote.id}
-                votes={vote.votes}
-                address={vote.voter.id}
-                isFor={vote.supportDetailed}
-                reason={vote.reason}
-                block={vote.blockNumber}
-                proposalTitle={vote.proposal.title}
-                proposalId={vote.proposal.id}
-              />
-            ))}
+            <div>
+              {votes.map(vote => (
+                <VoteReasons
+                  key={vote.id}
+                  votes={vote.votes}
+                  address={vote.voter.id}
+                  isFor={vote.supportDetailed}
+                  reason={vote.reason}
+                  block={vote.blockNumber}
+                  proposalTitle={vote.proposal.title}
+                  proposalId={vote.proposal.id}
+                />
+              ))}
+            </div>
             <div ref={lastVoteElementRef} className="h-4" />
           </div>
         )}

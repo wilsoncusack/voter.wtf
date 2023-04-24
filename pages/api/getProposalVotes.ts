@@ -38,6 +38,6 @@ export default async function handler(
     },
   });
 
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 'max-age=5');
   res.status(200).json(data.votes);
 }
