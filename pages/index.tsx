@@ -1,9 +1,11 @@
 import type { NextPage } from 'next';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import VoteReasons from '../components/VoteReasons';
+import { VoteList } from '../components/VoteList';
+import { ProposalContainer } from '../components/ProposalsContainer';
+import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
 // import { useBlockNumber } from 'wagmi';
 
-interface Vote {
+export interface Vote {
   id: string;
   vote: number;
   votes: number;
@@ -20,14 +22,27 @@ interface Vote {
   blockNumber: number;
 }
 
+export interface Proposal {
+  id: string;
+  title: string;
+  description: string;
+  startBlock: number;
+  endBlock: number;
+  forVotes: number;
+  againstVotes: number;
+  status: string;
+}
+
 const Home: NextPage = () => {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [openProposals, setOpenProposals] = useState([]);
-  const [selectedProposal, setSelectedProposal] = useState(null);
-  const [forVotes, setForVotes] = useState([]);
-  const [againstVotes, setAgainstVotes] = useState([]);
+  const [openProposals, setOpenProposals] = useState<Proposal[]>([]);
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
+    null
+  );
+  const [forVotes, setForVotes] = useState<Vote[]>([]);
+  const [againstVotes, setAgainstVotes] = useState<Vote[]>([]);
   const [mobileVoteType, setMobileVoteType] = useState<'for' | 'against'>(
     'for'
   );
@@ -63,6 +78,10 @@ const Home: NextPage = () => {
   };
 
   const loadProposalVotes = async proposal => {
+    setSelectedProposal(proposal);
+
+    if (proposal == null) return;
+
     const allVotes = await fetchProposalVotes(proposal.id);
     const forVotes = allVotes.filter((vote: Vote) => vote.support === true);
     const againstVotes = allVotes.filter(
@@ -106,155 +125,32 @@ const Home: NextPage = () => {
   return (
     <div className="bg-gray-900 min-h-screen text-white font-sans">
       <header className="text-center py-6">
-        <h1 className="text-4xl font-bold">Nouns Vote with Reason</h1>
+        <h1 className="neon">Nouns Vote with Reason</h1>
+        {/* <img className="center neon" src="https://nouns.wtf/static/media/noggles.7644bfd0.svg"/> */}
       </header>
-      <div className=" ">
-        <h2 className="text-xl font-semibold  mb-4 px-4">Proposals</h2>
-        <div className="flex space-x-4 py-4 px-4  hide-scrollbar min-h-36 overflow-x-scroll overflow-y-hidden ">
-          {openProposals.map(proposal => (
-            <div
-              key={proposal.id}
-              className={`proposal-card p-3 w-80 rounded-md shadow-lg cursor-pointer ${
-                selectedProposal && selectedProposal.id === proposal.id
-                  ? 'bg-gray-600 '
-                  : 'bg-gray-800'
-              }`}
-              onClick={() => {
-                if (selectedProposal && selectedProposal.id === proposal.id) {
-                  setSelectedProposal(null);
-                } else {
-                  setSelectedProposal(proposal);
-                  loadProposalVotes(proposal);
-                }
-              }}
-            >
-              <p className="text-sm text-gray-400">{proposal.id}</p>
-              <h3 className="text-lg font-semibold">{proposal.title}</h3>
-              <p className="text-sm text-green-400 ">
-                FOR <span className="font-semibold">{proposal.forVotes} </span>
-              </p>
-              <p className="text-sm text-red-400">
-                AGAINST{' '}
-                <span className="font-semibold">{proposal.againstVotes} </span>
-              </p>
-              <p className="text-xs">
-                {/* Voting Ends: {formatDistanceToNowStrict(new Date(proposal.endTime * 1000))} Remaining */}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div>
+        <h1 className="text-3xl font-semibold  mb-4 px-4">Proposals</h1>
+        <ProposalContainer
+          proposals={openProposals}
+          selectedProposal={selectedProposal}
+          setSelectedProposal={loadProposalVotes}
+        />
       </div>
 
-      <h2 className="text-xl  font-semibold  m-4 px-2 pt-2">Votes</h2>
+      <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">Votes</h1>
       <div className="flex flex-wrap justify-center m-4">
         {selectedProposal ? (
-          <>
-            {selectedProposal && (
-              <div className="w-full md:hidden flex justify-center my-4">
-                <button
-                  className={`bg-gray-700 text-white px-4 py-2 rounded-l-md focus:outline-none ${
-                    mobileVoteType === 'for' ? 'bg-gray-800' : ''
-                  }`}
-                  onClick={() => setMobileVoteType('for')}
-                >
-                  For
-                </button>
-                <button
-                  className={`bg-gray-700 text-white px-4 py-2 rounded-r-md focus:outline-none ${
-                    mobileVoteType === 'against' ? 'bg-gray-800' : ''
-                  }`}
-                  onClick={() => setMobileVoteType('against')}
-                >
-                  Against
-                </button>
-              </div>
-            )}
-            <div
-              className={`w-full ${selectedProposal && 'md:hidden'} ${
-                mobileVoteType === 'for' ? 'block' : 'hidden'
-              }`}
-            >
-              {forVotes.map(vote => (
-                <VoteReasons
-                  key={vote.id}
-                  votes={vote.votes}
-                  address={vote.voter.id}
-                  isFor={vote.supportDetailed}
-                  reason={vote.reason}
-                  block={vote.blockNumber}
-                  proposalTitle={vote.proposal.title}
-                  proposalId={vote.proposal.id}
-                />
-              ))}
-            </div>
-            <div
-              className={`w-full ${selectedProposal && 'md:hidden'} ${
-                mobileVoteType === 'against' ? 'block' : 'hidden'
-              }`}
-            >
-              {againstVotes.map(vote => (
-                <VoteReasons
-                  key={vote.id}
-                  votes={vote.votes}
-                  address={vote.voter.id}
-                  isFor={vote.supportDetailed}
-                  reason={vote.reason}
-                  block={vote.blockNumber}
-                  proposalTitle={vote.proposal.title}
-                  proposalId={vote.proposal.id}
-                />
-              ))}
-            </div>
-            <div className="for-column  m-4 flex-1">
-              <h2 className="text-white text-xl mb-4 font-bold">
-                <span className="text-green-400">FOR</span>
-              </h2>
-              {forVotes.map(vote => (
-                <VoteReasons
-                  key={vote.id}
-                  votes={vote.votes}
-                  address={vote.voter.id}
-                  isFor={vote.supportDetailed}
-                  reason={vote.reason}
-                  block={vote.blockNumber}
-                  proposalTitle={vote.proposal.title}
-                  proposalId={vote.proposal.id}
-                />
-              ))}
-            </div>
-            <div className="for-column m-4 flex-1">
-              <h2 className="text-white text-xl mb-4 font-bold">
-                <span className="text-red-400">AGAINST</span>
-              </h2>
-              {againstVotes.map(vote => (
-                <VoteReasons
-                  key={vote.id}
-                  votes={vote.votes}
-                  address={vote.voter.id}
-                  isFor={vote.supportDetailed}
-                  reason={vote.reason}
-                  block={vote.blockNumber}
-                  proposalTitle={vote.proposal.title}
-                  proposalId={vote.proposal.id}
-                />
-              ))}
-            </div>
-          </>
+          <SelectedProposalVoteView
+            selectedProposal={selectedProposal}
+            mobileVoteType={mobileVoteType}
+            setMobileVoteType={setMobileVoteType}
+            forVotes={forVotes}
+            againstVotes={againstVotes}
+          />
         ) : (
           <div className="w-full grid justify-items-center">
             <div>
-              {votes.map(vote => (
-                <VoteReasons
-                  key={vote.id}
-                  votes={vote.votes}
-                  address={vote.voter.id}
-                  isFor={vote.supportDetailed}
-                  reason={vote.reason}
-                  block={vote.blockNumber}
-                  proposalTitle={vote.proposal.title}
-                  proposalId={vote.proposal.id}
-                />
-              ))}
+              <VoteList votes={votes} />
             </div>
             <div ref={lastVoteElementRef} className="h-4" />
           </div>
