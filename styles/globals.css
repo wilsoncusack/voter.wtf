@@ -12,3 +12,10 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .avatar-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  

@@ -205,7 +205,7 @@ const Home: NextPage = () => {
                 />
               ))}
             </div>
-            <div className="for-column m-4 flex-1">
+            <div className="for-column  m-4 flex-1">
               <h2 className="text-white text-xl mb-4 font-bold">
                 <span className="text-green-400">FOR</span>
               </h2>
@@ -241,7 +241,7 @@ const Home: NextPage = () => {
             </div>
           </>
         ) : (
-          <div className="w-full">
+          <div className="w-full grid justify-items-center">
             <div>
               {votes.map(vote => (
                 <VoteReasons

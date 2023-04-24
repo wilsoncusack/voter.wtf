@@ -74,16 +74,16 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
   }, [getTimestamp]);
 
   return (
-    <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
-      <div className="mr-4">
+    <div className="flex mb-4 max-w-xl p-4 bg-gray-800 rounded-lg shadow-md">
+      <div className="mr-4 w-16 h-16">
         <a href={`https://etherscan.io/address/${address}`}>
           {ensAvatar.data ? (
-            <img
-              src={ensAvatar.data}
-              className="w-16 min-w-16 min-h-16 h-16 bg-gray-700 rounded-full"
-            />
+            <div
+              className="avatar-image rounded-full w-16 h-16"
+              style={{ backgroundImage: `url(${ensAvatar.data})` }}
+            ></div>
           ) : (
-            <div className="w-16 h-16  bg-gray-700 rounded-full"></div>
+            <div className="w-16 h-16 bg-gray-700 rounded-full"></div>
           )}
         </a>
       </div>
@@ -124,7 +124,7 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
           </span>
         </p>
         <p
-          className={`whitespace-pre-line ${
+          className={`whitespace-pre-line mb-2 mt-2 ${
             reason ? 'text-gray-300' : 'text-gray-500'
           }`}
         >
