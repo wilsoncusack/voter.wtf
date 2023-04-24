@@ -11,7 +11,7 @@ export default async function handler(
     query: gql`
       query GetOpenProposals($endBlock: String!) {
         openProposals: proposals(
-          where: { status: "ACTIVE", endBlock_gt: $endBlock }
+          where: { endBlock_gt: $endBlock }
           orderBy: endBlock
           orderDirection: desc
         ) {
@@ -26,6 +26,6 @@ export default async function handler(
     variables: { endBlock },
   });
 
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 'max-age=43200');
   res.status(200).json(data.openProposals);
 }

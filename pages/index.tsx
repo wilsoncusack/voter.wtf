@@ -80,7 +80,7 @@ const Home: NextPage = () => {
       setVotes(initialVotes);
       await fetchOpenProposals();
     })();
-  }, []);
+  }, [fetchOpenProposals]);
 
   const fetchMoreVotes = useCallback(async () => {
     const newVotes = await fetchVotes(skip + 20);
@@ -117,7 +117,7 @@ const Home: NextPage = () => {
           {openProposals.map(proposal => (
             <div
               key={proposal.id}
-              className={`proposal-card p-3 mr-2 rounded-md shadow-lg cursor-pointer ${
+              className={`proposal-card p-3 w-80 rounded-md shadow-lg cursor-pointer ${
                 selectedProposal && selectedProposal.id === proposal.id
                   ? 'bg-gray-600 '
                   : 'bg-gray-800'
@@ -177,7 +177,7 @@ const Home: NextPage = () => {
                 mobileVoteType === 'for' ? 'block' : 'hidden'
               }`}
             >
-              {forVotes.map((vote, index) => (
+              {forVotes.map((vote) => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -195,7 +195,7 @@ const Home: NextPage = () => {
                 mobileVoteType === 'against' ? 'block' : 'hidden'
               }`}
             >
-              {againstVotes.map((vote, index) => (
+              {againstVotes.map((vote) => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -212,7 +212,7 @@ const Home: NextPage = () => {
               <h2 className="text-white text-xl mb-4 font-bold">
                 <span className="text-green-400">FOR</span>
               </h2>
-              {forVotes.map((vote, index) => (
+              {forVotes.map((vote) => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -229,7 +229,7 @@ const Home: NextPage = () => {
               <h2 className="text-white text-xl mb-4 font-bold">
                 <span className="text-red-400">AGAINST</span>
               </h2>
-              {againstVotes.map((vote, index) => (
+              {againstVotes.map((vote) => (
                 <VoteReasons
                   key={vote.id}
                   votes={vote.votes}
@@ -245,7 +245,7 @@ const Home: NextPage = () => {
           </>
         ) : (
           <div className="w-full">
-            {votes.map((vote, index) => (
+            {votes.map((vote) => (
               <VoteReasons
                 key={vote.id}
                 votes={vote.votes}
@@ -257,6 +257,7 @@ const Home: NextPage = () => {
                 proposalId={vote.proposal.id}
               />
             ))}
+            <div ref={lastVoteElementRef} className="h-4" />
           </div>
         )}
       </div>
