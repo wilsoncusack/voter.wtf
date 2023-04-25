@@ -68,7 +68,7 @@ const Home: NextPage = () => {
     const data = await res.json();
 
     setOpenProposals(data);
-  }, []);
+  }, [block.data]);
 
   const fetchProposalVotes = async (proposalId: string) => {
     const res = await fetch(`/api/getProposalVotes?proposalId=${proposalId}`);
@@ -96,9 +96,14 @@ const Home: NextPage = () => {
     (async () => {
       const initialVotes = await fetchVotes();
       setVotes(initialVotes);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       fetchOpenProposals();
     })();
-  }, [fetchOpenProposals]);
+  }, [block.data, fetchOpenProposals]);
 
   const fetchMoreVotes = useCallback(async () => {
     const newVotes = await fetchVotes(skip + 20);
