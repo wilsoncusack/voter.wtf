@@ -6,14 +6,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const endBlock = (req.query.endBlock as string) || '0';
+  const block = (req.query.block as string) || '0';
   const { data } = await apolloClient.query({
     query: gql`
-      query GetOpenProposals($endBlock: String!) {
+      query GetOpenProposals($block: String!) {
         openProposals: proposals(
-          where: { endBlock_gt: $endBlock }
+          where: { endBlock_gt: $block, startBlock_lte: $block }
           orderBy: endBlock
-          orderDirection: desc
+          orderDirection: asc
           limit: 50
         ) {
           id
@@ -24,7 +24,7 @@ export default async function handler(
         }
       }
     `,
-    variables: { endBlock },
+    variables: { block },
   });
 
   res.setHeader('Cache-Control', 'max-age=60');

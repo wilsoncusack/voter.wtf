@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { VoteList } from '../components/VoteList';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
-// import { useBlockNumber } from 'wagmi';
+import { useBlockNumber } from 'wagmi';
 
 export interface Vote {
   id: string;
@@ -48,9 +48,9 @@ const Home: NextPage = () => {
   );
 
   const observer = useRef<IntersectionObserver | null>(null);
-  // const block = useBlockNumber({
-  //   cacheTime: 2_000_000,
-  // });
+  const block = useBlockNumber({
+    cacheTime: 2_000_000,
+  });
 
   const fetchVotes = async (skip = 0) => {
     setLoading(true);
@@ -62,9 +62,9 @@ const Home: NextPage = () => {
   };
 
   const fetchOpenProposals = useCallback(async () => {
-    // if (block.data == undefined) return;
+    if (block.data == undefined) return;
 
-    const res = await fetch(`/api/getOpenProposals?endBlock=${0}`);
+    const res = await fetch(`/api/getOpenProposals?block=${block.data}`);
     const data = await res.json();
 
     setOpenProposals(data);
@@ -129,7 +129,7 @@ const Home: NextPage = () => {
         {/* <img className="center neon" src="https://nouns.wtf/static/media/noggles.7644bfd0.svg"/> */}
       </header>
       <div>
-        <h1 className="text-3xl font-semibold  mb-4 px-4">Proposals</h1>
+        <h1 className="text-3xl font-semibold  mb-4 px-4">Active Proposals</h1>
         <ProposalContainer
           proposals={openProposals}
           selectedProposal={selectedProposal}
