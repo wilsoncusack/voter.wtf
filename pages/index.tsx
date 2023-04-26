@@ -80,7 +80,9 @@ export default function Home({ fallback, initialVotes }: HomePageProps) {
           </div>
         </header>
         <div>
-          <h1 className="text-3xl font-semibold  mb-4 px-4">Active Proposals</h1>
+          <h1 className="text-3xl font-semibold  mb-4 px-4">
+            Active Proposals
+          </h1>
           <ProposalContainer
             proposals={openProposals}
             selectedProposal={selectedProposal}
