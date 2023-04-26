@@ -1,18 +1,16 @@
 import { SWRConfig } from 'swr';
 import { Feed } from '../compositions/Feed';
-import { Proposal } from './index';
 import { FallbackProp } from '../lib/util/swr';
 import { subgraphService } from '../lib/services/subgraph.service';
 
 type FeedPageProps = {
   fallback: FallbackProp;
-  proposals: Proposal[];
 };
 
-export default function FeedPage({ fallback, proposals }: FeedPageProps) {
+export default function FeedPage({ fallback }: FeedPageProps) {
   return (
     <SWRConfig value={{ fallback }}>
-      <Feed initialProposals={proposals} />
+      <Feed />
     </SWRConfig>
   );
 }
@@ -23,7 +21,8 @@ export async function getStaticProps() {
 
   return {
     props: {
-      proposals,
+      initialProposals: proposals,
+      initialVotes: votes,
       fallback: {
         '/api/proposals': proposals,
         '/api/votes': votes,

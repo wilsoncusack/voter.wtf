@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
+import { useEffect } from 'react';
 
 const { provider, webSocketProvider } = configureChains(
   [mainnet],
@@ -10,12 +11,16 @@ const { provider, webSocketProvider } = configureChains(
 );
 
 const client = createClient({
-  autoConnect: true,
+  autoConnect: false,
   provider,
   webSocketProvider,
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    client.autoConnect().then();
+  }, []);
+
   return (
     <div>
       <Head>

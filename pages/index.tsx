@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { VoteList } from '../components/VoteList';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
-import { useBlockNumber } from 'wagmi';
+import { Address, useBlockNumber } from 'wagmi';
 
 export interface Vote {
   id: string;
@@ -13,7 +13,7 @@ export interface Vote {
   supportDetailed: number;
   reason: string;
   voter: {
-    id: string;
+    id: Address;
   };
   proposal: {
     id: string;
