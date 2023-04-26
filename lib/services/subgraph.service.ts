@@ -117,5 +117,6 @@ export class SubgraphService {
 }
 
 export const subgraphService = new SubgraphService(
-  process.env.NEXT_PUBLIC_SUBGRAPH_URL || ''
+  process.env.NEXT_PUBLIC_SUBGRAPH_URL ||
+    'https://api.thegraph.com/subgraphs/name/nounsdao/nouns-subgraph'
 );

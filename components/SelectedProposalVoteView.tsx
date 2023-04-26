@@ -1,6 +1,6 @@
-import { Proposal, Vote } from '../pages';
 import { MobileForAgainstToggle } from './MobileForAgainstToggle';
 import { VoteList } from './VoteList';
+import { Proposal, Vote } from '../lib/services/subgraph.service';
 
 interface SelectedProposalVoteViewProps {
   setMobileVoteType: (type: 'for' | 'against') => void;

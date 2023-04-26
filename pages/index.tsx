@@ -1,15 +1,22 @@
-import type { NextPage } from 'next';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { VoteList } from '../components/VoteList';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
 import { useBlockNumber } from 'wagmi';
-import { Proposal, Vote } from '../lib/services/subgraph.service';
+import {
+  Proposal,
+  subgraphService,
+  Vote,
+} from '../lib/services/subgraph.service';
+import { SWRConfig } from 'swr';
+import { PaginatedVoteList } from '../compositions/PaginatedVoteList';
+import { FallbackProp } from '../lib/util/swr';
 
-const Home: NextPage = () => {
-  const [votes, setVotes] = useState<Vote[]>([]);
-  const [skip, setSkip] = useState(0);
-  const [loading, setLoading] = useState(false);
+type HomePageProps = {
+  fallback: FallbackProp;
+  initialVotes: Vote[];
+};
+
+export default function Home({ fallback, initialVotes }: HomePageProps) {
   const [openProposals, setOpenProposals] = useState<Proposal[]>([]);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
@@ -20,19 +27,9 @@ const Home: NextPage = () => {
     'for'
   );
 
-  const observer = useRef<IntersectionObserver | null>(null);
   const block = useBlockNumber({
     cacheTime: 2_000_000,
   });
-
-  const fetchVotes = async (skip = 0) => {
-    setLoading(true);
-    const res = await fetch(`/api/getVotes?skip=${skip}`);
-    const data = await res.json();
-    setLoading(false);
-
-    return data;
-  };
 
   const fetchOpenProposals = useCallback(async () => {
     if (block.data == undefined) return;
@@ -50,7 +47,7 @@ const Home: NextPage = () => {
     return data;
   };
 
-  const loadProposalVotes = async proposal => {
+  const loadProposalVotes = useCallback(async proposal => {
     setSelectedProposal(proposal);
 
     if (proposal == null) return;
@@ -63,81 +60,64 @@ const Home: NextPage = () => {
 
     setForVotes(forVotes);
     setAgainstVotes(againstVotes);
-  };
-
-  useEffect(() => {
-    (async () => {
-      const initialVotes = await fetchVotes();
-      setVotes(initialVotes);
-    })();
   }, []);
 
   useEffect(() => {
-    (async () => {
-      fetchOpenProposals();
-    })();
+    fetchOpenProposals().then();
   }, [block.data, fetchOpenProposals]);
 
-  const fetchMoreVotes = useCallback(async () => {
-    const newVotes = await fetchVotes(skip + 20);
-    setVotes(prevVotes => {
-      return [...prevVotes, ...newVotes];
-    });
-    setSkip(prevSkip => prevSkip + 20);
-  }, [skip]);
-
-  const lastVoteElementRef = useCallback(
-    async (node: HTMLDivElement) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver(async entries => {
-        if (entries[0].isIntersecting) {
-          await fetchMoreVotes();
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [loading, fetchMoreVotes]
-  );
-
   return (
-    <div className="bg-gray-900 min-h-screen text-white font-sans">
-      <header className="text-center py-6">
-        <h1 className="neon">Nouns Vote with Reason</h1>
-        {/* <img className="center neon" src="https://nouns.wtf/static/media/noggles.7644bfd0.svg"/> */}
-      </header>
-      <div>
-        <h1 className="text-3xl font-semibold  mb-4 px-4">Active Proposals</h1>
-        <ProposalContainer
-          proposals={openProposals}
-          selectedProposal={selectedProposal}
-          setSelectedProposal={loadProposalVotes}
-        />
-      </div>
-
-      <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-        {selectedProposal ? selectedProposal.title : 'All'} Votes
-      </h1>
-      <div className="flex flex-wrap justify-center m-4">
-        {selectedProposal ? (
-          <SelectedProposalVoteView
+    <SWRConfig value={{ fallback }}>
+      <div className="bg-gray-900 min-h-screen text-white font-sans">
+        <header className="text-center py-6">
+          <h1 className="neon">Nouns Vote with Reason</h1>
+          {/* <img className="center neon" src="https://nouns.wtf/static/media/noggles.7644bfd0.svg"/> */}
+        </header>
+        <div>
+          <h1 className="text-3xl font-semibold  mb-4 px-4">
+            Active Proposals
+          </h1>
+          <ProposalContainer
+            proposals={openProposals}
             selectedProposal={selectedProposal}
-            mobileVoteType={mobileVoteType}
-            setMobileVoteType={setMobileVoteType}
-            forVotes={forVotes}
-            againstVotes={againstVotes}
+            setSelectedProposal={loadProposalVotes}
           />
-        ) : (
-          <div className="flex justify-center items-center">
-            <div>
-              <VoteList votes={votes} />
-            </div>
-            <div ref={lastVoteElementRef} className="h-4" />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
+        </div>
 
-export default Home;
+        <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+          {selectedProposal ? selectedProposal.title : 'All'} Votes
+        </h1>
+        <div className="flex flex-wrap justify-center m-4">
+          {selectedProposal ? (
+            <SelectedProposalVoteView
+              selectedProposal={selectedProposal}
+              mobileVoteType={mobileVoteType}
+              setMobileVoteType={setMobileVoteType}
+              forVotes={forVotes}
+              againstVotes={againstVotes}
+            />
+          ) : (
+            <div className="flex justify-center items-center">
+              <PaginatedVoteList initialVotes={initialVotes} />
+            </div>
+          )}
+        </div>
+      </div>
+    </SWRConfig>
+  );
+}
+
+export async function getStaticProps() {
+  // TODO - update service with sensible defaults for use cross app
+  const votes = await subgraphService.getVotes('desc', 10, 0);
+
+  return {
+    props: {
+      initialVotes: votes,
+      fallback: {
+        '/api/votes?page=1': votes,
+      },
+    },
+    revalidate: 30,
+  };
+}
