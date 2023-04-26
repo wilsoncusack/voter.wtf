@@ -129,9 +129,15 @@ const Home: NextPage = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen text-white font-sans">
-      <header className="text-center py-6">
-        <h1 className="neon">Nouns Vote with Reason</h1>
-        {/* <img className="center neon" src="https://nouns.wtf/static/media/noggles.7644bfd0.svg"/> */}
+      <header className="text-center ">
+        <div className="flex justify-center items-center">
+          <h1 className="neon">Vote with Reason</h1>
+          <img
+            src="noun652head.svg"
+            alt="Noun652 Head"
+            className="w-auto h-32"
+          />
+        </div>
       </header>
       <div>
         <h1 className="text-3xl font-semibold  mb-4 px-4">Active Proposals</h1>
