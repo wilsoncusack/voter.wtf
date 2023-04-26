@@ -1,5 +1,6 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
 import * as process from 'process';
+import { Vote } from '../../pages';
 
 const GET_VOTES = gql`
   query GetVotes($order: String, $limit: Int, $offset: Int) {
@@ -70,7 +71,11 @@ export class SubgraphService {
     return data?.openProposals || [];
   }
 
-  public async getVotes(order: 'desc' | 'asc', limit: number, offset: number) {
+  public async getVotes(
+    order: 'desc' | 'asc',
+    limit: number,
+    offset: number
+  ): Promise<Vote[]> {
     const { data } = await this.client.query({
       query: GET_VOTES,
       variables: {

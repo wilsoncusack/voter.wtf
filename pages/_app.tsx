@@ -1,20 +1,9 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
+import { WagmiConfig } from 'wagmi';
 import { useEffect } from 'react';
-
-const { provider, webSocketProvider } = configureChains(
-  [mainnet],
-  [publicProvider()]
-);
-
-const client = createClient({
-  autoConnect: false,
-  provider,
-  webSocketProvider,
-});
+import { client } from '../lib/wagmi';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
