@@ -15,12 +15,19 @@ const getKey = (pageIndex, previousPageData) => {
 
 export function PaginatedVoteList({ initialVotes }: FeedProps) {
   const observer = useRef<IntersectionObserver | null>(null);
-  const { data, error, isLoading, isValidating, size, setSize } =
-    useSWRInfinite(getKey, fetcher, {
-      revalidateFirstPage: false,
-      fallbackData: initialVotes,
-      parallel: true,
-    });
+  const {
+    data = [initialVotes],
+    error,
+    isLoading,
+    isValidating,
+    size,
+    setSize,
+  } = useSWRInfinite(getKey, fetcher, {
+    fallback: {
+      '/api/votes?page=1': initialVotes,
+    },
+    parallel: true,
+  });
 
   const lastVoteElementRef = useCallback(
     async (node: HTMLDivElement) => {
