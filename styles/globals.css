@@ -24,17 +24,17 @@ body {
 
 
   .neon {
-    color: #D53C5E;
-    text-shadow: 0 0 5px #D53C5E, 0 0 10px #D53C5E, 0 0 20px #D53C5E, 0 0 30px #D53C5E, 0 0 40px #D53C5E;
+    color: #8DD122;
+    text-shadow: 0 0 5px #8DD122, 0 0 10px #8DD122, 0 0 20px #8DD122, 0 0 30px #8DD122, 0 0 40px #8DD122;
     /* animation: glow 1s ease-in-out infinite alternate; */
     font-family: 'Press Start 2P', cursive;
   }
 
   @keyframes glow {
     from {
-      text-shadow: 0 0 5px #D53C5E, 0 0 10px #D53C5E, 0 0 15px #D53C5E, 0 0 20px #D53C5E, 0 0 25px #D53C5E, 0 0 30px #D53C5E, 0 0 35px #D53C5E;
+      text-shadow: 0 0 5px #8DD122, 0 0 10px #8DD122, 0 0 15px #8DD122, 0 0 20px #8DD122, 0 0 25px #8DD122, 0 0 30px #8DD122, 0 0 35px #8DD122;
     }
     to {
-      text-shadow: 0 0 10px #D53C5E, 0 0 20px #D53C5E, 0 0 30px #D53C5E, 0 0 40px #D53C5E, 0 0 50px #D53C5E, 0 0 60px #D53C5E, 0 0 70px #D53C5E;
+      text-shadow: 0 0 10px #8DD122, 0 0 20px #8DD122, 0 0 30px #8DD122, 0 0 40px #8DD122, 0 0 50px #8DD122, 0 0 60px #8DD122, 0 0 70px #8DD122;
     }
   }
