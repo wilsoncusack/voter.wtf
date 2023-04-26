@@ -131,7 +131,7 @@ const Home: NextPage = () => {
     <div className="bg-gray-900 min-h-screen text-white font-sans">
       <header className="text-center ">
         <div className="flex justify-center items-center">
-          <h1 className="neon">Vote with Reason</h1>
+          <h1 className="neon ml-4">Vote with Reason</h1>
           <img
             src="noun652head.svg"
             alt="Noun652 Head"
