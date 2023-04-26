@@ -73,6 +73,16 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
     getTimestamp();
   }, [getTimestamp]);
 
+  function replaceURLsWithLink(text) {
+    const urlRegex =
+      /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+
+    return text.replace(
+      urlRegex,
+      '<a style="text-decoration:underline;" href="$1" target="_blank" rel="noopener noreferrer">*link*</a>'
+    );
+  }
+
   return (
     <div className="flex mb-4 max-w-xl p-4 bg-gray-800 rounded-lg shadow-md">
       <div className="mr-4 w-16 h-16">
@@ -91,7 +101,7 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
         <p className="text-gray-400 ">
           <a
             href={`https://etherscan.io/address/${address}`}
-            className="hover:underline"
+            className="hover:underline break-all"
           >
             {ensName.data ? ensName.data : address.slice(0, 8)}
           </a>
@@ -124,12 +134,13 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
           </span>
         </p>
         <p
-          className={`whitespace-pre-line mb-2 mt-2 ${
+          className={`whitespace-pre-line break-words overflow-wrap mb-2 mt-2 ${
             reason ? 'text-gray-300' : 'text-gray-500'
           }`}
-        >
-          {reason ? reason : 'no reason :('}
-        </p>
+          dangerouslySetInnerHTML={{
+            __html: reason ? replaceURLsWithLink(reason) : 'no reason :(',
+          }}
+        ></p>
         <p className="text-gray-500 text-sm">{timestamp}</p>
       </div>
     </div>

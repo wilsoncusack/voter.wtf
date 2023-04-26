@@ -142,7 +142,9 @@ const Home: NextPage = () => {
         />
       </div>
 
-      <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">Votes</h1>
+      <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+        {selectedProposal ? selectedProposal.title : 'All'} Votes
+      </h1>
       <div className="flex flex-wrap justify-center m-4">
         {selectedProposal ? (
           <SelectedProposalVoteView
@@ -153,7 +155,7 @@ const Home: NextPage = () => {
             againstVotes={againstVotes}
           />
         ) : (
-          <div className="w-full grid justify-items-center">
+          <div className="flex justify-center items-center">
             <div>
               <VoteList votes={votes} />
             </div>
