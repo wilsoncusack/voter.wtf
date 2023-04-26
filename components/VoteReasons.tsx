@@ -101,7 +101,7 @@ const VoteReasons: React.FC<VoteReasonProps> = ({
         <p className="text-gray-400 ">
           <a
             href={`https://etherscan.io/address/${address}`}
-            className="hover:underline break-all"
+            className="hover:underline"
           >
             {ensName.data ? ensName.data : address.slice(0, 8)}
           </a>
