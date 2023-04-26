@@ -1,7 +1,8 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { SUBGRAPH_URL } from './constants';
 
 const link = new HttpLink({
-  uri: 'https://api.thegraph.com/subgraphs/name/nounsdao/nouns-subgraph', // Replace this with the correct subgraph URL
+  uri: SUBGRAPH_URL, // Replace this with the correct subgraph URL
 });
 
 const cache = new InMemoryCache();

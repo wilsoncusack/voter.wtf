@@ -1,6 +1,7 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
 import * as process from 'process';
 import { Address } from 'wagmi';
+import { SUBGRAPH_URL } from '../constants';
 
 export interface Vote {
   id: string;
@@ -116,7 +117,4 @@ export class SubgraphService {
   }
 }
 
-export const subgraphService = new SubgraphService(
-  process.env.NEXT_PUBLIC_SUBGRAPH_URL ||
-    'https://api.thegraph.com/subgraphs/name/nounsdao/nouns-subgraph'
-);
+export const subgraphService = new SubgraphService(SUBGRAPH_URL);
