@@ -27,6 +27,6 @@ export default async function handler(
     variables: { block },
   });
 
-  res.setHeader('Cache-Control', 'max-age=60');
+  res.setHeader('Cache-Control', 'no-cache');
   res.status(200).json(data.openProposals);
 }

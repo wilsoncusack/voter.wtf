@@ -35,6 +35,6 @@ export default async function handler(
     `,
     variables: { skip },
   });
-  res.setHeader('Cache-Control', 'max-age=5');
+  res.setHeader('Cache-Control', 'no-cache');
   res.status(200).json(data.votes);
 }
