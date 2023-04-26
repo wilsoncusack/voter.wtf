@@ -19,12 +19,14 @@ export default function FeedPage({ fallback, proposals }: FeedPageProps) {
 
 export async function getStaticProps() {
   const proposals = await subgraphService.getOpenProposals('desc', 10, 0);
+  const votes = await subgraphService.getVotes('desc', 25, 0);
 
   return {
     props: {
       proposals,
       fallback: {
         '/api/proposals': proposals,
+        '/api/votes': votes,
       },
     },
     revalidate: 30,

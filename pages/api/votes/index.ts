@@ -5,7 +5,7 @@ import { restrictHandlerMethods } from '../../../lib/util/api';
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // TODO - should service default
-    const proposals = await subgraphService.getOpenProposals('desc', 10, 0);
+    const proposals = await subgraphService.getVotes('desc', 25, 0);
     res.setHeader('Cache-Control', 'no-cache');
     res.status(200).json(proposals);
   } catch (err) {

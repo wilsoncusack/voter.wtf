@@ -1,12 +1,19 @@
-import { Proposal } from '../pages';
+import { Proposal, Vote } from '../pages';
 import useSWR from 'swr';
 
 export type FeedProps = {
   initialProposals?: Proposal[];
+  initialVotes?: Vote[];
 };
 
-export function Feed({ initialProposals = [] }: FeedProps) {
-  const { data = initialProposals, error } = useSWR('/api/proposals');
+export function Feed({ initialProposals = [], initialVotes = [] }: FeedProps) {
+  const { data: proposals = initialProposals } = useSWR('/api/proposals');
+  const { data: votes = initialVotes } = useSWR('/api/votes');
 
-  return <div>{initialProposals.length} Found</div>;
+  return (
+    <div>
+      {proposals.length} Proposals
+      {votes.length} Votes
+    </div>
+  );
 }

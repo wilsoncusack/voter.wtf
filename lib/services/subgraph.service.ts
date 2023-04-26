@@ -1,6 +1,31 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
 import * as process from 'process';
 
+const GET_VOTES = gql`
+  query GetVotes($order: String, $limit: Int, $offset: Int) {
+    votes(
+      orderBy: blockNumber
+      orderDirection: $order
+      first: $limit
+      skip: $offset
+    ) {
+      id
+      support
+      supportDetailed
+      votes
+      reason
+      voter {
+        id
+      }
+      proposal {
+        id
+        title
+      }
+      blockNumber
+    }
+  }
+`;
+
 const GET_OPEN_PROPOSALS = gql`
   query GetOpenProposals($order: String, $limit: Int, $offset: Int) {
     openProposals: proposals(
@@ -43,6 +68,18 @@ export class SubgraphService {
       },
     });
     return data?.openProposals || [];
+  }
+
+  public async getVotes(order: 'desc' | 'asc', limit: number, offset: number) {
+    const { data } = await this.client.query({
+      query: GET_VOTES,
+      variables: {
+        order,
+        limit,
+        offset,
+      },
+    });
+    return data?.votes || [];
   }
 }
 
