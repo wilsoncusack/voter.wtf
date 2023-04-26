@@ -3,6 +3,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+body {
+  background: rgba(17, 24, 39, 90);
+}
 
 .hide-scrollbar::-webkit-scrollbar {
     display: none;

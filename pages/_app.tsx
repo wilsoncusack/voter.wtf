@@ -4,6 +4,9 @@ import Head from 'next/head';
 import { WagmiConfig } from 'wagmi';
 import { useEffect } from 'react';
 import { client } from '../lib/wagmi';
+import { SWRConfig } from 'swr';
+
+const refreshInterval = 1000 * 60; // 1 minute
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -25,7 +28,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         ></link>
       </Head>
       <WagmiConfig client={client}>
-        <Component {...pageProps} />
+        <SWRConfig
+          value={{
+            refreshInterval,
+            fetcher: (resource, init) =>
+              fetch(resource, init).then(res => res.json()),
+          }}
+        >
+          <Component {...pageProps} />
+        </SWRConfig>
       </WagmiConfig>
     </div>
   );

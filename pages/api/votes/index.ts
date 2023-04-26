@@ -1,11 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { subgraphService } from '../../../lib/services/subgraph.service';
 import { restrictHandlerMethods } from '../../../lib/util/api';
+import { z } from 'zod';
 
+const QuerySchema = z.object({
+  page: z.coerce.number().default(0),
+  limit: z.coerce.number().default(20),
+  order: z.enum(['desc', 'asc']).default('desc'),
+});
+
+type Query = z.infer<typeof QuerySchema>;
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // TODO - should service default
-    const proposals = await subgraphService.getVotes('desc', 25, 0);
+    const query: Query = QuerySchema.parse(req.query);
+    const offset = (query.page - 1) * query.limit;
+    const proposals = await subgraphService.getVotes(
+      query.order,
+      query.limit,
+      offset
+    );
     res.setHeader('Cache-Control', 'no-cache');
     res.status(200).json(proposals);
   } catch (err) {

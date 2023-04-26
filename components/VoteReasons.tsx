@@ -68,7 +68,12 @@ export function VoteReasons({
       </div>
       <div>
         <div className="text-gray-400">
-          <a href={getEtherscanLink(address)} className="hover:underline">
+          <a
+            href={getEtherscanLink(address)}
+            className="hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
             {ensName}
           </a>{' '}
           voted{' '}
@@ -85,6 +90,8 @@ export function VoteReasons({
             <a
               href={getNounsLink(proposalId)}
               className="hover:underline font-semibold"
+              target="_blank"
+              rel="noreferrer"
             >
               Proposal {proposalId}: {proposalTitle}{' '}
             </a>

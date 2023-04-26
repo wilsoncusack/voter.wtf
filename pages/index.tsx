@@ -1,37 +1,10 @@
 import type { NextPage } from 'next';
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { VoteList } from '../components/VoteList';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
-import { Address, useBlockNumber } from 'wagmi';
-
-export interface Vote {
-  id: string;
-  vote: number;
-  votes: number;
-  support: boolean;
-  supportDetailed: number;
-  reason: string;
-  voter: {
-    id: Address;
-  };
-  proposal: {
-    id: string;
-    title: string;
-  };
-  blockNumber: number;
-}
-
-export interface Proposal {
-  id: string;
-  title: string;
-  description: string;
-  startBlock: number;
-  endBlock: number;
-  forVotes: number;
-  againstVotes: number;
-  status: string;
-}
+import { useBlockNumber } from 'wagmi';
+import { Proposal, Vote } from '../lib/services/subgraph.service';
 
 const Home: NextPage = () => {
   const [votes, setVotes] = useState<Vote[]>([]);

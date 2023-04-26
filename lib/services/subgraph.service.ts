@@ -1,6 +1,34 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
 import * as process from 'process';
-import { Vote } from '../../pages';
+import { Address } from 'wagmi';
+
+export interface Vote {
+  id: string;
+  vote: number;
+  votes: number;
+  support: boolean;
+  supportDetailed: number;
+  reason: string;
+  voter: {
+    id: Address;
+  };
+  proposal: {
+    id: string;
+    title: string;
+  };
+  blockNumber: number;
+}
+
+export interface Proposal {
+  id: string;
+  title: string;
+  description: string;
+  startBlock: number;
+  endBlock: number;
+  forVotes: number;
+  againstVotes: number;
+  status: string;
+}
 
 const GET_VOTES = gql`
   query GetVotes($order: String, $limit: Int, $offset: Int) {
