@@ -1,5 +1,5 @@
-import { Vote } from '../pages';
 import VoteReasons from './VoteReasons';
+import { Vote } from '../lib/services/subgraph.service';
 
 interface VoteListProps {
   votes: Vote[];

@@ -1,5 +1,5 @@
-import { Proposal } from '../pages';
 import { ProposalCard } from './ProposalCard';
+import { Proposal } from '../lib/services/subgraph.service';
 
 interface ProposalContainerProps {
   proposals: Proposal[];

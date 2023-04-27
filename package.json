@@ -11,15 +11,18 @@
   "dependencies": {
     "@apollo/client": "^3.7.12",
     "autoprefixer": "^10.4.14",
+    "classnames": "^2.3.2",
     "date-fns": "^2.29.3",
     "graphql": "^16.6.0",
     "next": "latest",
     "postcss": "^8.4.23",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "swr": "^2.1.5",
     "tailwindcss": "^3.3.1",
     "viem": "^0.3.7",
-    "wagmi": "^0.12.12"
+    "wagmi": "^0.12.12",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",

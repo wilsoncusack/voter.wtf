@@ -1,21 +1,18 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
+import { WagmiConfig } from 'wagmi';
+import { useEffect } from 'react';
+import { client } from '../lib/wagmi';
+import { SWRConfig } from 'swr';
 
-const { provider, webSocketProvider } = configureChains(
-  [mainnet],
-  [publicProvider()]
-);
-
-const client = createClient({
-  autoConnect: true,
-  provider,
-  webSocketProvider,
-});
+const refreshInterval = 1000 * 60; // 1 minute
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    client.autoConnect().then();
+  }, []);
+
   return (
     <div>
       <Head>
@@ -31,7 +28,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         ></link>
       </Head>
       <WagmiConfig client={client}>
-        <Component {...pageProps} />
+        <SWRConfig
+          value={{
+            refreshInterval,
+            fetcher: (resource, init) =>
+              fetch(resource, init).then(res => res.json()),
+          }}
+        >
+          <Component {...pageProps} />
+        </SWRConfig>
       </WagmiConfig>
     </div>
   );

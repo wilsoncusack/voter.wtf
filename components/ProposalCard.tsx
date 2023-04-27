@@ -1,4 +1,4 @@
-import { Proposal } from '../pages';
+import { Proposal } from '../lib/services/subgraph.service';
 
 interface ProposalCardProps {
   proposal: Proposal;
