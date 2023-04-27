@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
-import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
+import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
 import { useBlockNumber } from 'wagmi';
 import {
   Proposal,
@@ -89,7 +89,6 @@ export default function Home({ fallback, initialVotes }: HomePageProps) {
             setSelectedProposal={loadProposalVotes}
           />
         </div>
-
         <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
           {selectedProposal ? selectedProposal.title : 'All'} Votes
         </h1>
@@ -99,8 +98,6 @@ export default function Home({ fallback, initialVotes }: HomePageProps) {
               selectedProposal={selectedProposal}
               mobileVoteType={mobileVoteType}
               setMobileVoteType={setMobileVoteType}
-              forVotes={forVotes}
-              againstVotes={againstVotes}
             />
           ) : (
             <div className="flex justify-center items-center">

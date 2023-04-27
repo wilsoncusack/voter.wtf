@@ -1,7 +1,7 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
-import * as process from 'process';
 import { Address } from 'wagmi';
 import { SUBGRAPH_URL } from '../constants';
+import { VOTE_FRAGMENT } from './fragments';
 
 export interface Vote {
   id: string;
@@ -31,6 +31,8 @@ export interface Proposal {
   status: string;
 }
 
+export type Order = 'desc' | 'asc';
+
 const GET_VOTES = gql`
   query GetVotes($order: String, $limit: Int, $offset: Int) {
     votes(
@@ -39,21 +41,30 @@ const GET_VOTES = gql`
       first: $limit
       skip: $offset
     ) {
-      id
-      support
-      supportDetailed
-      votes
-      reason
-      voter {
-        id
-      }
-      proposal {
-        id
-        title
-      }
-      blockNumber
+      ...VoteFragment
     }
   }
+  ${VOTE_FRAGMENT}
+`;
+
+const GET_VOTES_FOR_PROPOSAL = gql`
+  query GetVotesForProposal(
+    $proposalId: String!
+    $order: String
+    $limit: Int
+    $offset: Int
+  ) {
+    votes(
+      where: { proposal: $proposalId }
+      orderBy: blockNumber
+      orderDirection: $order
+      first: $limit
+      skip: $offset
+    ) {
+      ...VoteFragment
+    }
+  }
+  ${VOTE_FRAGMENT}
 `;
 
 const GET_OPEN_PROPOSALS = gql`
@@ -84,11 +95,7 @@ export class SubgraphService {
     });
   }
 
-  public async getOpenProposals(
-    order: 'desc' | 'asc',
-    limit: number,
-    offset: number
-  ) {
+  public async getOpenProposals(order: Order, limit: number, offset: number) {
     const { data } = await this.client.query({
       query: GET_OPEN_PROPOSALS,
       variables: {
@@ -101,7 +108,7 @@ export class SubgraphService {
   }
 
   public async getVotes(
-    order: 'desc' | 'asc',
+    order: Order,
     limit: number,
     offset: number
   ): Promise<Vote[]> {
@@ -111,6 +118,23 @@ export class SubgraphService {
         order,
         limit,
         offset,
+      },
+    });
+    return data?.votes || [];
+  }
+
+  public async getVotesForProposal(
+    proposalId: string,
+    order: Order,
+    limit?: number,
+    offset?: number
+  ): Promise<Vote[]> {
+    const { data } = await this.client.query({
+      query: GET_VOTES_FOR_PROPOSAL,
+      variables: {
+        proposalId,
+        order,
+        ...(limit && offset && { limit, offset }),
       },
     });
     return data?.votes || [];
