@@ -12,6 +12,6 @@ export function replaceURLsWithLink(text) {
 
   return text.replace(
     urlRegex,
-    '<a style="text-decoration:underline;" href="$1" target="_blank" rel="noopener noreferrer">*link*</a>'
+    '<a style="word-break: break-all; text-decoration:underline" href=$1 target="_blank" rel="noopener noreferrer">$1</a>'
   );
 }
