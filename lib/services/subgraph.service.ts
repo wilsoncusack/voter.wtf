@@ -1,5 +1,4 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
-import * as process from 'process';
 import { Address } from 'wagmi';
 import { SUBGRAPH_URL } from '../constants';
 
@@ -57,8 +56,14 @@ const GET_VOTES = gql`
 `;
 
 const GET_OPEN_PROPOSALS = gql`
-  query GetOpenProposals($order: String, $limit: Int, $offset: Int) {
+  query GetOpenProposals(
+    $currentBlock: String
+    $order: String
+    $limit: Int
+    $offset: Int
+  ) {
     openProposals: proposals(
+      where: { endBlock_gt: $currentBlock, startBlock_lte: $currentBlock }
       orderBy: endBlock
       orderDirection: $order
       first: $limit
@@ -85,6 +90,7 @@ export class SubgraphService {
   }
 
   public async getOpenProposals(
+    currentBlock: string,
     order: 'desc' | 'asc',
     limit: number,
     offset: number
@@ -92,6 +98,7 @@ export class SubgraphService {
     const { data } = await this.client.query({
       query: GET_OPEN_PROPOSALS,
       variables: {
+        currentBlock,
         order,
         limit,
         offset,

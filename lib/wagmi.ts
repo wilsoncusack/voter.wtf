@@ -1,10 +1,16 @@
 import { configureChains, createClient, mainnet } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { createPublicClient, http } from 'viem';
 
 export const { provider, webSocketProvider } = configureChains(
   [mainnet],
-  [publicProvider()]
+  [
+    jsonRpcProvider({
+      rpc: _ => ({
+        http: 'https://rpc.eth.gateway.fm',
+      }),
+    }),
+  ]
 );
 
 export const client = createClient({
