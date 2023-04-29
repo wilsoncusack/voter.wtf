@@ -57,7 +57,7 @@ export function VoteReasons({
             })}
           >
             <img
-              className={classNames({
+              className={classNames('w-16 h-16', {
                 hidden: !ensAvatar,
               })}
               src={ensAvatar}

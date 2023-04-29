@@ -102,7 +102,7 @@ export default function Home({
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes('desc', 10, 0);
+  const votes = await subgraphService.getVotes('desc', 5, 0);
   const block = await viem.getBlockNumber();
   const proposals = await subgraphService.getOpenProposals(
     block.toString(),
