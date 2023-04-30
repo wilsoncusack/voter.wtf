@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { subgraphService } from '../../../lib/services/subgraph.service';
 import { restrictHandlerMethods } from '../../../lib/util/api';
 import { z } from 'zod';
-import { supabase } from '../../../lib/supabaseClient';
+import { buildVotesWithLikes } from '../../../lib';
 
 const QuerySchema = z.object({
   page: z.coerce.number().default(0),
@@ -20,20 +20,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       query.limit,
       offset
     );
-    const voteIds = votes.map(vote => `${vote.proposal.id}-${vote.voter.id}`);
-    const voteLikes = await supabase
-      .from('vote_likes')
-      .select('vote_id, is_nouns_voter')
-      .in('vote_id', voteIds);
-    const votesWithLikes = votes.map(vote => {
-      const id = `${vote.proposal.id}-${vote.voter.id}`;
-      const likes = voteLikes.data.filter(like => like.vote_id === id);
-      return {
-        nounHolderLikes: likes.filter(like => like.is_nouns_voter).length,
-        nonNounHolderLikes: likes.filter(like => !like.is_nouns_voter).length,
-        ...vote,
-      };
-    });
+    const votesWithLikes = await buildVotesWithLikes(votes);
     res.setHeader('Cache-Control', 'no-cache');
     res.status(200).json(votesWithLikes);
   } catch (err) {

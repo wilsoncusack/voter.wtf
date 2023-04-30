@@ -5,11 +5,7 @@ import { WagmiConfig } from 'wagmi';
 import { useEffect } from 'react';
 import { client } from '../lib/wagmi';
 import { SWRConfig } from 'swr';
-import {
-  ConnectKitProvider,
-  ConnectKitButton,
-  getDefaultClient,
-} from 'connectkit';
+import { ConnectKitProvider, ConnectKitButton } from 'connectkit';
 
 const refreshInterval = 1000 * 60; // 1 minute
 

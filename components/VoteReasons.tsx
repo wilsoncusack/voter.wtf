@@ -17,7 +17,6 @@ import { TimeAgo } from './TimeAgo';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 import axios from 'axios';
 import Image from 'next/image';
-import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 
 interface VoteReasonProps {
@@ -48,7 +47,7 @@ export function VoteReasons({
   const { data: ensAvatar } = useEnsAvatar({ address });
   const { data: timestamp } = useBlockTimestamp(BigInt(block));
   const { data: signer } = useSigner();
-  const { data: account } = useSigner();
+  const { address: account } = useAccount();
   const [likes, setLikes] = useState(nounHolderLikes);
   const [liked, setLiked] = useState(false);
 
@@ -75,7 +74,7 @@ export function VoteReasons({
         prop_id: proposalId,
         voter: address,
         signed_message: signedMessage,
-        user: await account.getAddress(),
+        user: await account,
       });
 
       if (response.status === 200) {
