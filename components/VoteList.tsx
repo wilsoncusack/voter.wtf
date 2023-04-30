@@ -18,6 +18,8 @@ export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
           block={vote.blockNumber}
           proposalTitle={vote.proposal.title}
           proposalId={vote.proposal.id}
+          nounHolderLikes={vote.nounHolderLikes}
+          nonNounHolderLikes={vote.nonNounHolderLikes}
         />
       ))}
     </div>

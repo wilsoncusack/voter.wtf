@@ -16,12 +16,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
       const message = `like vote by ${voter} on ${prop_id}`;
       const message_hash = hashMessage(message);
-      console.log('before');
+
       const recovered_address = await recoverAddress({
         hash: message_hash,
         signature: signed_message,
       });
-      console.log(recovered_address);
 
       const votes = await viem.readContract({
         address: '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
@@ -29,8 +28,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         functionName: 'getCurrentVotes',
         args: [user],
       });
-      console.log(votes);
-      console.log((votes as bigint) > BigInt(0));
 
       if (recovered_address.toLowerCase() === user.toLowerCase()) {
         const { error } = await supabase.from('vote_likes').insert({
