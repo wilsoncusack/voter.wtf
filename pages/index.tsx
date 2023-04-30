@@ -49,17 +49,17 @@ export default function Home({
       .filter((vote: VoteWithLikes) => vote.support === true)
       .sort(
         (a: VoteWithLikes, b: VoteWithLikes) =>
-          b.nounHolderLikes +
-          b.nonNounHolderLikes -
-          (a.nounHolderLikes + a.nonNounHolderLikes)
+          b.nounHolderLikes.length +
+          b.nonNounHolderLikes.length -
+          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
       );
     const againstVotes = allVotes
       .filter((vote: Vote) => vote.support === false)
       .sort(
         (a: VoteWithLikes, b: VoteWithLikes) =>
-          b.nounHolderLikes +
-          b.nonNounHolderLikes -
-          (a.nounHolderLikes + a.nonNounHolderLikes)
+          b.nounHolderLikes.length +
+          b.nonNounHolderLikes.length -
+          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
       );
 
     setForVotes(forVotes);

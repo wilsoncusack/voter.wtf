@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Address,
   useEnsAvatar,
@@ -18,6 +18,7 @@ import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 import axios from 'axios';
 import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
+import { Like } from '../lib/types/VoteWithLikes';
 
 interface VoteReasonProps {
   votes: number;
@@ -27,8 +28,8 @@ interface VoteReasonProps {
   proposalTitle: string;
   proposalId: string;
   block: number;
-  nounHolderLikes: number;
-  nonNounHolderLikes: number;
+  nounHolderLikes: Like[];
+  nonNounHolderLikes: Like[];
 }
 
 export function VoteReasons({
@@ -48,7 +49,6 @@ export function VoteReasons({
   const { data: timestamp } = useBlockTimestamp(BigInt(block));
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
-  const [likes, setLikes] = useState(nounHolderLikes);
   const [liked, setLiked] = useState(false);
 
   const ensName = useMemo(
@@ -74,11 +74,10 @@ export function VoteReasons({
         prop_id: proposalId,
         voter: address,
         signed_message: signedMessage,
-        user: await account,
+        user: account,
       });
 
       if (response.status === 200) {
-        setLikes(likes + 1);
         setLiked(true);
         // TODO pass in some isNounHolder from the top level
         // and update vote count based on this
@@ -87,6 +86,17 @@ export function VoteReasons({
       console.error('Error liking the vote:', error);
     }
   };
+
+  useEffect(() => {
+    if (!account || !nonNounHolderLikes || !nounHolderLikes) return;
+
+    if (
+      nounHolderLikes.find(like => like.user === account) ||
+      nonNounHolderLikes.find(like => like.user === account)
+    ) {
+      setLiked(true);
+    }
+  }, [account, nonNounHolderLikes, nounHolderLikes]);
 
   if (!isMounted) return null;
 
@@ -111,17 +121,17 @@ export function VoteReasons({
         </a>
         <div>
           <div className={'flex mt-4 justify-center'}>
-            {nounHolderLikes > 0 && (
+            {nounHolderLikes && nounHolderLikes.length > 0 && (
               <>
                 <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
                 <p className="text-gray-500 font-semibold">
                   {' '}
-                  {nounHolderLikes}{' '}
+                  {nounHolderLikes.length}{' '}
                 </p>
               </>
             )}
           </div>
-          {nonNounHolderLikes > 0 && (
+          {nonNounHolderLikes && nonNounHolderLikes.length > 0 && (
             <>
               <div className={'flex justify-center'}>
                 <SolidHeartIcon
@@ -131,7 +141,7 @@ export function VoteReasons({
                 />
                 <p className="ml-1 text-gray-500 font-semibold">
                   {' '}
-                  {nonNounHolderLikes}{' '}
+                  {nonNounHolderLikes.length}{' '}
                 </p>
               </div>
             </>
@@ -190,8 +200,12 @@ export function VoteReasons({
         <div className={'flex justify-end'}>
           <button
             onClick={handleLikeClick}
-            disabled={!signer}
-            className="p-2 transition duration-300 ease-in-out hover:bg-red-500 rounded-full"
+            disabled={!signer || liked}
+            className={`p-2 ${
+              liked
+                ? ''
+                : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
+            }`}
           >
             {liked ? (
               <Image
