@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Address, useEnsAvatar, useEnsName } from 'wagmi';
+import { Address, useEnsAvatar, useEnsName, useSigner, useAccount } from 'wagmi';
 import {
   getEtherscanLink,
   getNounsLink,
@@ -34,6 +34,8 @@ export function VoteReasons({
   const { data: rawEnsName } = useEnsName({ address });
   const { data: ensAvatar } = useEnsAvatar({ address });
   const { data: timestamp } = useBlockTimestamp(BigInt(block));
+  const { data: signer } = useSigner()
+  const { data: account } = useSigner()
   const [likes, setLikes] = useState(0);
 
   const ensName = useMemo(
@@ -47,19 +49,15 @@ export function VoteReasons({
   );
 
   const handleLikeClick = async () => {
-    // TODO: Sign the message, get the user address, and replace the placeholders below
-    const signedMessage =
-      '0xf63ea7932e5527754bb53eb0ec07c9fc8dc77319927a30f33c940d9185831eaa02c53c96aaf78e8229b7974f126390407e8d9176695d0e06fe9b3de4acfaf1ca1b';
-    const userAddress = '0xbc3ed6B537f2980e66f396Fe14210A56ba3f72C4';
-
     const message = `like vote by ${address} on ${proposalId}`;
+    const signedMessage = await signer.signMessage(message);
 
     try {
       const response = await axios.post('/api/like_vote', {
         prop_id: proposalId,
         voter: address,
         signed_message: signedMessage,
-        user: userAddress,
+        user: await account.getAddress(),
       });
 
       if (response.status === 200) {
