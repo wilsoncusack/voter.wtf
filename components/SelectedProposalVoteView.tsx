@@ -1,13 +1,14 @@
 import { MobileForAgainstToggle } from './MobileForAgainstToggle';
 import { VoteList } from './VoteList';
-import { Proposal, Vote } from '../lib/services/subgraph.service';
+import { Proposal } from '../lib/services/subgraph.service';
+import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
 interface SelectedProposalVoteViewProps {
   setMobileVoteType: (type: 'for' | 'against') => void;
   mobileVoteType: 'for' | 'against';
   selectedProposal: Proposal | null;
-  forVotes: Vote[];
-  againstVotes: Vote[];
+  forVotes: VoteWithLikes[];
+  againstVotes: VoteWithLikes[];
 }
 
 export const SelectedProposalVoteView: React.FC<
