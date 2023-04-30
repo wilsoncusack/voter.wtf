@@ -45,10 +45,14 @@ export default function Home({
     if (proposal == null) return;
 
     const allVotes = await fetchProposalVotes(proposal.id);
-    const forVotes = allVotes.filter((vote: Vote) => vote.support === true);
-    const againstVotes = allVotes.filter(
+    const forVotes = allVotes
+    .filter((vote: VoteWithLikes) => vote.support === true)
+    .sort((a: VoteWithLikes, b: VoteWithLikes) => (b.nounHolderLikes + b.nonNounHolderLikes) - (a.nounHolderLikes + a.nonNounHolderLikes));
+    const againstVotes = allVotes
+    .filter(
       (vote: Vote) => vote.support === false
-    );
+    )
+    .sort((a: VoteWithLikes, b: VoteWithLikes) => (b.nounHolderLikes + b.nonNounHolderLikes) - (a.nounHolderLikes + a.nonNounHolderLikes));
 
     setForVotes(forVotes);
     setAgainstVotes(againstVotes);
