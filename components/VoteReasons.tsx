@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Address, useEnsAvatar, useEnsName } from 'wagmi';
 import {
   getEtherscanLink,
@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { useIsMounted } from '../hooks/useIsMounted';
 import { TimeAgo } from './TimeAgo';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
+import axios from 'axios';
 
 interface VoteReasonProps {
   votes: number;
@@ -33,6 +34,7 @@ export function VoteReasons({
   const { data: rawEnsName } = useEnsName({ address });
   const { data: ensAvatar } = useEnsAvatar({ address });
   const { data: timestamp } = useBlockTimestamp(BigInt(block));
+  const [likes, setLikes] = useState(0);
 
   const ensName = useMemo(
     () => (rawEnsName ? rawEnsName : address.slice(0, 8)),
@@ -43,6 +45,30 @@ export function VoteReasons({
     () => (rawReason ? replaceURLsWithLink(rawReason) : 'no reason :('),
     [rawReason]
   );
+
+  const handleLikeClick = async () => {
+    // TODO: Sign the message, get the user address, and replace the placeholders below
+    const signedMessage =
+      '0xf63ea7932e5527754bb53eb0ec07c9fc8dc77319927a30f33c940d9185831eaa02c53c96aaf78e8229b7974f126390407e8d9176695d0e06fe9b3de4acfaf1ca1b';
+    const userAddress = '0xbc3ed6B537f2980e66f396Fe14210A56ba3f72C4';
+
+    const message = `like vote by ${address} on ${proposalId}`;
+
+    try {
+      const response = await axios.post('/api/like_vote', {
+        prop_id: proposalId,
+        voter: address,
+        signed_message: signedMessage,
+        user: userAddress,
+      });
+
+      if (response.status === 200) {
+        setLikes(likes + 1);
+      }
+    } catch (error) {
+      console.error('Error liking the vote:', error);
+    }
+  };
 
   if (!isMounted) return null;
 
@@ -67,6 +93,15 @@ export function VoteReasons({
         </a>
       </div>
       <div>
+        <div className="flex items-center mt-2">
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none"
+            onClick={handleLikeClick}
+          >
+            Like
+          </button>
+          <span className="ml-2 text-gray-400">{likes} likes</span>
+        </div>
         <div className="text-gray-400">
           <a
             href={getEtherscanLink(address)}
