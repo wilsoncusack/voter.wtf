@@ -10,6 +10,7 @@ import { SWRConfig } from 'swr';
 import { PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
+import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -25,8 +26,8 @@ export default function Home({
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
-  const [forVotes, setForVotes] = useState<Vote[]>([]);
-  const [againstVotes, setAgainstVotes] = useState<Vote[]>([]);
+  const [forVotes, setForVotes] = useState<VoteWithLikes[]>([]);
+  const [againstVotes, setAgainstVotes] = useState<VoteWithLikes[]>([]);
   const [mobileVoteType, setMobileVoteType] = useState<'for' | 'against'>(
     'for'
   );
@@ -44,10 +45,22 @@ export default function Home({
     if (proposal == null) return;
 
     const allVotes = await fetchProposalVotes(proposal.id);
-    const forVotes = allVotes.filter((vote: Vote) => vote.support === true);
-    const againstVotes = allVotes.filter(
-      (vote: Vote) => vote.support === false
-    );
+    const forVotes = allVotes
+      .filter((vote: VoteWithLikes) => vote.support === true)
+      .sort(
+        (a: VoteWithLikes, b: VoteWithLikes) =>
+          b.nounHolderLikes.length +
+          b.nonNounHolderLikes.length -
+          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
+      );
+    const againstVotes = allVotes
+      .filter((vote: Vote) => vote.support === false)
+      .sort(
+        (a: VoteWithLikes, b: VoteWithLikes) =>
+          b.nounHolderLikes.length +
+          b.nonNounHolderLikes.length -
+          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
+      );
 
     setForVotes(forVotes);
     setAgainstVotes(againstVotes);
