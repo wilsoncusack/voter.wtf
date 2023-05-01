@@ -7,7 +7,7 @@ export const buildVotesWithLikes = async (votes: Vote[]) => {
     .from('vote_likes')
     .select('vote_id, is_nouns_voter, user')
     .in('vote_id', voteIds);
-  const votesWithLikes = votes.map(vote => {
+  return votes.map(vote => {
     const id = `${vote.proposal.id}-${vote.voter.id}`;
     const likes = voteLikes.data.filter(like => like.vote_id === id);
     return {
@@ -16,5 +16,4 @@ export const buildVotesWithLikes = async (votes: Vote[]) => {
       ...vote,
     };
   });
-  return votesWithLikes;
 };
