@@ -14,7 +14,7 @@ import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
 type HomePageProps = {
   fallback: FallbackProp;
-  initialVotes: Vote[];
+  initialVotes: VoteWithLikes[];
   openProposals: Proposal[];
 };
 

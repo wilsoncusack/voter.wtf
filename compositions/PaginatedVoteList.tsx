@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { VoteList } from '../components/VoteList';
-import { Vote } from '../lib/services/subgraph.service';
 import useSWRInfinite from 'swr/infinite';
 import { fetcher } from '../lib/util/swr';
+import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
 type FeedProps = {
-  initialVotes?: Vote[];
+  initialVotes?: VoteWithLikes[];
 };
 
 const getKey = (pageIndex, previousPageData) => {
