@@ -11,7 +11,7 @@ import {
   getNounsLink,
   replaceURLsWithLink,
 } from '../lib/util/link';
-import classNames from 'classnames';
+import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
 import { TimeAgo } from './TimeAgo';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
@@ -101,7 +101,7 @@ export function VoteReasons({
   if (!isMounted) return null;
 
   return (
-    <div className="flex mb-4 max-w-xl p-4 bg-gray-800 rounded-lg shadow-md">
+    <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
       <div className="mr-4">
         <a href={getEtherscanLink(address)} target="_blank" rel="noreferrer">
           <div

@@ -22,9 +22,6 @@ export default function Home({
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
-  const [mobileVoteType, setMobileVoteType] = useState<'for' | 'against'>(
-    'for'
-  );
 
   return (
     <SWRConfig value={{ fallback }}>
@@ -54,11 +51,7 @@ export default function Home({
         </h1>
         <div className="flex flex-wrap justify-center m-4">
           {selectedProposal ? (
-            <SelectedProposalVoteView
-              selectedProposal={selectedProposal}
-              mobileVoteType={mobileVoteType}
-              setMobileVoteType={setMobileVoteType}
-            />
+            <SelectedProposalVoteView selectedProposal={selectedProposal} />
           ) : (
             <div className="flex justify-center items-center">
               <PaginatedVoteList initialVotes={initialVotes} />

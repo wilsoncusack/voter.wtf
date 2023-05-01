@@ -1,12 +1,13 @@
-interface MobileForAgtainstToggleProps {
-  setMobileVoteType: (type: 'for' | 'against') => void;
-  mobileVoteType: 'for' | 'against';
+export type VoteType = 'for' | 'against';
+interface MobileForAgainstToggle {
+  setMobileVoteType: (type: VoteType) => void;
+  mobileVoteType: VoteType;
 }
 
-export const MobileForAgainstToggle: React.FC<MobileForAgtainstToggleProps> = ({
+export function MobileForAgainstToggle({
   setMobileVoteType,
   mobileVoteType,
-}) => {
+}: MobileForAgainstToggle) {
   return (
     <div className="w-full md:hidden flex justify-center my-4">
       <button
@@ -27,4 +28,4 @@ export const MobileForAgainstToggle: React.FC<MobileForAgtainstToggleProps> = ({
       </button>
     </div>
   );
-};
+}
