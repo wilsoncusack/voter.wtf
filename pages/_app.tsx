@@ -5,6 +5,7 @@ import { WagmiConfig } from 'wagmi';
 import { useEffect } from 'react';
 import { client } from '../lib/wagmi';
 import { SWRConfig } from 'swr';
+import { ConnectKitProvider, ConnectKitButton } from 'connectkit';
 
 const refreshInterval = 1000 * 60; // 1 minute
 
@@ -28,15 +29,20 @@ function MyApp({ Component, pageProps }: AppProps) {
         ></link>
       </Head>
       <WagmiConfig client={client}>
-        <SWRConfig
-          value={{
-            refreshInterval,
-            fetcher: (resource, init) =>
-              fetch(resource, init).then(res => res.json()),
-          }}
-        >
-          <Component {...pageProps} />
-        </SWRConfig>
+        <ConnectKitProvider theme="nouns">
+          <div className="m-4 flex justify-end">
+            <ConnectKitButton />
+          </div>
+          <SWRConfig
+            value={{
+              refreshInterval,
+              fetcher: (resource, init) =>
+                fetch(resource, init).then(res => res.json()),
+            }}
+          >
+            <Component {...pageProps} />
+          </SWRConfig>
+        </ConnectKitProvider>
       </WagmiConfig>
     </div>
   );

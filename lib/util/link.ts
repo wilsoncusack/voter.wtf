@@ -1,5 +1,5 @@
 export function getEtherscanLink(address: `0x${string}`, type = 'address') {
-  return `https://etherscan.io${type}/${address}`;
+  return `https://etherscan.io/${type}/${address}`;
 }
 
 export function getNounsLink(id: number | string, type = 'vote') {
@@ -12,6 +12,6 @@ export function replaceURLsWithLink(text) {
 
   return text.replace(
     urlRegex,
-    '<a style="text-decoration:underline;" href="$1" target="_blank" rel="noopener noreferrer">*link*</a>'
+    '<a style="word-break: break-all; text-decoration:underline" href=$1 target="_blank" rel="noopener noreferrer">$1</a>'
   );
 }

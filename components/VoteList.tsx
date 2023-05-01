@@ -1,8 +1,8 @@
 import VoteReasons from './VoteReasons';
-import { Vote } from '../lib/services/subgraph.service';
+import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
 interface VoteListProps {
-  votes: Vote[];
+  votes: VoteWithLikes[];
 }
 
 export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
@@ -18,6 +18,8 @@ export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
           block={vote.blockNumber}
           proposalTitle={vote.proposal.title}
           proposalId={vote.proposal.id}
+          nounHolderLikes={vote.nounHolderLikes}
+          nonNounHolderLikes={vote.nonNounHolderLikes}
         />
       ))}
     </div>

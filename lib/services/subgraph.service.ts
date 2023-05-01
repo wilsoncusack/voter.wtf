@@ -68,8 +68,14 @@ const GET_VOTES_FOR_PROPOSAL = gql`
 `;
 
 const GET_OPEN_PROPOSALS = gql`
-  query GetOpenProposals($order: String, $limit: Int, $offset: Int) {
+  query GetOpenProposals(
+    $currentBlock: String
+    $order: String
+    $limit: Int
+    $offset: Int
+  ) {
     openProposals: proposals(
+      where: { endBlock_gt: $currentBlock, startBlock_lte: $currentBlock }
       orderBy: endBlock
       orderDirection: $order
       first: $limit
@@ -95,10 +101,12 @@ export class SubgraphService {
     });
   }
 
-  public async getOpenProposals(order: Order, limit: number, offset: number) {
+  public async getOpenProposals(currentBlock: string,
+    order: Order, limit: number, offset: number) {
     const { data } = await this.client.query({
       query: GET_OPEN_PROPOSALS,
       variables: {
+        currentBlock,
         order,
         limit,
         offset,

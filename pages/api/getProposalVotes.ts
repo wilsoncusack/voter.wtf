@@ -2,6 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { gql } from '@apollo/client';
 import apolloClient from '../../lib/apolloClient';
+import { buildVotesWithLikes } from '../../lib';
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,5 +40,5 @@ export default async function handler(
   });
 
   res.setHeader('Cache-Control', 'no-cache');
-  res.status(200).json(data.votes);
+  res.status(200).json(await buildVotesWithLikes(data.votes));
 }

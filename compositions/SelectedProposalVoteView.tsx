@@ -1,30 +1,32 @@
+import { Proposal } from '../lib/services/subgraph.service';
+import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 import { MobileForAgainstToggle } from '../components/MobileForAgainstToggle';
 import { VoteList } from '../components/VoteList';
-import { Proposal, Vote } from '../lib/services/subgraph.service';
-import { useVotesForProposal } from '../hooks/useVotesForProposal';
 
 interface SelectedProposalVoteViewProps {
   setMobileVoteType: (type: 'for' | 'against') => void;
   mobileVoteType: 'for' | 'against';
   selectedProposal: Proposal | null;
-  // forVotes: Vote[];
-  // againstVotes: Vote[];
+  forVotes: VoteWithLikes[];
+  againstVotes: VoteWithLikes[];
 }
 
 export function SelectedProposalVoteView({
   setMobileVoteType,
   mobileVoteType,
   selectedProposal,
+  forVotes,
+  againstVotes,
 }: SelectedProposalVoteViewProps) {
-  const {
-    forVotes = [],
-    againstVotes = [],
-    isLoading,
-  } = useVotesForProposal(selectedProposal.id);
+  // const {
+  //   forVotes = [],
+  //   againstVotes = [],
+  //   isLoading,
+  // } = useVotesForProposal(selectedProposal.id);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <>

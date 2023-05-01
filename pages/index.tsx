@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
-import { useBlockNumber } from 'wagmi';
 import {
   Proposal,
   subgraphService,
@@ -10,35 +9,28 @@ import {
 import { SWRConfig } from 'swr';
 import { PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
+import { viem } from '../lib/wagmi';
+import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
 type HomePageProps = {
   fallback: FallbackProp;
   initialVotes: Vote[];
+  openProposals: Proposal[];
 };
 
-export default function Home({ fallback, initialVotes }: HomePageProps) {
-  const [openProposals, setOpenProposals] = useState<Proposal[]>([]);
+export default function Home({
+  initialVotes,
+  openProposals,
+  fallback,
+}: HomePageProps) {
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
-  const [forVotes, setForVotes] = useState<Vote[]>([]);
-  const [againstVotes, setAgainstVotes] = useState<Vote[]>([]);
+  const [forVotes, setForVotes] = useState<VoteWithLikes[]>([]);
+  const [againstVotes, setAgainstVotes] = useState<VoteWithLikes[]>([]);
   const [mobileVoteType, setMobileVoteType] = useState<'for' | 'against'>(
     'for'
   );
-
-  const block = useBlockNumber({
-    cacheTime: 2_000_000,
-  });
-
-  const fetchOpenProposals = useCallback(async () => {
-    if (block.data == undefined) return;
-
-    const res = await fetch(`/api/getOpenProposals?block=${block.data}`);
-    const data = await res.json();
-
-    setOpenProposals(data);
-  }, [block.data]);
 
   const fetchProposalVotes = async (proposalId: string) => {
     const res = await fetch(`/api/getProposalVotes?proposalId=${proposalId}`);
@@ -53,18 +45,26 @@ export default function Home({ fallback, initialVotes }: HomePageProps) {
     if (proposal == null) return;
 
     const allVotes = await fetchProposalVotes(proposal.id);
-    const forVotes = allVotes.filter((vote: Vote) => vote.support === true);
-    const againstVotes = allVotes.filter(
-      (vote: Vote) => vote.support === false
-    );
+    const forVotes = allVotes
+      .filter((vote: VoteWithLikes) => vote.support === true)
+      .sort(
+        (a: VoteWithLikes, b: VoteWithLikes) =>
+          b.nounHolderLikes.length +
+          b.nonNounHolderLikes.length -
+          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
+      );
+    const againstVotes = allVotes
+      .filter((vote: Vote) => vote.support === false)
+      .sort(
+        (a: VoteWithLikes, b: VoteWithLikes) =>
+          b.nounHolderLikes.length +
+          b.nonNounHolderLikes.length -
+          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
+      );
 
     setForVotes(forVotes);
     setAgainstVotes(againstVotes);
   }, []);
-
-  useEffect(() => {
-    fetchOpenProposals().then();
-  }, [block.data, fetchOpenProposals]);
 
   return (
     <SWRConfig value={{ fallback }}>
@@ -98,6 +98,8 @@ export default function Home({ fallback, initialVotes }: HomePageProps) {
               selectedProposal={selectedProposal}
               mobileVoteType={mobileVoteType}
               setMobileVoteType={setMobileVoteType}
+              forVotes={forVotes}
+              againstVotes={againstVotes}
             />
           ) : (
             <div className="flex justify-center items-center">
@@ -112,11 +114,19 @@ export default function Home({ fallback, initialVotes }: HomePageProps) {
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes('desc', 10, 0);
+  const votes = await subgraphService.getVotes('desc', 5, 0);
+  const block = await viem.getBlockNumber();
+  const proposals = await subgraphService.getOpenProposals(
+    block.toString(),
+    'asc',
+    10,
+    0
+  );
 
   return {
     props: {
       initialVotes: votes,
+      openProposals: proposals,
       fallback: {
         '/api/votes?page=1': votes,
       },
