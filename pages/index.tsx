@@ -7,22 +7,18 @@ import {
   Vote,
 } from '../lib/services/subgraph.service';
 import { SWRConfig } from 'swr';
-import { PaginatedVoteList } from '../compositions/PaginatedVoteList';
+import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { VoteWithLikes } from '../lib/types/VoteWithLikes';
+import { unstable_serialize } from 'swr/infinite';
 
 type HomePageProps = {
   fallback: FallbackProp;
-  initialVotes: Vote[];
   openProposals: Proposal[];
 };
 
-export default function Home({
-  initialVotes,
-  openProposals,
-  fallback,
-}: HomePageProps) {
+export default function Home({ openProposals, fallback }: HomePageProps) {
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
@@ -104,7 +100,7 @@ export default function Home({
             />
           ) : (
             <div className="flex justify-center items-center">
-              <PaginatedVoteList initialVotes={initialVotes} />
+              <PaginatedVoteList />
             </div>
           )}
         </div>
@@ -126,10 +122,9 @@ export async function getStaticProps() {
 
   return {
     props: {
-      initialVotes: votes,
       openProposals: proposals,
       fallback: {
-        '/api/votes?page=1': votes,
+        [unstable_serialize(getKey)]: votes,
       },
     },
     revalidate: 10,
