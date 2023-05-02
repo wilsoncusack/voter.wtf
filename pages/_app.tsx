@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { client } from '../lib/wagmi';
 import { SWRConfig } from 'swr';
 import { ConnectKitProvider, ConnectKitButton } from 'connectkit';
+import { Analytics } from '@vercel/analytics/react';
 
 const refreshInterval = 1000 * 60; // 1 minute
 
@@ -44,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </SWRConfig>
         </ConnectKitProvider>
       </WagmiConfig>
+      <Analytics />
     </div>
   );
 }
