@@ -36,7 +36,7 @@ export const ProposalCard: React.FC<ProposalCardProps> = ({
         <span className="">{proposal.againstVotes}</span> AGAINST
       </p>
       <p className="text-xs">
-        {/* Voting Ends: {formatDistanceToNowStrict(new Date(proposal.endTime * 1000))} Remaining */}
+        {/* Voting Ends: {formatDistanceToNowStrict(new Date(proposals.endTime * 1000))} Remaining */}
       </p>
     </div>
   );

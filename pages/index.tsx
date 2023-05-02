@@ -1,11 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
-import { SelectedProposalVoteView } from '../components/SelectedProposalVoteView';
-import {
-  Proposal,
-  subgraphService,
-  Vote,
-} from '../lib/services/subgraph.service';
+import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
+import { Proposal, subgraphService } from '../lib/services/subgraph.service';
 import { SWRConfig } from 'swr';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
@@ -22,45 +18,6 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
-  const [forVotes, setForVotes] = useState<VoteWithLikes[]>([]);
-  const [againstVotes, setAgainstVotes] = useState<VoteWithLikes[]>([]);
-  const [mobileVoteType, setMobileVoteType] = useState<'for' | 'against'>(
-    'for'
-  );
-
-  const fetchProposalVotes = async (proposalId: string) => {
-    const res = await fetch(`/api/getProposalVotes?proposalId=${proposalId}`);
-    const data = await res.json();
-
-    return data;
-  };
-
-  const loadProposalVotes = useCallback(async proposal => {
-    setSelectedProposal(proposal);
-
-    if (proposal == null) return;
-
-    const allVotes = await fetchProposalVotes(proposal.id);
-    const forVotes = allVotes
-      .filter((vote: VoteWithLikes) => vote.support === true)
-      .sort(
-        (a: VoteWithLikes, b: VoteWithLikes) =>
-          b.nounHolderLikes.length +
-          b.nonNounHolderLikes.length -
-          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
-      );
-    const againstVotes = allVotes
-      .filter((vote: Vote) => vote.support === false)
-      .sort(
-        (a: VoteWithLikes, b: VoteWithLikes) =>
-          b.nounHolderLikes.length +
-          b.nonNounHolderLikes.length -
-          (a.nounHolderLikes.length + a.nonNounHolderLikes.length)
-      );
-
-    setForVotes(forVotes);
-    setAgainstVotes(againstVotes);
-  }, []);
 
   return (
     <SWRConfig value={{ fallback }}>
@@ -82,22 +39,15 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           <ProposalContainer
             proposals={openProposals}
             selectedProposal={selectedProposal}
-            setSelectedProposal={loadProposalVotes}
+            setSelectedProposal={setSelectedProposal}
           />
         </div>
-
         <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
           {selectedProposal ? selectedProposal.title : 'All'} Votes
         </h1>
         <div className="flex flex-wrap justify-center m-4">
           {selectedProposal ? (
-            <SelectedProposalVoteView
-              selectedProposal={selectedProposal}
-              mobileVoteType={mobileVoteType}
-              setMobileVoteType={setMobileVoteType}
-              forVotes={forVotes}
-              againstVotes={againstVotes}
-            />
+            <SelectedProposalVoteView selectedProposal={selectedProposal} />
           ) : (
             <div className="flex justify-center items-center">
               <PaginatedVoteList />
@@ -120,11 +70,24 @@ export async function getStaticProps() {
     0
   );
 
+  const prefetchedVotes = await Promise.all(
+    proposals.map(p => subgraphService.getVotesForProposal(p.id, 'desc'))
+  );
+
+  const voteFallback = prefetchedVotes.reduce((acc, votes, idx) => {
+    const key = proposals[idx].id;
+    return {
+      ...acc,
+      [`/api/proposals/${key}/votes`]: votes,
+    };
+  }, {});
+
   return {
     props: {
       openProposals: proposals,
       fallback: {
         [unstable_serialize(getKey)]: votes,
+        ...voteFallback,
       },
     },
     revalidate: 10,
