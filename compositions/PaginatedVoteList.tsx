@@ -2,32 +2,16 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { VoteList } from '../components/VoteList';
 import useSWRInfinite from 'swr/infinite';
 import { fetcher } from '../lib/util/swr';
-import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
-type FeedProps = {
-  initialVotes?: VoteWithLikes[];
-};
-
-const getKey = (pageIndex, previousPageData) => {
+export const getKey = (pageIndex, previousPageData) => {
   if (previousPageData && !previousPageData.length) return null; // reached the end
   return `/api/votes?page=${pageIndex + 1}`; // SWR key
 };
 
-export function PaginatedVoteList({ initialVotes }: FeedProps) {
+export function PaginatedVoteList() {
   const observer = useRef<IntersectionObserver | null>(null);
-  const {
-    data = [initialVotes],
-    error,
-    isLoading,
-    isValidating,
-    size,
-    setSize,
-  } = useSWRInfinite(getKey, fetcher, {
-    fallback: {
-      '/api/votes?page=1': initialVotes,
-    },
-    parallel: true,
-  });
+  const { data, error, isLoading, isValidating, size, setSize } =
+    useSWRInfinite(getKey, fetcher);
 
   const lastVoteElementRef = useCallback(
     async (node: HTMLDivElement) => {
