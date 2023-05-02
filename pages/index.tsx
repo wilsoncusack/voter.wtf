@@ -132,6 +132,6 @@ export async function getStaticProps() {
         '/api/votes?page=1': votes,
       },
     },
-    revalidate: 30,
+    revalidate: 10,
   };
 }
