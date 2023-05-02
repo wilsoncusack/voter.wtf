@@ -27,7 +27,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     console.error(err);
     res.status(500).json({
       statusCode: 500,
-      message: 'An error occurred while fetching proposal, please try again.',
+      message: 'An error occurred while fetching proposals, please try again.',
     });
   }
 }

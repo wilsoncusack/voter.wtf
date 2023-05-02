@@ -3,9 +3,9 @@ import { Vote } from '../lib/services/subgraph.service';
 import { useMemo } from 'react';
 import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 
-export function useVotesForProposal(proposalId: string) {
+export function useVotesForProposal(id: string) {
   const { data, ...rest } = useSWR<VoteWithLikes[]>(
-    `/api/proposal/${proposalId}/votes`
+    `/api/proposals/${id}/votes`
   );
 
   const forVotes = useMemo(

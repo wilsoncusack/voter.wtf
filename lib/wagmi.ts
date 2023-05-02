@@ -14,12 +14,6 @@ export const { provider, webSocketProvider } = configureChains(
   ]
 );
 
-// export const client = createClient({
-//   autoConnect: false,
-//   provider,
-//   webSocketProvider,
-// });
-
 const alchemyId = process.env.ALCHEMY_ID;
 
 export const client = createClient(

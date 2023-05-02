@@ -8,33 +8,35 @@ body {
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  display: none;
+}
 
-  .avatar-image {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
+.avatar-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-  .neon {
-    color: #8DD122;
-    text-shadow: 0 0 5px #8DD122, 0 0 10px #8DD122, 0 0 20px #8DD122, 0 0 30px #8DD122, 0 0 40px #8DD122;
-    /* animation: glow 1s ease-in-out infinite alternate; */
-    font-family: 'Press Start 2P', cursive;
-  }
+.neon {
+  color: #8dd122;
+  text-shadow: 0 0 5px #8dd122, 0 0 10px #8dd122, 0 0 20px #8dd122,
+    0 0 30px #8dd122, 0 0 40px #8dd122;
+  /* animation: glow 1s ease-in-out infinite alternate; */
+  font-family: 'Press Start 2P', cursive;
+}
 
-  @keyframes glow {
-    from {
-      text-shadow: 0 0 5px #8DD122, 0 0 10px #8DD122, 0 0 15px #8DD122, 0 0 20px #8DD122, 0 0 25px #8DD122, 0 0 30px #8DD122, 0 0 35px #8DD122;
-    }
-    to {
-      text-shadow: 0 0 10px #8DD122, 0 0 20px #8DD122, 0 0 30px #8DD122, 0 0 40px #8DD122, 0 0 50px #8DD122, 0 0 60px #8DD122, 0 0 70px #8DD122;
-    }
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #8dd122, 0 0 10px #8dd122, 0 0 15px #8dd122,
+      0 0 20px #8dd122, 0 0 25px #8dd122, 0 0 30px #8dd122, 0 0 35px #8dd122;
   }
+  to {
+    text-shadow: 0 0 10px #8dd122, 0 0 20px #8dd122, 0 0 30px #8dd122,
+      0 0 40px #8dd122, 0 0 50px #8dd122, 0 0 60px #8dd122, 0 0 70px #8dd122;
+  }
+}

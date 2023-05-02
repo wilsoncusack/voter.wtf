@@ -82,7 +82,7 @@ export async function getStaticProps() {
     const key = proposals[idx].id;
     return {
       ...acc,
-      [`/api/proposal/${key}/votes`]: votes,
+      [`/api/proposals/${key}/votes`]: votes,
     };
   }, {});
 

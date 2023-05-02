@@ -101,8 +101,12 @@ export class SubgraphService {
     });
   }
 
-  public async getOpenProposals(currentBlock: string,
-    order: Order, limit: number, offset: number) {
+  public async getOpenProposals(
+    currentBlock: string,
+    order: Order,
+    limit: number,
+    offset: number
+  ) {
     const { data } = await this.client.query({
       query: GET_OPEN_PROPOSALS,
       variables: {

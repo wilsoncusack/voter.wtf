@@ -5,7 +5,7 @@ import { restrictHandlerMethods } from '../../../../lib/util/api';
 import { buildVotesWithLikes } from '../../../../lib';
 
 const QuerySchema = z.object({
-  proposalId: z.string(),
+  id: z.string(),
   page: z.number().optional(),
   limit: z.number().optional(),
   order: z.enum(['desc', 'asc']).default('desc'),
@@ -19,16 +19,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (query.page && query.limit) {
       const offset = (query.page - 1) * query.limit;
       data = await subgraphService.getVotesForProposal(
-        query.proposalId,
+        query.id,
         query.order,
         query.limit,
         offset
       );
     } else {
-      data = await subgraphService.getVotesForProposal(
-        query.proposalId,
-        query.order
-      );
+      data = await subgraphService.getVotesForProposal(query.id, query.order);
     }
     data = await buildVotesWithLikes(data);
     res.setHeader('Cache-Control', 'no-cache');
@@ -37,7 +34,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     console.error(err);
     res.status(500).json({
       statusCode: 500,
-      message: 'An error occurred while fetching proposal, please try again.',
+      message: 'An error occurred while fetching proposals, please try again.',
     });
   }
 }
