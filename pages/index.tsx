@@ -7,6 +7,7 @@ import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
+import { Page } from '../components/Page';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -19,7 +20,7 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
   );
 
   return (
-    <SWRConfig value={{ fallback }}>
+    <Page title="Home" fallback={fallback}>
       <div className="bg-gray-900 min-h-screen text-white font-sans">
         <header className="text-center">
           <div className="flex flex-col md:flex-row justify-center items-center">
@@ -54,13 +55,17 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           )}
         </div>
       </div>
-    </SWRConfig>
+    </Page>
   );
 }
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes('desc', 5, 0);
+  const votes = await subgraphService.getVotes({
+    order: 'desc',
+    limit: 5,
+    offset: 0,
+  });
   const block = await viem.getBlockNumber();
   const proposals = await subgraphService.getOpenProposals(
     block.toString(),

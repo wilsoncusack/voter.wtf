@@ -47,6 +47,21 @@ const GET_VOTES = gql`
   ${VOTE_FRAGMENT}
 `;
 
+const GET_VOTES_BY_VOTER = gql`
+  query GetVotes($order: String, $limit: Int, $offset: Int, $voterId: String) {
+    votes(
+      where: { voter: $voterId }
+      orderBy: blockNumber
+      orderDirection: $order
+      first: $limit
+      skip: $offset
+    ) {
+      ...VoteFragment
+    }
+  }
+  ${VOTE_FRAGMENT}
+`;
+
 const GET_VOTES_FOR_PROPOSAL = gql`
   query GetVotesForProposal(
     $proposalId: String!
@@ -90,6 +105,12 @@ const GET_OPEN_PROPOSALS = gql`
   }
 `;
 
+type FilterParams<T = object> = T & {
+  order: Order;
+  limit?: number;
+  offset?: number;
+};
+
 export class SubgraphService {
   client: ApolloClient<any>;
   constructor(uri: string) {
@@ -120,16 +141,17 @@ export class SubgraphService {
   }
 
   public async getVotes(
-    order: Order,
-    limit: number,
-    offset: number
+    params: FilterParams<{ voterId?: string }>
   ): Promise<Vote[]> {
+    const { order, limit = null, offset = 0, voterId } = params;
     const { data } = await this.client.query({
-      query: GET_VOTES,
+      query: params.voterId ? GET_VOTES_BY_VOTER : GET_VOTES,
       variables: {
+        ...(voterId && {
+          voterId: voterId.toLowerCase(),
+        }),
         order,
-        limit,
-        offset,
+        ...(limit && offset && { limit, offset }),
       },
     });
     return data?.votes || [];

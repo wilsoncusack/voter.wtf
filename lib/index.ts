@@ -1,5 +1,6 @@
 import { Vote } from './services/subgraph.service';
 import { supabase } from './supabaseClient';
+import { VoteWithLikes } from './types/VoteWithLikes';
 
 export const buildVotesWithLikes = async (votes: Vote[]) => {
   const voteIds = votes.map(vote => `${vote.proposal.id}-${vote.voter.id}`);

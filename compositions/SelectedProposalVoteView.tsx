@@ -24,8 +24,6 @@ export function SelectedProposalVoteView({
     return <div>Loading...</div>;
   }
 
-  console.log({ voteType });
-
   return (
     <>
       <MobileForAgainstToggle
