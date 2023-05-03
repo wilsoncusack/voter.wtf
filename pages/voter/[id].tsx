@@ -7,26 +7,34 @@ import { VoteList } from '../../components/VoteList';
 import { FallbackProp } from '../../lib/util/swr';
 import { useRouter } from 'next/router';
 import { viem } from '../../lib/wagmi';
+import { formatAddress } from '../../lib/util/format';
+import { Address } from 'wagmi';
 
 type VoterPageProps = {
-  address: string;
+  address: Address;
+  ensName: string | null;
   fallback: FallbackProp;
 };
 
 type VoterPageParams = {
-  id: string;
+  id: Address | string;
 };
 
-export default function Voter({ fallback, address }: VoterPageProps) {
+export default function Voter({ fallback, address, ensName }: VoterPageProps) {
   const { votes = [] } = useVotesForAddress(address);
-
   const { isFallback } = useRouter();
 
+  if (isFallback) {
+    return <Page title="Votes" />;
+  }
+
+  const name = ensName || formatAddress(address);
+
   return (
-    <Page title="Voter" fallback={fallback}>
+    <Page title={`${name} Votes`} fallback={fallback}>
       <section>
-        <h1>{address}</h1>
-        {isFallback ? <h5>loading</h5> : <VoteList votes={votes} />}
+        <h1>{name}</h1>
+        <VoteList votes={votes} />
       </section>
     </Page>
   );
@@ -44,18 +52,22 @@ export const getStaticProps: GetStaticProps<
   VoterPageParams
 > = async context => {
   const params = context.params;
-  let address = params.id;
+  let address: Address = params.id as Address;
+  let ensName;
   if (params.id.includes('.eth')) {
     address = await viem.getEnsAddress({
       name: params.id,
     });
+    ensName = params.id;
   } else {
     const isValid = isAddress(address);
     if (!isValid) {
       throw new Error('supplied id is not a valid address or ens name');
     }
-    // TODO - we check before call to avoid unhandled / badly messaged error
     address = getAddress(address);
+    ensName = await viem.getEnsName({
+      address,
+    });
   }
   const votes = await subgraphService.getVotes({
     order: 'desc',
@@ -65,6 +77,7 @@ export const getStaticProps: GetStaticProps<
   return {
     props: {
       address,
+      ensName,
       fallback: {
         [`/api/votes?voterId=${address}`]: votes,
       },
