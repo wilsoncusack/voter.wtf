@@ -19,6 +19,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like } from '../lib/types/VoteWithLikes';
+import Link from 'next/link';
 
 interface VoteReasonProps {
   votes: number;
@@ -103,7 +104,7 @@ export function VoteReasons({
   return (
     <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
       <div className="mr-4">
-        <a href={getEtherscanLink(address)} target="_blank" rel="noreferrer">
+        <Link href={`/voter/${encodeURIComponent(address)}`}>
           <div
             className={classNames('rounded-full w-16 h-16 overflow-hidden', {
               'avatar-image': !!ensAvatar,
@@ -118,7 +119,7 @@ export function VoteReasons({
               alt={`Ens Avatar for ${address}`}
             />
           </div>
-        </a>
+        </Link>
         <div>
           <div className={'flex mt-4 justify-center'}>
             {nounHolderLikes && nounHolderLikes.length > 0 && (
@@ -150,14 +151,7 @@ export function VoteReasons({
       </div>
       <div>
         <div className="text-gray-400">
-          <a
-            href={getEtherscanLink(address)}
-            className="hover:underline"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {ensName}
-          </a>{' '}
+          <Link href={`/voter/${encodeURIComponent(address)}`}>{ensName}</Link>{' '}
           voted{' '}
           <span
             className={classNames('font-semibold', {

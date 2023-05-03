@@ -5,6 +5,7 @@ import { getAddress, isAddress } from 'viem';
 import { useVotesForAddress } from '../../hooks/useVotesForAddress';
 import { VoteList } from '../../components/VoteList';
 import { FallbackProp } from '../../lib/util/swr';
+import { useRouter } from 'next/router';
 
 type VoterPageProps = {
   address: string;
@@ -17,11 +18,14 @@ type VoterPageParams = {
 
 export default function Voter({ fallback, address }: VoterPageProps) {
   const { votes = [] } = useVotesForAddress(address);
+
+  const { isFallback } = useRouter();
+
   return (
     <Page title="Voter" fallback={fallback}>
       <section>
         <h1>{address}</h1>
-        <VoteList votes={votes} />
+        {isFallback ? <h5>loading</h5> : <VoteList votes={votes} />}
       </section>
     </Page>
   );
@@ -30,7 +34,7 @@ export default function Voter({ fallback, address }: VoterPageProps) {
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: true,
   };
 }
 
