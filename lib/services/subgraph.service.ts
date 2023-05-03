@@ -18,6 +18,8 @@ export interface Vote {
     title: string;
   };
   blockNumber: number;
+  nounHolderLikes?: any;
+  nonNounHolderLikes?: any;
 }
 
 export interface Proposal {
@@ -29,9 +31,38 @@ export interface Proposal {
   forVotes: number;
   againstVotes: number;
   status: string;
+  votes?: Vote[];
 }
 
 export type Order = 'desc' | 'asc';
+
+const GET_PROPOSAL_BY_ID = gql`
+  query GetProposalById($id: String!) {
+    proposal(id: $id) {
+      id
+      title
+      description
+      forVotes
+      againstVotes
+      endBlock
+      votes {
+        id
+        support
+        supportDetailed
+        votes
+        reason
+        voter {
+          id
+        }
+        proposal {
+          id
+          title
+        }
+        blockNumber
+      }
+    }
+  }
+`;
 
 const GET_VOTES = gql`
   query GetVotes($order: String, $limit: Int, $offset: Int) {
@@ -117,6 +148,16 @@ export class SubgraphService {
       },
     });
     return data?.openProposals || [];
+  }
+
+  public async getProposalById(id: string): Promise<Proposal> {
+    const { data } = await this.client.query({
+      query: GET_PROPOSAL_BY_ID,
+      variables: {
+        id,
+      },
+    });
+    return data?.proposal;
   }
 
   public async getVotes(
