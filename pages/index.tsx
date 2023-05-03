@@ -6,7 +6,6 @@ import { SWRConfig } from 'swr';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
-import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 import { unstable_serialize } from 'swr/infinite';
 
 type HomePageProps = {
