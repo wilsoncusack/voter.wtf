@@ -6,6 +6,7 @@ import { useVotesForAddress } from '../../hooks/useVotesForAddress';
 import { VoteList } from '../../components/VoteList';
 import { FallbackProp } from '../../lib/util/swr';
 import { useRouter } from 'next/router';
+import { viem } from '../../lib/wagmi';
 
 type VoterPageProps = {
   address: string;
@@ -45,8 +46,9 @@ export const getStaticProps: GetStaticProps<
   const params = context.params;
   let address = params.id;
   if (params.id.includes('.eth')) {
-    // TODO - fetch ens name
-    throw new Error('Not Implemented');
+    address = await viem.getEnsAddress({
+      name: params.id,
+    });
   } else {
     const isValid = isAddress(address);
     if (!isValid) {
