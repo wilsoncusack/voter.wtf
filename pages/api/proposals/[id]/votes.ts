@@ -9,6 +9,8 @@ const QuerySchema = z.object({
   page: z.number().optional(),
   limit: z.number().optional(),
   order: z.enum(['desc', 'asc']).default('desc'),
+  // TODO - make orderBy blocknumber optional / mature available filters
+  orderBy: z.array(z.enum(['likes'])).default(['likes']),
 });
 
 type Query = z.infer<typeof QuerySchema>;
@@ -28,7 +30,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       data = await subgraphService.getVotesForProposal(query.id, query.order);
     }
     data = await buildVotesWithLikes(data);
-    data = await sortVotesByLikes(data);
+    if (query.orderBy.includes('likes')) {
+      data = sortVotesByLikes(data);
+    }
     res.setHeader('Cache-Control', 'no-cache');
     res.status(200).json(data);
   } catch (err) {
