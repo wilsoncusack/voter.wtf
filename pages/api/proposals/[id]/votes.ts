@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { subgraphService } from '../../../../lib/services/subgraph.service';
 import { restrictHandlerMethods } from '../../../../lib/util/api';
-import { buildVotesWithLikes } from '../../../../lib';
+import { buildVotesWithLikes, sortVotesByLikes } from '../../../../lib';
 
 const QuerySchema = z.object({
   id: z.string(),
@@ -28,6 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       data = await subgraphService.getVotesForProposal(query.id, query.order);
     }
     data = await buildVotesWithLikes(data);
+    data = await sortVotesByLikes(data);
     res.setHeader('Cache-Control', 'no-cache');
     res.status(200).json(data);
   } catch (err) {
