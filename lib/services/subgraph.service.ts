@@ -18,6 +18,8 @@ export interface Vote {
     title: string;
   };
   blockNumber: number;
+  nounHolderLikes?: any;
+  nonNounHolderLikes?: any;
 }
 
 export interface Proposal {
