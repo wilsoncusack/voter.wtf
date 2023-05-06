@@ -6,7 +6,11 @@ module.exports = {
   ],
   darkMode: 'media', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      borderWidth: {
+        tiny: '0.5px',
+      },
+    },
   },
   variants: {
     extend: {},
