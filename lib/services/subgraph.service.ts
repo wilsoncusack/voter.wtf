@@ -115,6 +115,7 @@ export class SubgraphService {
         limit,
         offset,
       },
+      fetchPolicy: 'network-only',
     });
     return data?.openProposals || [];
   }
@@ -131,6 +132,7 @@ export class SubgraphService {
         limit,
         offset,
       },
+      fetchPolicy: 'network-only',
     });
     return data?.votes || [];
   }
@@ -148,6 +150,7 @@ export class SubgraphService {
         order,
         ...(limit && offset && { limit, offset }),
       },
+      fetchPolicy: 'network-only',
     });
     return data?.votes || [];
   }
