@@ -57,7 +57,7 @@ export function VoteReasons({
   );
 
   const reason = useMemo(
-    () => (rawReason ? replaceURLsWithLink(rawReason) : 'no reason :('),
+    () => (rawReason ? replaceURLsWithLink(rawReason) : ''),
     [rawReason]
   );
 
@@ -101,8 +101,8 @@ export function VoteReasons({
   if (!isMounted) return null;
 
   return (
-    <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
-      <div className="mr-4">
+    <div className={`flex mb-4 p-4 ${reason != '' ? 'bg-gray-800' : ''} rounded-lg shadow-md`}>
+      {reason != '' && <div className="mr-4">
         <a href={getEtherscanLink(address)} target="_blank" rel="noreferrer">
           <div
             className={classNames('rounded-full w-16 h-16 overflow-hidden', {
@@ -148,6 +148,7 @@ export function VoteReasons({
           )}
         </div>
       </div>
+}
       <div>
         <div className="text-gray-400">
           <a
@@ -197,7 +198,7 @@ export function VoteReasons({
           timestamp={timestamp}
           as="div"
         />
-        <div className={'flex justify-end'}>
+        {reason != '' && <div className={'flex justify-end'}>
           <button
             onClick={handleLikeClick}
             disabled={!signer || liked}
@@ -218,7 +219,9 @@ export function VoteReasons({
               <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
             )}
           </button>
+        
         </div>
+        }
       </div>
     </div>
   );
