@@ -40,7 +40,7 @@ export function SelectedProposalVoteView({
           <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
             <span className="text-green-400">For</span>
           </h2>
-          <div className="overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
+          <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
             <VoteList votes={forVotes} />
           </div>
         </div>
@@ -53,7 +53,7 @@ export function SelectedProposalVoteView({
           <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
             <span className="text-red-400">Against</span>
           </h2>
-          <div className="overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
+          <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
             <VoteList votes={againstVotes} />
           </div>
         </div>
