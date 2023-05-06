@@ -26,13 +26,14 @@ const sortOnLikes = (a: VoteWithLikes, b: VoteWithLikes) => {
   if (a.reason && !b.reason) return -1;
   if (!a.reason && b.reason) return 1;
 
-  let likeDiff =  b.nonNounHolderLikes.length +
-  b.nounHolderLikes.length -
-  (a.nonNounHolderLikes.length + a.nounHolderLikes.length);
+  const likeDiff =
+    b.nonNounHolderLikes.length +
+    b.nounHolderLikes.length -
+    (a.nonNounHolderLikes.length + a.nounHolderLikes.length);
 
   if (likeDiff === 0) {
     return b.votes - a.votes;
   }
-  
+
   return likeDiff;
 };

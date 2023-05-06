@@ -60,5 +60,4 @@ export function SelectedProposalVoteView({
       </div>
     </>
   );
-  
 }
