@@ -41,9 +41,11 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
             setSelectedProposal={setSelectedProposal}
           />
         </div>
-        <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-          {selectedProposal ? selectedProposal.title : 'All'} Votes
-        </h1>
+        {!selectedProposal && (
+          <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+            Vote Timeline
+          </h1>
+        )}
         <div className="flex flex-wrap justify-center m-4">
           {selectedProposal ? (
             <SelectedProposalVoteView selectedProposal={selectedProposal} />

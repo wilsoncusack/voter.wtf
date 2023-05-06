@@ -23,9 +23,17 @@ export function useVotesForProposal(id: string) {
 
 const sortOnLikes = (a: VoteWithLikes, b: VoteWithLikes) => {
   if (!a.nounHolderLikes || !b.nounHolderLikes) return 0;
-  return (
+  if (a.reason && !b.reason) return -1;
+  if (!a.reason && b.reason) return 1;
+
+  const likeDiff =
     b.nonNounHolderLikes.length +
     b.nounHolderLikes.length -
-    (a.nonNounHolderLikes.length + a.nounHolderLikes.length)
-  );
+    (a.nonNounHolderLikes.length + a.nounHolderLikes.length);
+
+  if (likeDiff === 0) {
+    return b.votes - a.votes;
+  }
+
+  return likeDiff;
 };

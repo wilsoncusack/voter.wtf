@@ -57,7 +57,7 @@ export function VoteReasons({
   );
 
   const reason = useMemo(
-    () => (rawReason ? replaceURLsWithLink(rawReason) : 'no reason :('),
+    () => (rawReason ? replaceURLsWithLink(rawReason) : ''),
     [rawReason]
   );
 
@@ -101,53 +101,64 @@ export function VoteReasons({
   if (!isMounted) return null;
 
   return (
-    <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
-      <div className="mr-4">
-        <a href={getEtherscanLink(address)} target="_blank" rel="noreferrer">
-          <div
-            className={classNames('rounded-full w-16 h-16 overflow-hidden', {
-              'avatar-image': !!ensAvatar,
-              'bg-gray-700': !ensAvatar,
-            })}
-          >
-            <img
-              className={classNames('w-16 h-16', {
-                hidden: !ensAvatar,
+    <div
+      className={`flex mb-4 p-4 ${
+        reason != '' ? 'bg-gray-800' : ''
+      } rounded-lg shadow-md`}
+    >
+      {reason != '' && (
+        <div className="mr-4">
+          <a href={getEtherscanLink(address)} target="_blank" rel="noreferrer">
+            <div
+              className={classNames('rounded-full w-16 h-16 overflow-hidden', {
+                'avatar-image': !!ensAvatar,
+                'bg-gray-700': !ensAvatar,
               })}
-              src={ensAvatar}
-              alt={`Ens Avatar for ${address}`}
-            />
-          </div>
-        </a>
-        <div>
-          <div className={'flex mt-4 justify-center'}>
-            {nounHolderLikes && nounHolderLikes.length > 0 && (
+            >
+              <img
+                className={classNames('w-16 h-16', {
+                  hidden: !ensAvatar,
+                })}
+                src={ensAvatar}
+                alt={`Ens Avatar for ${address}`}
+              />
+            </div>
+          </a>
+          <div>
+            <div className={'flex mt-4 justify-center'}>
+              {nounHolderLikes && nounHolderLikes.length > 0 && (
+                <>
+                  <Image
+                    height={30}
+                    width={30}
+                    alt="test"
+                    src="/nounHeart.svg"
+                  />
+                  <p className="text-gray-500 font-semibold">
+                    {' '}
+                    {nounHolderLikes.length}{' '}
+                  </p>
+                </>
+              )}
+            </div>
+            {nonNounHolderLikes && nonNounHolderLikes.length > 0 && (
               <>
-                <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
-                <p className="text-gray-500 font-semibold">
-                  {' '}
-                  {nounHolderLikes.length}{' '}
-                </p>
+                <div className={'flex justify-center'}>
+                  <SolidHeartIcon
+                    height={25}
+                    width={25}
+                    className="ml-1 text-gray-500"
+                  />
+                  <p className="ml-1 text-gray-500 font-semibold">
+                    {' '}
+                    {nonNounHolderLikes.length}{' '}
+                  </p>
+                </div>
               </>
             )}
           </div>
-          {nonNounHolderLikes && nonNounHolderLikes.length > 0 && (
-            <>
-              <div className={'flex justify-center'}>
-                <SolidHeartIcon
-                  height={25}
-                  width={25}
-                  className="ml-1 text-gray-500"
-                />
-                <p className="ml-1 text-gray-500 font-semibold">
-                  {' '}
-                  {nonNounHolderLikes.length}{' '}
-                </p>
-              </div>
-            </>
-          )}
         </div>
-      </div>
+      )}
       <div>
         <div className="text-gray-400">
           <a
@@ -197,28 +208,30 @@ export function VoteReasons({
           timestamp={timestamp}
           as="div"
         />
-        <div className={'flex justify-end'}>
-          <button
-            onClick={handleLikeClick}
-            disabled={!signer || liked}
-            className={`p-2 ${
-              liked
-                ? ''
-                : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
-            }`}
-          >
-            {liked ? (
-              <Image
-                height={30}
-                width={30}
-                alt="test"
-                src="/coloredNounHeart.svg"
-              />
-            ) : (
-              <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
-            )}
-          </button>
-        </div>
+        {reason != '' && (
+          <div className={'flex justify-end'}>
+            <button
+              onClick={handleLikeClick}
+              disabled={!signer || liked}
+              className={`p-2 ${
+                liked
+                  ? ''
+                  : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
+              }`}
+            >
+              {liked ? (
+                <Image
+                  height={30}
+                  width={30}
+                  alt="test"
+                  src="/coloredNounHeart.svg"
+                />
+              ) : (
+                <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
