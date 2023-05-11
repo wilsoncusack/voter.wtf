@@ -14,38 +14,48 @@ type HomePageProps = {
 };
 
 export default function Home({ openProposals, fallback }: HomePageProps) {
+  const [propososals, setProposals] = useState<Proposal[]>(openProposals);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
 
+  const toggleProposalType = async (type: 'active' | 'all') => {
+    let proposals;
+    if (type == 'active') {
+      const block = 0
+  proposals = await subgraphService.getOpenProposals(
+    block.toString(),
+    'desc',
+    10,
+    0
+  );
+
+    } else {
+      const block = await viem.getBlockNumber();
+  proposals = await subgraphService.getOpenProposals(
+    block.toString(),
+    'asc',
+    10,
+    0
+  );
+  setProposals(proposals);
+    }
+  }
+
   return (
     <SWRConfig value={{ fallback }}>
-      <div className="bg-gray-900 min-h-screen text-white font-sans">
-        <header className="text-center">
-          <div className="flex flex-col md:flex-row justify-center items-center">
-            <img
-              src="noun652head.svg"
-              alt="Noun652 Head"
-              className="w-auto h-32 md:order-2"
-            />
-            <h1 className="neon mb-4 md:mb-0 md:order-1">Vote with Reason</h1>
-          </div>
-        </header>
-        <div>
-          <h1 className="text-3xl font-semibold  mb-4 px-4">
-            Active Proposals
-          </h1>
+      <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
+        <div className="">
           <ProposalContainer
-            proposals={openProposals}
+            proposals={propososals}
             selectedProposal={selectedProposal}
             setSelectedProposal={setSelectedProposal}
           />
         </div>
-        {!selectedProposal && (
-          <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-            Vote Timeline
+        <div>
+        <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+            {selectedProposal ? `${selectedProposal.id}: ${selectedProposal.title}` : 'Vote Timeline'}
           </h1>
-        )}
         <div className="flex flex-wrap justify-center m-4">
           {selectedProposal ? (
             <SelectedProposalVoteView selectedProposal={selectedProposal} />
@@ -55,6 +65,7 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
             </div>
           )}
         </div>
+        </div>
       </div>
     </SWRConfig>
   );
@@ -62,7 +73,7 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes('desc', 5, 0);
+  const votes = await subgraphService.getVotes('desc', 10, 0);
   const block = await viem.getBlockNumber();
   const proposals = await subgraphService.getOpenProposals(
     block.toString(),

@@ -102,7 +102,7 @@ export function VoteReasons({
 
   return (
     <div
-      className={`flex p-4 m-4 ${
+      className={`flex p-4 mb-2 ${
         reason != '' ? 'bg-gray-800' : ''
       } rounded-lg shadow-md`}
     >

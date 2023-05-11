@@ -1,12 +1,12 @@
 import { Proposal } from '../lib/services/subgraph.service';
 
-interface ProposalCardProps {
+interface MobileProposalCardProps {
   proposal: Proposal;
   selectedProposal: Proposal | null;
   setSelectedProposal: (proposal: Proposal | null) => void;
 }
 
-export const ProposalCard: React.FC<ProposalCardProps> = ({
+export const MobileProposalCard: React.FC<MobileProposalCardProps> = ({
   proposal,
   selectedProposal,
   setSelectedProposal,
