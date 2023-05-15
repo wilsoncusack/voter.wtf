@@ -48,7 +48,7 @@ export const DesktopProposalCard: React.FC<DesktopProposalCardProps> = ({
             <span className="">{proposal.againstVotes} AGAINST</span>
           </p>
           <p className="text-gray-400">
-            Quorum {Math.floor(proposal.dynamicQuorum)}
+            Threshold {Math.floor(proposal.dynamicQuorum)}
           </p>
         </div>
       </div>
