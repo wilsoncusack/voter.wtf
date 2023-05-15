@@ -162,7 +162,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         </div>
       )}
       <div>
-        <div className="text-gray-400">
+        <div className="text-gray-300">
           <a
             href={getEtherscanLink(vote.voter.id as Address)}
             className="hover:underline"
@@ -170,8 +170,8 @@ export function VoteReasons({ vote }: VoteReasonProps) {
             rel="noreferrer"
           >
             {ensName}
-          </a>{' '}
-          voted{' '}
+          </a>
+          {': '}
           <span
             className={classNames('font-semibold', {
               'text-green-400': vote.supportDetailed == 1,
@@ -180,24 +180,23 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
             })}
           >
+            {' '}
+            <span className=" w-5 rounded-full ">{vote.votes} </span>
             {vote.supportDetailed == 1
               ? 'FOR'
               : vote.supportDetailed == 0
               ? 'AGAINST'
               : 'ABSTAIN'}{' '}
           </span>
-          <span>
-            <a
-              href={getNounsLink(vote.proposal.id)}
-              className="hover:underline font-semibold"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Proposal {vote.proposal.id}: {vote.proposal.title}{' '}
-            </a>
-            with {vote.votes} {`vote${vote.votes > 1 ? 's' : ''}`}
-          </span>
         </div>
+        <a
+          href={getNounsLink(vote.proposal.id)}
+          className="hover:underline text-gray-400 text-sm line-clamp-1"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Prop {vote.proposal.id}: {vote.proposal.title}{' '}
+        </a>
         <div
           className={classNames(
             `whitespace-pre-line break-words overflow-wrap mb-2 mt-2`,
