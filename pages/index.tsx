@@ -8,6 +8,8 @@ import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
 import { Proposal } from '../types/Proposal';
+import axios from 'axios';
+import { getProposals } from '../lib/proposals';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -20,28 +22,37 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
     null
   );
 
-  // const toggleProposalType = async (type: 'active' | 'all') => {
-  //   let proposals;
-  //   if (type == 'active') {
-  //     const block = 0
-  // proposals = await subgraphService.getProposals(
-  //   block.toString(),
-  //   'desc',
-  //   10,
-  //   0
-  // );
-
-  //   } else {
-  //     const block = await viem.getBlockNumber();
-  // proposals = await subgraphService.getProposals(
-  //   block.toString(),
-  //   'asc',
-  //   10,
-  //   0
-  // );
-  // setProposals(proposals);
-  //   }
-  // }
+  const toggleProposalsType = async (type: 'active' | 'all') => {
+    console.log(type);
+    let proposals;
+    if (type == 'active') {
+      const block = await viem.getBlockNumber();
+      proposals = await axios.get('/api/proposals', {
+        params: {
+          currentBlock: block.toString(),
+          startBlockLimit: block.toString(),
+          endBlockLimit: block.toString(),
+          order: 'asc',
+          limit: 10,
+          offset: 0,
+        },
+      });
+    } else {
+      const block = await viem.getBlockNumber();
+      proposals = await axios.get('/api/proposals', {
+        params: {
+          currentBlock: block.toString(),
+          startBlockLimit: (block + BigInt(100000)).toString(),
+          endBlockLimit: 0,
+          order: 'desc',
+          limit: 400,
+          offset: 0,
+        },
+      });
+      console.log(proposals);
+    }
+    setProposals(proposals.data);
+  };
 
   return (
     <SWRConfig value={{ fallback }}>
@@ -51,21 +62,24 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
             proposals={propososals}
             selectedProposal={selectedProposal}
             setSelectedProposal={setSelectedProposal}
+            toggleProposalsType={toggleProposalsType}
           />
         </div>
         <div>
-        <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-            {selectedProposal ? `${selectedProposal.id}: ${selectedProposal.title}` : 'Vote Timeline'}
+          <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+            {selectedProposal
+              ? `${selectedProposal.id}: ${selectedProposal.title}`
+              : 'Vote Timeline'}
           </h1>
-        <div className="flex flex-wrap justify-center m-4">
-          {selectedProposal ? (
-            <SelectedProposalVoteView selectedProposal={selectedProposal} />
-          ) : (
-            <div className="flex justify-center items-center">
-              <PaginatedVoteList />
-            </div>
-          )}
-        </div>
+          <div className="flex flex-wrap justify-center m-4">
+            {selectedProposal ? (
+              <SelectedProposalVoteView selectedProposal={selectedProposal} />
+            ) : (
+              <div className="flex justify-center items-center">
+                <PaginatedVoteList />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </SWRConfig>
@@ -76,7 +90,8 @@ export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
   const votes = await subgraphService.getVotes('desc', 10, 0);
   const block = await viem.getBlockNumber();
-  const proposals = await subgraphService.getProposals(
+  const proposals = await getProposals(
+    block,
     block.toString(),
     block.toString(),
     'asc',

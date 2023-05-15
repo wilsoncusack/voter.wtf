@@ -3,7 +3,6 @@ import { SUBGRAPH_URL } from '../constants';
 import { VOTE_FRAGMENT } from './fragments';
 import { Vote, Proposal } from '../../types/generated/nounsSubgraph';
 
-
 export type Order = 'desc' | 'asc';
 
 const GET_VOTES = gql`
@@ -143,4 +142,3 @@ export class SubgraphService {
 }
 
 export const subgraphService = new SubgraphService(SUBGRAPH_URL);
-

@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Order, subgraphService } from '../../../lib/services/subgraph.service';
-import { Proposal as GqlProposal } from '../../../types/generated/nounsSubgraph';
-import { Proposal } from '../../../types/Proposal';
-import { computeProposalQuorumVotes, deriveProposalStatus } from '../../../lib';
+import { getProposals } from '../../../lib/proposals';
+import { Order } from '../../../lib/services/subgraph.service';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,26 +14,18 @@ export default async function handler(
     const limit = Number(req.query.limit);
     const offset = Number(req.query.offset);
 
-    const gqlProposals = await subgraphService.getProposals(
-      startBlockLimit,
-      endBlockLimit,
-      order,
-      limit,
-      offset
-    );
-
-    const proposals = gqlProposals.map((gqlProposal: GqlProposal) : Proposal => {
-        const dynamicQuorum = computeProposalQuorumVotes(gqlProposal);
-        const status = deriveProposalStatus(currentBlock, dynamicQuorum, gqlProposal);
-      
-        return {
-          ...gqlProposal,
-          status,
-          dynamicQuorum
-        };
-      });
-
-    res.status(200).json(proposals);
+    res
+      .status(200)
+      .json(
+        await getProposals(
+          currentBlock,
+          startBlockLimit,
+          endBlockLimit,
+          order,
+          limit,
+          offset
+        )
+      );
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get proposals' });

@@ -21,21 +21,23 @@ import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like, Vote } from '../types/Vote';
 
 interface VoteReasonProps {
-  vote: Vote
+  vote: Vote;
 }
 
-export function VoteReasons({
-  vote
-}: VoteReasonProps) {
+export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
-  const { data: rawEnsName } = useEnsName({ address: (vote.voter.id as Address) });
-  const { data: ensAvatar } = useEnsAvatar({ address: (vote.voter.id as Address)  });
+  const { data: rawEnsName } = useEnsName({
+    address: vote.voter.id as Address,
+  });
+  const { data: ensAvatar } = useEnsAvatar({
+    address: vote.voter.id as Address,
+  });
   const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
   const [liked, setLiked] = useState(false);
-  const [voterLikes, setVoterLikes] = useState<Like[]>([])
-  const [nonVoterLikes, setNonVoterLikes] = useState<Like[]>([])
+  const [voterLikes, setVoterLikes] = useState<Like[]>([]);
+  const [nonVoterLikes, setNonVoterLikes] = useState<Like[]>([]);
 
   const ensName = useMemo(
     () => (rawEnsName ? rawEnsName : vote.voter.id.slice(0, 8)),
@@ -76,14 +78,14 @@ export function VoteReasons({
   useEffect(() => {
     if (!account || !vote.likes) return;
 
-    const vLikes = []
-    const nVLikes = []
+    const vLikes = [];
+    const nVLikes = [];
 
     for (const like of vote.likes) {
       if (like.is_nouns_voter) {
-        vLikes.push(like)
+        vLikes.push(like);
       } else {
-        nVLikes.push(like)
+        nVLikes.push(like);
       }
       if (like.user === account) {
         setLiked(true);
@@ -104,7 +106,11 @@ export function VoteReasons({
     >
       {reason != '' && (
         <div className="mr-4">
-          <a href={getEtherscanLink(vote.voter.id as Address)} target="_blank" rel="noreferrer">
+          <a
+            href={getEtherscanLink(vote.voter.id as Address)}
+            target="_blank"
+            rel="noreferrer"
+          >
             <div
               className={classNames('rounded-full w-12 h-12 overflow-hidden', {
                 'avatar-image': !!ensAvatar,
@@ -170,10 +176,15 @@ export function VoteReasons({
             className={classNames('font-semibold', {
               'text-green-400': vote.supportDetailed == 1,
               'text-red-400': vote.supportDetailed == 0,
-              'text-gray-400': vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
+              'text-gray-400':
+                vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
             })}
           >
-            {vote.supportDetailed == 1 ? 'FOR' : vote.supportDetailed == 0 ? 'AGAINST' : 'ABSTAIN'}{' '}
+            {vote.supportDetailed == 1
+              ? 'FOR'
+              : vote.supportDetailed == 0
+              ? 'AGAINST'
+              : 'ABSTAIN'}{' '}
           </span>
           <span>
             <a

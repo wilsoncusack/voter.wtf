@@ -1,8 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -32,7 +38,6 @@ export type Account = {
   /** Total amount of Nouns ever held by this address expressed in the smallest unit of the Nouns ERC721 Token */
   totalTokensHeldRaw: Scalars['BigInt'];
 };
-
 
 export type AccountNounsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -128,7 +133,7 @@ export enum Account_OrderBy {
   TokenBalance = 'tokenBalance',
   TokenBalanceRaw = 'tokenBalanceRaw',
   TotalTokensHeld = 'totalTokensHeld',
-  TotalTokensHeldRaw = 'totalTokensHeldRaw'
+  TotalTokensHeldRaw = 'totalTokensHeldRaw',
 }
 
 export type Auction = {
@@ -150,7 +155,6 @@ export type Auction = {
   /** The time that the auction started */
   startTime: Scalars['BigInt'];
 };
-
 
 export type AuctionBidsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -260,7 +264,7 @@ export enum Auction_OrderBy {
   Noun = 'noun',
   NounId = 'noun__id',
   Settled = 'settled',
-  StartTime = 'startTime'
+  StartTime = 'startTime',
 }
 
 export type Bid = {
@@ -412,7 +416,7 @@ export enum Bid_OrderBy {
   Id = 'id',
   Noun = 'noun',
   NounId = 'noun__id',
-  TxIndex = 'txIndex'
+  TxIndex = 'txIndex',
 }
 
 export type BlockChangedFilter = {
@@ -444,7 +448,6 @@ export type Delegate = {
   votes: Array<Vote>;
 };
 
-
 export type DelegateNounsRepresentedArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Noun_OrderBy>;
@@ -452,7 +455,6 @@ export type DelegateNounsRepresentedArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Noun_Filter>;
 };
-
 
 export type DelegateProposalsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -462,7 +464,6 @@ export type DelegateProposalsArgs = {
   where?: InputMaybe<Proposal_Filter>;
 };
 
-
 export type DelegateTokenHoldersRepresentedArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Account_OrderBy>;
@@ -470,7 +471,6 @@ export type DelegateTokenHoldersRepresentedArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Account_Filter>;
 };
-
 
 export type DelegateVotesArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -537,7 +537,7 @@ export enum Delegate_OrderBy {
   Proposals = 'proposals',
   TokenHoldersRepresented = 'tokenHoldersRepresented',
   TokenHoldersRepresentedAmount = 'tokenHoldersRepresentedAmount',
-  Votes = 'votes'
+  Votes = 'votes',
 }
 
 export type DelegationEvent = {
@@ -665,7 +665,7 @@ export enum DelegationEvent_OrderBy {
   PreviousDelegateDelegatedVotes = 'previousDelegate__delegatedVotes',
   PreviousDelegateDelegatedVotesRaw = 'previousDelegate__delegatedVotesRaw',
   PreviousDelegateId = 'previousDelegate__id',
-  PreviousDelegateTokenHoldersRepresentedAmount = 'previousDelegate__tokenHoldersRepresentedAmount'
+  PreviousDelegateTokenHoldersRepresentedAmount = 'previousDelegate__tokenHoldersRepresentedAmount',
 }
 
 export type DynamicQuorumParams = {
@@ -734,7 +734,7 @@ export enum DynamicQuorumParams_OrderBy {
   Id = 'id',
   MaxQuorumVotesBps = 'maxQuorumVotesBPS',
   MinQuorumVotesBps = 'minQuorumVotesBPS',
-  QuorumCoefficient = 'quorumCoefficient'
+  QuorumCoefficient = 'quorumCoefficient',
 }
 
 export type Governance = {
@@ -847,7 +847,7 @@ export enum Governance_OrderBy {
   Proposals = 'proposals',
   ProposalsQueued = 'proposalsQueued',
   TotalDelegates = 'totalDelegates',
-  TotalTokenHolders = 'totalTokenHolders'
+  TotalTokenHolders = 'totalTokenHolders',
 }
 
 export type Noun = {
@@ -861,7 +861,6 @@ export type Noun = {
   /** Historical votes for the Noun */
   votes: Array<Vote>;
 };
-
 
 export type NounVotesArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -944,13 +943,13 @@ export enum Noun_OrderBy {
   SeedGlasses = 'seed__glasses',
   SeedHead = 'seed__head',
   SeedId = 'seed__id',
-  Votes = 'votes'
+  Votes = 'votes',
 }
 
 /** Defines the order direction, either ascending or descending */
 export enum OrderDirection {
   Asc = 'asc',
-  Desc = 'desc'
+  Desc = 'desc',
 }
 
 export type Proposal = {
@@ -1007,7 +1006,6 @@ export type Proposal = {
   votes: Array<Vote>;
 };
 
-
 export type ProposalVotesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Vote_OrderBy>;
@@ -1022,7 +1020,7 @@ export enum ProposalStatus {
   Executed = 'EXECUTED',
   Pending = 'PENDING',
   Queued = 'QUEUED',
-  Vetoed = 'VETOED'
+  Vetoed = 'VETOED',
 }
 
 export type Proposal_Filter = {
@@ -1281,7 +1279,7 @@ export enum Proposal_OrderBy {
   Title = 'title',
   TotalSupply = 'totalSupply',
   Values = 'values',
-  Votes = 'votes'
+  Votes = 'votes',
 }
 
 export type Query = {
@@ -1313,18 +1311,15 @@ export type Query = {
   votes: Array<Vote>;
 };
 
-
 export type Query_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
-
 
 export type QueryAccountArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryAccountsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1336,13 +1331,11 @@ export type QueryAccountsArgs = {
   where?: InputMaybe<Account_Filter>;
 };
 
-
 export type QueryAuctionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryAuctionsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1354,13 +1347,11 @@ export type QueryAuctionsArgs = {
   where?: InputMaybe<Auction_Filter>;
 };
 
-
 export type QueryBidArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryBidsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1372,13 +1363,11 @@ export type QueryBidsArgs = {
   where?: InputMaybe<Bid_Filter>;
 };
 
-
 export type QueryDelegateArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryDelegatesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1390,13 +1379,11 @@ export type QueryDelegatesArgs = {
   where?: InputMaybe<Delegate_Filter>;
 };
 
-
 export type QueryDelegationEventArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryDelegationEventsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1408,7 +1395,6 @@ export type QueryDelegationEventsArgs = {
   where?: InputMaybe<DelegationEvent_Filter>;
 };
 
-
 export type QueryDynamicQuorumParamsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1419,13 +1405,11 @@ export type QueryDynamicQuorumParamsArgs = {
   where?: InputMaybe<DynamicQuorumParams_Filter>;
 };
 
-
 export type QueryGovernanceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryGovernancesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1437,13 +1421,11 @@ export type QueryGovernancesArgs = {
   where?: InputMaybe<Governance_Filter>;
 };
 
-
 export type QueryNounArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryNounsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1455,13 +1437,11 @@ export type QueryNounsArgs = {
   where?: InputMaybe<Noun_Filter>;
 };
 
-
 export type QueryProposalArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryProposalsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1473,13 +1453,11 @@ export type QueryProposalsArgs = {
   where?: InputMaybe<Proposal_Filter>;
 };
 
-
 export type QuerySeedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QuerySeedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1491,13 +1469,11 @@ export type QuerySeedsArgs = {
   where?: InputMaybe<Seed_Filter>;
 };
 
-
 export type QueryTransferEventArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryTransferEventsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1509,13 +1485,11 @@ export type QueryTransferEventsArgs = {
   where?: InputMaybe<TransferEvent_Filter>;
 };
 
-
 export type QueryVoteArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type QueryVotesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1604,7 +1578,7 @@ export enum Seed_OrderBy {
   Body = 'body',
   Glasses = 'glasses',
   Head = 'head',
-  Id = 'id'
+  Id = 'id',
 }
 
 export type Subscription = {
@@ -1636,18 +1610,15 @@ export type Subscription = {
   votes: Array<Vote>;
 };
 
-
 export type Subscription_MetaArgs = {
   block?: InputMaybe<Block_Height>;
 };
-
 
 export type SubscriptionAccountArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionAccountsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1659,13 +1630,11 @@ export type SubscriptionAccountsArgs = {
   where?: InputMaybe<Account_Filter>;
 };
 
-
 export type SubscriptionAuctionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionAuctionsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1677,13 +1646,11 @@ export type SubscriptionAuctionsArgs = {
   where?: InputMaybe<Auction_Filter>;
 };
 
-
 export type SubscriptionBidArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionBidsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1695,13 +1662,11 @@ export type SubscriptionBidsArgs = {
   where?: InputMaybe<Bid_Filter>;
 };
 
-
 export type SubscriptionDelegateArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionDelegatesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1713,13 +1678,11 @@ export type SubscriptionDelegatesArgs = {
   where?: InputMaybe<Delegate_Filter>;
 };
 
-
 export type SubscriptionDelegationEventArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionDelegationEventsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1731,7 +1694,6 @@ export type SubscriptionDelegationEventsArgs = {
   where?: InputMaybe<DelegationEvent_Filter>;
 };
 
-
 export type SubscriptionDynamicQuorumParamsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
@@ -1742,13 +1704,11 @@ export type SubscriptionDynamicQuorumParamsArgs = {
   where?: InputMaybe<DynamicQuorumParams_Filter>;
 };
 
-
 export type SubscriptionGovernanceArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionGovernancesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1760,13 +1720,11 @@ export type SubscriptionGovernancesArgs = {
   where?: InputMaybe<Governance_Filter>;
 };
 
-
 export type SubscriptionNounArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionNounsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1778,13 +1736,11 @@ export type SubscriptionNounsArgs = {
   where?: InputMaybe<Noun_Filter>;
 };
 
-
 export type SubscriptionProposalArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionProposalsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1796,13 +1752,11 @@ export type SubscriptionProposalsArgs = {
   where?: InputMaybe<Proposal_Filter>;
 };
 
-
 export type SubscriptionSeedArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionSeedsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1814,13 +1768,11 @@ export type SubscriptionSeedsArgs = {
   where?: InputMaybe<Seed_Filter>;
 };
 
-
 export type SubscriptionTransferEventArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionTransferEventsArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1832,13 +1784,11 @@ export type SubscriptionTransferEventsArgs = {
   where?: InputMaybe<TransferEvent_Filter>;
 };
 
-
 export type SubscriptionVoteArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
-
 
 export type SubscriptionVotesArgs = {
   block?: InputMaybe<Block_Height>;
@@ -1977,7 +1927,7 @@ export enum TransferEvent_OrderBy {
   PreviousHolderTokenBalance = 'previousHolder__tokenBalance',
   PreviousHolderTokenBalanceRaw = 'previousHolder__tokenBalanceRaw',
   PreviousHolderTotalTokensHeld = 'previousHolder__totalTokensHeld',
-  PreviousHolderTotalTokensHeldRaw = 'previousHolder__totalTokensHeldRaw'
+  PreviousHolderTotalTokensHeldRaw = 'previousHolder__totalTokensHeldRaw',
 }
 
 export type Vote = {
@@ -2003,7 +1953,6 @@ export type Vote = {
   /** Amount of votes in favour or against expressed in the smallest unit of the Nouns ERC721 Token */
   votesRaw: Scalars['BigInt'];
 };
-
 
 export type VoteNounsArgs = {
   first?: InputMaybe<Scalars['Int']>;
@@ -2166,7 +2115,7 @@ export enum Vote_OrderBy {
   VoterId = 'voter__id',
   VoterTokenHoldersRepresentedAmount = 'voter__tokenHoldersRepresentedAmount',
   Votes = 'votes',
-  VotesRaw = 'votesRaw'
+  VotesRaw = 'votesRaw',
 }
 
 export type _Block_ = {
@@ -2200,10 +2149,20 @@ export enum _SubgraphErrorPolicy_ {
   /** Data will be returned even if the subgraph has indexing errors */
   Allow = 'allow',
   /** If the subgraph has indexing errors, data will be omitted. The default. */
-  Deny = 'deny'
+  Deny = 'deny',
 }
 
-export type VoteFragmentFragment = { __typename?: 'Vote', id: string, support: boolean, supportDetailed: number, votes: any, reason?: string | null, blockNumber: any, voter: { __typename?: 'Delegate', id: string }, proposal: { __typename?: 'Proposal', id: string, title: string } };
+export type VoteFragmentFragment = {
+  __typename?: 'Vote';
+  id: string;
+  support: boolean;
+  supportDetailed: number;
+  votes: any;
+  reason?: string | null;
+  blockNumber: any;
+  voter: { __typename?: 'Delegate'; id: string };
+  proposal: { __typename?: 'Proposal'; id: string; title: string };
+};
 
 export type GetVotesQueryVariables = Exact<{
   order?: InputMaybe<OrderDirection>;
@@ -2211,8 +2170,20 @@ export type GetVotesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
 }>;
 
-
-export type GetVotesQuery = { __typename?: 'Query', votes: Array<{ __typename?: 'Vote', id: string, support: boolean, supportDetailed: number, votes: any, reason?: string | null, blockNumber: any, voter: { __typename?: 'Delegate', id: string }, proposal: { __typename?: 'Proposal', id: string, title: string } }> };
+export type GetVotesQuery = {
+  __typename?: 'Query';
+  votes: Array<{
+    __typename?: 'Vote';
+    id: string;
+    support: boolean;
+    supportDetailed: number;
+    votes: any;
+    reason?: string | null;
+    blockNumber: any;
+    voter: { __typename?: 'Delegate'; id: string };
+    proposal: { __typename?: 'Proposal'; id: string; title: string };
+  }>;
+};
 
 export type GetVotesForProposalQueryVariables = Exact<{
   proposalId: Scalars['String'];
@@ -2221,8 +2192,20 @@ export type GetVotesForProposalQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
 }>;
 
-
-export type GetVotesForProposalQuery = { __typename?: 'Query', votes: Array<{ __typename?: 'Vote', id: string, support: boolean, supportDetailed: number, votes: any, reason?: string | null, blockNumber: any, voter: { __typename?: 'Delegate', id: string }, proposal: { __typename?: 'Proposal', id: string, title: string } }> };
+export type GetVotesForProposalQuery = {
+  __typename?: 'Query';
+  votes: Array<{
+    __typename?: 'Vote';
+    id: string;
+    support: boolean;
+    supportDetailed: number;
+    votes: any;
+    reason?: string | null;
+    blockNumber: any;
+    voter: { __typename?: 'Delegate'; id: string };
+    proposal: { __typename?: 'Proposal'; id: string; title: string };
+  }>;
+};
 
 export type GetProposalsQueryVariables = Exact<{
   startBlockLimit?: InputMaybe<Scalars['BigInt']>;
@@ -2232,5 +2215,27 @@ export type GetProposalsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
 }>;
 
-
-export type GetProposalsQuery = { __typename?: 'Query', proposals: Array<{ __typename?: 'Proposal', id: string, title: string, description: string, forVotes: any, againstVotes: any, abstainVotes: any, totalSupply: any, minQuorumVotesBPS: number, maxQuorumVotesBPS: number, quorumCoefficient: any, createdTimestamp: any, createdBlock: any, startBlock: any, endBlock: any, proposalThreshold: any, quorumVotes: any, status: ProposalStatus, executionETA?: any | null }> };
+export type GetProposalsQuery = {
+  __typename?: 'Query';
+  proposals: Array<{
+    __typename?: 'Proposal';
+    id: string;
+    title: string;
+    description: string;
+    forVotes: any;
+    againstVotes: any;
+    abstainVotes: any;
+    totalSupply: any;
+    minQuorumVotesBPS: number;
+    maxQuorumVotesBPS: number;
+    quorumCoefficient: any;
+    createdTimestamp: any;
+    createdBlock: any;
+    startBlock: any;
+    endBlock: any;
+    proposalThreshold: any;
+    quorumVotes: any;
+    status: ProposalStatus;
+    executionETA?: any | null;
+  }>;
+};

@@ -3,9 +3,7 @@ import { useMemo } from 'react';
 import { Vote } from '../types/Vote';
 
 export function useVotesForProposal(id: string) {
-  const { data, ...rest } = useSWR<Vote[]>(
-    `/api/proposals/${id}/votes`
-  );
+  const { data, ...rest } = useSWR<Vote[]>(`/api/proposals/${id}/votes`);
 
   const forVotes = useMemo(
     () => data?.filter((vote: Vote) => vote.support).sort(sortOnLikes),
@@ -25,8 +23,7 @@ const sortOnLikes = (a: Vote, b: Vote) => {
   if (a.reason && !b.reason) return -1;
   if (!a.reason && b.reason) return 1;
 
-  const likeDiff =
-    b.likes.length - a.likes.length
+  const likeDiff = b.likes.length - a.likes.length;
 
   if (likeDiff === 0) {
     return b.votes - a.votes;
