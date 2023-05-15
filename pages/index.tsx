@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
-import { Proposal, subgraphService } from '../lib/services/subgraph.service';
+import { subgraphService } from '../lib/services/subgraph.service';
 import { SWRConfig } from 'swr';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
+import { Proposal } from '../types/Proposal';
+import axios from 'axios';
+import { getProposals } from '../lib/proposals';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -14,46 +17,69 @@ type HomePageProps = {
 };
 
 export default function Home({ openProposals, fallback }: HomePageProps) {
+  const [propososals, setProposals] = useState<Proposal[]>(openProposals);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
 
+  const toggleProposalsType = async (type: 'active' | 'all') => {
+    console.log(type);
+    let proposals;
+    if (type == 'active') {
+      const block = await viem.getBlockNumber();
+      proposals = await axios.get('/api/proposals', {
+        params: {
+          currentBlock: block.toString(),
+          startBlockLimit: block.toString(),
+          endBlockLimit: block.toString(),
+          order: 'asc',
+          limit: 10,
+          offset: 0,
+        },
+      });
+    } else {
+      const block = await viem.getBlockNumber();
+      proposals = await axios.get('/api/proposals', {
+        params: {
+          currentBlock: block.toString(),
+          startBlockLimit: (block + BigInt(100000)).toString(),
+          endBlockLimit: 0,
+          order: 'desc',
+          limit: 400,
+          offset: 0,
+        },
+      });
+      console.log(proposals);
+    }
+    setProposals(proposals.data);
+  };
+
   return (
     <SWRConfig value={{ fallback }}>
-      <div className="bg-gray-900 min-h-screen text-white font-sans">
-        <header className="text-center">
-          <div className="flex flex-col md:flex-row justify-center items-center">
-            <img
-              src="noun652head.svg"
-              alt="Noun652 Head"
-              className="w-auto h-32 md:order-2"
-            />
-            <h1 className="neon mb-4 md:mb-0 md:order-1">Vote with Reason</h1>
-          </div>
-        </header>
-        <div>
-          <h1 className="text-3xl font-semibold  mb-4 px-4">
-            Active Proposals
-          </h1>
+      <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
+        <div className="">
           <ProposalContainer
-            proposals={openProposals}
+            proposals={propososals}
             selectedProposal={selectedProposal}
             setSelectedProposal={setSelectedProposal}
+            toggleProposalsType={toggleProposalsType}
           />
         </div>
-        {!selectedProposal && (
+        <div>
           <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-            Vote Timeline
+            {selectedProposal
+              ? `${selectedProposal.id}: ${selectedProposal.title}`
+              : 'Vote Timeline'}
           </h1>
-        )}
-        <div className="flex flex-wrap justify-center m-4">
-          {selectedProposal ? (
-            <SelectedProposalVoteView selectedProposal={selectedProposal} />
-          ) : (
-            <div className="flex justify-center items-center">
-              <PaginatedVoteList />
-            </div>
-          )}
+          <div className="flex flex-wrap justify-center m-4">
+            {selectedProposal ? (
+              <SelectedProposalVoteView selectedProposal={selectedProposal} />
+            ) : (
+              <div className="flex justify-center items-center">
+                <PaginatedVoteList />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </SWRConfig>
@@ -62,9 +88,11 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes('desc', 5, 0);
+  const votes = await subgraphService.getVotes('desc', 10, 0);
   const block = await viem.getBlockNumber();
-  const proposals = await subgraphService.getOpenProposals(
+  const proposals = await getProposals(
+    block,
+    block.toString(),
     block.toString(),
     'asc',
     10,

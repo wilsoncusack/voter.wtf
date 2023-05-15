@@ -1,4 +1,3 @@
-import { Proposal } from '../lib/services/subgraph.service';
 import {
   MobileForAgainstToggle,
   VoteType,
@@ -7,6 +6,7 @@ import { VoteList } from '../components/VoteList';
 import { useVotesForProposal } from '../hooks/useVotesForProposal';
 import { clsx as classNames } from 'clsx';
 import { useState } from 'react';
+import { Proposal } from '../types/Proposal';
 
 interface SelectedProposalVoteViewProps {
   selectedProposal: Proposal;

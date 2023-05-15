@@ -18,47 +18,35 @@ import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 import axios from 'axios';
 import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
-import { Like } from '../lib/types/VoteWithLikes';
+import { Like, Vote } from '../types/Vote';
 
 interface VoteReasonProps {
-  votes: number;
-  address: Address;
-  isFor: number;
-  reason: string;
-  proposalTitle: string;
-  proposalId: string;
-  block: number;
-  nounHolderLikes: Like[];
-  nonNounHolderLikes: Like[];
+  vote: Vote;
 }
 
-export function VoteReasons({
-  address,
-  isFor,
-  proposalId,
-  proposalTitle,
-  votes,
-  reason: rawReason,
-  block,
-  nounHolderLikes,
-  nonNounHolderLikes,
-}: VoteReasonProps) {
+export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
-  const { data: rawEnsName } = useEnsName({ address });
-  const { data: ensAvatar } = useEnsAvatar({ address });
-  const { data: timestamp } = useBlockTimestamp(BigInt(block));
+  const { data: rawEnsName } = useEnsName({
+    address: vote.voter.id as Address,
+  });
+  const { data: ensAvatar } = useEnsAvatar({
+    address: vote.voter.id as Address,
+  });
+  const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
   const [liked, setLiked] = useState(false);
+  const [voterLikes, setVoterLikes] = useState<Like[]>([]);
+  const [nonVoterLikes, setNonVoterLikes] = useState<Like[]>([]);
 
   const ensName = useMemo(
-    () => (rawEnsName ? rawEnsName : address.slice(0, 8)),
-    [address, rawEnsName]
+    () => (rawEnsName ? rawEnsName : vote.voter.id.slice(0, 8)),
+    [vote.voter, rawEnsName]
   );
 
   const reason = useMemo(
-    () => (rawReason ? replaceURLsWithLink(rawReason) : ''),
-    [rawReason]
+    () => (vote.reason ? replaceURLsWithLink(vote.reason) : ''),
+    [vote.reason]
   );
 
   const handleLikeClick = async () => {
@@ -66,13 +54,13 @@ export function VoteReasons({
       return;
     }
 
-    const message = `like vote by ${address} on ${proposalId}`;
+    const message = `like vote by ${vote.voter.id} on ${vote.proposal.id}`;
 
     try {
       const signedMessage = await signer.signMessage(message);
       const response = await axios.post('/api/likeVote', {
-        prop_id: proposalId,
-        voter: address,
+        prop_id: vote.proposal.id,
+        voter: vote.voter.id,
         signed_message: signedMessage,
         user: account,
       });
@@ -88,45 +76,59 @@ export function VoteReasons({
   };
 
   useEffect(() => {
-    if (!account || !nonNounHolderLikes || !nounHolderLikes) return;
+    if (!account || !vote.likes) return;
 
-    if (
-      nounHolderLikes.find(like => like.user === account) ||
-      nonNounHolderLikes.find(like => like.user === account)
-    ) {
-      setLiked(true);
+    const vLikes = [];
+    const nVLikes = [];
+
+    for (const like of vote.likes) {
+      if (like.is_nouns_voter) {
+        vLikes.push(like);
+      } else {
+        nVLikes.push(like);
+      }
+      if (like.user === account) {
+        setLiked(true);
+      }
     }
-  }, [account, nonNounHolderLikes, nounHolderLikes]);
+
+    setVoterLikes(vLikes);
+    setNonVoterLikes(nVLikes);
+  }, [account, vote.likes]);
 
   if (!isMounted) return null;
 
   return (
     <div
-      className={`flex p-4 m-4 ${
+      className={`flex p-4 mb-2 ${
         reason != '' ? 'bg-gray-800' : ''
       } rounded-lg shadow-md`}
     >
       {reason != '' && (
         <div className="mr-4">
-          <a href={getEtherscanLink(address)} target="_blank" rel="noreferrer">
+          <a
+            href={getEtherscanLink(vote.voter.id as Address)}
+            target="_blank"
+            rel="noreferrer"
+          >
             <div
-              className={classNames('rounded-full w-16 h-16 overflow-hidden', {
+              className={classNames('rounded-full w-12 h-12 overflow-hidden', {
                 'avatar-image': !!ensAvatar,
                 'bg-gray-700': !ensAvatar,
               })}
             >
               <img
-                className={classNames('w-16 h-16', {
+                className={classNames('w-12 h-12', {
                   hidden: !ensAvatar,
                 })}
                 src={ensAvatar}
-                alt={`Ens Avatar for ${address}`}
+                alt={`Ens Avatar for ${vote.voter.id}`}
               />
             </div>
           </a>
           <div>
             <div className={'flex mt-4 justify-center'}>
-              {nounHolderLikes && nounHolderLikes.length > 0 && (
+              {voterLikes.length > 0 && (
                 <>
                   <Image
                     height={30}
@@ -136,12 +138,12 @@ export function VoteReasons({
                   />
                   <p className="text-gray-500 font-semibold">
                     {' '}
-                    {nounHolderLikes.length}{' '}
+                    {voterLikes.length}{' '}
                   </p>
                 </>
               )}
             </div>
-            {nonNounHolderLikes && nonNounHolderLikes.length > 0 && (
+            {nonVoterLikes.length > 0 && (
               <>
                 <div className={'flex justify-center'}>
                   <SolidHeartIcon
@@ -151,7 +153,7 @@ export function VoteReasons({
                   />
                   <p className="ml-1 text-gray-500 font-semibold">
                     {' '}
-                    {nonNounHolderLikes.length}{' '}
+                    {nonVoterLikes.length}{' '}
                   </p>
                 </div>
               </>
@@ -162,7 +164,7 @@ export function VoteReasons({
       <div>
         <div className="text-gray-400">
           <a
-            href={getEtherscanLink(address)}
+            href={getEtherscanLink(vote.voter.id as Address)}
             className="hover:underline"
             target="_blank"
             rel="noreferrer"
@@ -172,31 +174,36 @@ export function VoteReasons({
           voted{' '}
           <span
             className={classNames('font-semibold', {
-              'text-green-400': isFor == 1,
-              'text-red-400': isFor == 0,
-              'text-gray-400': isFor !== 1 && isFor !== 0,
+              'text-green-400': vote.supportDetailed == 1,
+              'text-red-400': vote.supportDetailed == 0,
+              'text-gray-400':
+                vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
             })}
           >
-            {isFor == 1 ? 'FOR' : isFor == 0 ? 'AGAINST' : 'ABSTAIN'}{' '}
+            {vote.supportDetailed == 1
+              ? 'FOR'
+              : vote.supportDetailed == 0
+              ? 'AGAINST'
+              : 'ABSTAIN'}{' '}
           </span>
           <span>
             <a
-              href={getNounsLink(proposalId)}
+              href={getNounsLink(vote.proposal.id)}
               className="hover:underline font-semibold"
               target="_blank"
               rel="noreferrer"
             >
-              Proposal {proposalId}: {proposalTitle}{' '}
+              Proposal {vote.proposal.id}: {vote.proposal.title}{' '}
             </a>
-            with {votes} {`vote${votes > 1 ? 's' : ''}`}
+            with {vote.votes} {`vote${vote.votes > 1 ? 's' : ''}`}
           </span>
         </div>
         <div
           className={classNames(
             `whitespace-pre-line break-words overflow-wrap mb-2 mt-2`,
             {
-              'text-gray-300': rawReason,
-              'text-gray-500': !rawReason,
+              'text-gray-300': vote.reason,
+              'text-gray-500': !vote.reason,
             }
           )}
           dangerouslySetInnerHTML={{
