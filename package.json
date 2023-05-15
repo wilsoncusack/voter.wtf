@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "yarn graphql-codegen && next",
-    "build": "next build",
+    "dev": "yarn next",
+    "build": "yarn next build",
     "start": "next start",
     "format": "prettier --write .",
     "type-check": "tsc",

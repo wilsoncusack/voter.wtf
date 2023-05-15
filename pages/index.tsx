@@ -57,7 +57,7 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
   return (
     <SWRConfig value={{ fallback }}>
       <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
-        <div className="">
+        <div className="md:fixed md:overflow-y-auto md:w-1/3 md:max-h-screen">
           <ProposalContainer
             proposals={propososals}
             selectedProposal={selectedProposal}
@@ -65,13 +65,13 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
             toggleProposalsType={toggleProposalsType}
           />
         </div>
-        <div>
+        <div className="md:w-2/3 md:ml-auto">
           <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
             {selectedProposal
               ? `${selectedProposal.id}: ${selectedProposal.title}`
               : 'Vote Timeline'}
           </h1>
-          <div className="flex flex-wrap justify-center m-4">
+          <div className="flex flex-wrap justify-left m-4 overflow-y-auto">
             {selectedProposal ? (
               <SelectedProposalVoteView selectedProposal={selectedProposal} />
             ) : (

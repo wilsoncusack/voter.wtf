@@ -1,6 +1,5 @@
-import { ProposalStatus } from '../types/Proposal';
 import { Vote } from '../types/Vote';
-import { Proposal, Vote as GqlVote } from '../types/generated/nounsSubgraph';
+import { Vote as GqlVote } from '../types/generated/nounsSubgraph';
 import { supabase } from './supabaseClient';
 
 export const buildVotesWithLikes = async (
