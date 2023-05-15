@@ -40,12 +40,15 @@ export const DesktopProposalCard: React.FC<DesktopProposalCardProps> = ({
       <div className="ml-3 w-full">
         <p className="text-gray-400 line-clamp-2">{proposal.title}</p>
 
-        <div className="flex items-center justify-between mt-1 text-xs w-32">
+        <div className="flex items-center justify-between mt-1 text-xs w-full">
           <p className="text-green-400">
             <span className="">{proposal.forVotes} FOR</span>
           </p>
           <p className="text-red-400">
             <span className="">{proposal.againstVotes} AGAINST</span>
+          </p>
+          <p className="text-gray-400">
+            Quorum {Math.floor(proposal.dynamicQuorum)}
           </p>
         </div>
       </div>
