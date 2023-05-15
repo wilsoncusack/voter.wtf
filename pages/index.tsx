@@ -71,7 +71,7 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
               ? `${selectedProposal.id}: ${selectedProposal.title}`
               : 'Vote Timeline'}
           </h1>
-          <div className="flex flex-wrap justify-left m-4 overflow-y-auto">
+          <div className="flex flex-wrap justify-left m-4">
             {selectedProposal ? (
               <SelectedProposalVoteView selectedProposal={selectedProposal} />
             ) : (
