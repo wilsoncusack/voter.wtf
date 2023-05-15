@@ -53,7 +53,9 @@ export const deriveProposalStatus = (
   proposal: GqlProposal
 ): ProposalStatus => {
   // Calculate the dynamic quorum
-  if (currentBlock < proposal.startBlock) {
+  if (proposal.status === 'CANCELLED') {
+    return ProposalStatus.Cancelled;
+  } else if (currentBlock < proposal.startBlock) {
     return ProposalStatus.Pending;
   } else if (
     currentBlock >= proposal.startBlock &&
@@ -66,8 +68,6 @@ export const deriveProposalStatus = (
     } else {
       return ProposalStatus.Defeated;
     }
-  } else if (proposal.status === 'CANCELLED') {
-    return ProposalStatus.Cancelled;
   } else {
     throw new Error('Unable to determine proposal status');
   }
