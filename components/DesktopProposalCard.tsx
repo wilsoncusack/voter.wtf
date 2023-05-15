@@ -1,4 +1,4 @@
-import { Proposal } from '../lib/services/subgraph.service';
+import { Proposal } from "../types/Proposal";
 
 interface DesktopProposalCardProps {
   proposal: Proposal;
@@ -24,12 +24,13 @@ export const DesktopProposalCard: React.FC<DesktopProposalCardProps> = ({
   }}
 >
   <div
-    className={`flex items-center justify-center  w-12 h-12 `}
+    className={`flex items-center w-12 h-12 `}
   >
     <h3 className="text-xl font-semibold text-white">{proposal.id}</h3>
   </div>
-  <div className="ml-3">
-    <p className=" text-gray-400 line-clamp-2">{proposal.title}</p>
+  <div className="ml-3 w-full">
+  <p className="text-gray-400 line-clamp-2">{proposal.title}</p>
+
     <div className="flex justify-between mt-1 text-xs w-32">
       <p className="text-green-400">
         <span className="">{proposal.forVotes} FOR</span>

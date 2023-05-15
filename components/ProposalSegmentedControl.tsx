@@ -43,7 +43,7 @@ export function ProposalSegmentedControl({
           </button>
         </div>
       </div>
-      <div className="py-4 md:py-0 bg-gray-700 md:bg-gray-800 flex flex-row md:flex-col md:overflow-x-hidden">
+      <div className="py-4 md:py-0 bg-gray-700 md:bg-gray-800 flex flex-row md:flex-col overflow-y-hidden md:overflow-x-hidden">
         {proposals.map(proposal => (
           <div>
           <div className="md:hidden">

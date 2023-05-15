@@ -1,4 +1,4 @@
-import { Proposal } from '../lib/services/subgraph.service';
+import { Proposal } from "../types/Proposal";
 
 interface MobileProposalCardProps {
   proposal: Proposal;
@@ -14,7 +14,7 @@ export const MobileProposalCard: React.FC<MobileProposalCardProps> = ({
   return (
     <div
       key={proposal.id}
-      className="flex flex-col items-center"
+      className="mx-2 flex flex-col items-center"
       onClick={() => {
         if (selectedProposal && selectedProposal.id === proposal.id) {
           setSelectedProposal(null);

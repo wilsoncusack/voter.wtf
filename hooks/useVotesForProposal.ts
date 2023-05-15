@@ -1,10 +1,9 @@
 import useSWR from 'swr';
-import { Vote } from '../lib/services/subgraph.service';
 import { useMemo } from 'react';
-import { VoteWithLikes } from '../lib/types/VoteWithLikes';
+import { Vote } from '../types/Vote';
 
 export function useVotesForProposal(id: string) {
-  const { data, ...rest } = useSWR<VoteWithLikes[]>(
+  const { data, ...rest } = useSWR<Vote[]>(
     `/api/proposals/${id}/votes`
   );
 
@@ -21,15 +20,13 @@ export function useVotesForProposal(id: string) {
   return { forVotes, againstVotes, ...rest };
 }
 
-const sortOnLikes = (a: VoteWithLikes, b: VoteWithLikes) => {
-  if (!a.nounHolderLikes || !b.nounHolderLikes) return 0;
+const sortOnLikes = (a: Vote, b: Vote) => {
+  if (!a.likes || !b.likes) return 0;
   if (a.reason && !b.reason) return -1;
   if (!a.reason && b.reason) return 1;
 
   const likeDiff =
-    b.nonNounHolderLikes.length +
-    b.nounHolderLikes.length -
-    (a.nonNounHolderLikes.length + a.nounHolderLikes.length);
+    b.likes.length - a.likes.length
 
   if (likeDiff === 0) {
     return b.votes - a.votes;

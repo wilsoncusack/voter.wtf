@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
-import { Proposal, subgraphService } from '../lib/services/subgraph.service';
+import { subgraphService } from '../lib/services/subgraph.service';
 import { SWRConfig } from 'swr';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
+import { Proposal } from '../types/Proposal';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -19,28 +20,28 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
     null
   );
 
-  const toggleProposalType = async (type: 'active' | 'all') => {
-    let proposals;
-    if (type == 'active') {
-      const block = 0
-  proposals = await subgraphService.getOpenProposals(
-    block.toString(),
-    'desc',
-    10,
-    0
-  );
+  // const toggleProposalType = async (type: 'active' | 'all') => {
+  //   let proposals;
+  //   if (type == 'active') {
+  //     const block = 0
+  // proposals = await subgraphService.getProposals(
+  //   block.toString(),
+  //   'desc',
+  //   10,
+  //   0
+  // );
 
-    } else {
-      const block = await viem.getBlockNumber();
-  proposals = await subgraphService.getOpenProposals(
-    block.toString(),
-    'asc',
-    10,
-    0
-  );
-  setProposals(proposals);
-    }
-  }
+  //   } else {
+  //     const block = await viem.getBlockNumber();
+  // proposals = await subgraphService.getProposals(
+  //   block.toString(),
+  //   'asc',
+  //   10,
+  //   0
+  // );
+  // setProposals(proposals);
+  //   }
+  // }
 
   return (
     <SWRConfig value={{ fallback }}>
@@ -75,7 +76,8 @@ export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
   const votes = await subgraphService.getVotes('desc', 10, 0);
   const block = await viem.getBlockNumber();
-  const proposals = await subgraphService.getOpenProposals(
+  const proposals = await subgraphService.getProposals(
+    block.toString(),
     block.toString(),
     'asc',
     10,

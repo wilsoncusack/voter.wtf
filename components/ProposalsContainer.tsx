@@ -1,5 +1,5 @@
 
-import { Proposal } from '../lib/services/subgraph.service';
+import { Proposal } from '../types/Proposal';
 import { ProposalSegmentedControl } from './ProposalSegmentedControl';
 
 interface ProposalContainerProps {
