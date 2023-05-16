@@ -100,7 +100,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     >
       {reason != '' && (
         <div className="mr-4">
-          <Link href={`/voter/${encodeURIComponent(vote.voter.id)}`}>
+          <Link href={`/voters/${encodeURIComponent(vote.voter.id)}`}>
             <div
               className={classNames(
                 'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border',
@@ -158,7 +158,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         <div className="text-gray-300">
           <Link
             className="hover:underline"
-            href={`/voter/${encodeURIComponent(vote.voter.id)}`}
+            href={`/voters/${encodeURIComponent(vote.voter.id)}`}
           >
             {ensName}
           </Link>

@@ -13,6 +13,7 @@ import {
 } from '../../compositions/PaginatedVoteList';
 import { subgraphService } from '../../lib/services/subgraph.service';
 import { unstable_serialize } from 'swr/infinite';
+import { getEtherscanLink } from '../../lib/util/link';
 
 type VoterPageProps = {
   address: Address;
@@ -44,9 +45,19 @@ export default function Voter({ fallback, address, ensName }: VoterPageProps) {
   return (
     <Page title={`${name} Votes`} fallback={fallback}>
       <section className="w-full">
-        <h1 className="text-3xl text-center font-semibold  mb-4 px-4">
-          {name} Votes
-        </h1>
+        <div className="flex flex-col mb-8">
+          <h1 className="text-3xl text-center font-semibold  mb-1 px-4">
+            {name} Votes
+          </h1>
+          <a
+            href={getEtherscanLink(address)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-center hover:text-gray-100 text-sm text-gray-500 underline"
+          >
+            View on Etherscan
+          </a>
+        </div>
         <div className="flex flex-col justify-center items-center w-full">
           <PaginatedVoteList voterId={address} />
         </div>
