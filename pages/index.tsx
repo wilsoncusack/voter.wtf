@@ -7,7 +7,7 @@ import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
-import { Proposal } from '../types/Proposal';
+import { Proposal, ProposalStatus } from '../types/Proposal';
 import axios from 'axios';
 import { getProposals } from '../lib/proposals';
 
@@ -37,6 +37,9 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           offset: 0,
         },
       });
+      proposals = proposals.data.filter(
+        proposal => proposal.status != ProposalStatus.Cancelled
+      );
     } else {
       const block = await viem.getBlockNumber();
       proposals = await axios.get('/api/proposals', {
@@ -49,9 +52,9 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           offset: 0,
         },
       });
-      console.log(proposals);
+      proposals = proposals.data;
     }
-    setProposals(proposals.data);
+    setProposals(proposals);
   };
 
   return (
@@ -90,13 +93,18 @@ export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
   const votes = await subgraphService.getVotes('desc', 10, 0);
   const block = await viem.getBlockNumber();
-  const proposals = await getProposals(
+  let proposals = await getProposals(
     block,
     block.toString(),
     block.toString(),
     'asc',
     10,
     0
+  );
+
+  // kinda hacky but we start active
+  proposals = proposals.filter(
+    proposal => proposal.status != ProposalStatus.Cancelled
   );
 
   const prefetchedVotes = await Promise.all(
