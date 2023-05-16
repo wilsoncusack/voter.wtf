@@ -1,20 +1,9 @@
-import { configureChains, createClient, mainnet } from 'wagmi';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { createClient, mainnet } from 'wagmi';
 import { createPublicClient, http } from 'viem';
 import { getDefaultClient } from 'connectkit';
 
-export const { provider, webSocketProvider } = configureChains(
-  [mainnet],
-  [
-    jsonRpcProvider({
-      rpc: _ => ({
-        http: 'https://rpc.eth.gateway.fm',
-      }),
-    }),
-  ]
-);
-
-const alchemyId = process.env.ALCHEMY_ID;
+// can be public for client use - prod key needs URL whitelist
+const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_ID;
 
 export const client = createClient(
   getDefaultClient({
@@ -25,5 +14,5 @@ export const client = createClient(
 
 export const viem = createPublicClient({
   chain: mainnet,
-  transport: http(),
+  transport: http(`https://eth-mainnet.g.alchemy.com/v2/${alchemyId}`),
 });

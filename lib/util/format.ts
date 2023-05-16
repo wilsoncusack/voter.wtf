@@ -8,3 +8,7 @@ export function formatAddress(address: string, chars = 8) {
   const suffix = '...' + checksum.slice(-suffixLength);
   return prefix + suffix;
 }
+
+export function ensureTitleCase(name: string) {
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}

@@ -1,11 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Address,
-  useAccount,
-  useEnsAvatar,
-  useEnsName,
-  useSigner,
-} from 'wagmi';
+import { useAccount, useEnsAvatar, useEnsName, useSigner } from 'wagmi';
 import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
@@ -16,6 +10,7 @@ import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like, Vote } from '../types/Vote';
 import Link from 'next/link';
+import { getAddress } from 'viem';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -23,11 +18,13 @@ interface VoteReasonProps {
 
 export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
+  // TODO - checksum to ensure correct lookup for ens traits, need to add a zod schema to validate & transform on fetch
+  const checksum = getAddress(vote.voter.id);
   const { data: rawEnsName } = useEnsName({
-    address: vote.voter.id as Address,
+    address: checksum,
   });
   const { data: ensAvatar } = useEnsAvatar({
-    address: vote.voter.id as Address,
+    address: checksum,
   });
   const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
   const { data: signer } = useSigner();
@@ -105,10 +102,13 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         <div className="mr-4">
           <Link href={`/voter/${encodeURIComponent(vote.voter.id)}`}>
             <div
-              className={classNames('rounded-full w-12 h-12 overflow-hidden', {
-                'avatar-image': !!ensAvatar,
-                'bg-gray-700': !ensAvatar,
-              })}
+              className={classNames(
+                'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border',
+                {
+                  'avatar-image': !!ensAvatar,
+                  'bg-gray-700': !ensAvatar,
+                }
+              )}
             >
               <img
                 className={classNames('w-12 h-12', {
@@ -120,7 +120,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
             </div>
           </Link>
           <div>
-            <div className={'flex mt-4 justify-center'}>
+            <div className="flex mt-4 justify-center">
               {voterLikes.length > 0 && (
                 <>
                   <Image
@@ -157,8 +157,8 @@ export function VoteReasons({ vote }: VoteReasonProps) {
       <div>
         <div className="text-gray-300">
           <Link
-            href={`/voter/${encodeURIComponent(vote.voter.id)}`}
             className="hover:underline"
+            href={`/voter/${encodeURIComponent(vote.voter.id)}`}
           >
             {ensName}
           </Link>

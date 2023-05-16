@@ -23,7 +23,6 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
   );
 
   const toggleProposalsType = async (type: 'active' | 'all') => {
-    console.log(type);
     let proposals;
     if (type == 'active') {
       const block = await viem.getBlockNumber();
@@ -106,13 +105,14 @@ export async function getStaticProps() {
     0
   );
 
-  // kinda hacky but we start active
   proposals = proposals.filter(
     proposal => proposal.status != ProposalStatus.Cancelled
   );
 
   const prefetchedVotes = await Promise.all(
-    proposals.map(p => subgraphService.getVotesForProposal(p.id, 'desc'))
+    proposals
+      .slice(0, 3)
+      .map(p => subgraphService.getVotesForProposal(p.id, 'desc'))
   );
 
   const voteFallback = prefetchedVotes.reduce((acc, votes, idx) => {

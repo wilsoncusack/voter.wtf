@@ -1,14 +1,13 @@
 import { Page } from '../../components/Page';
-import { subgraphService } from '../../lib/services/subgraph.service';
 import { GetStaticProps } from 'next';
 import { getAddress, isAddress } from 'viem';
-import { useVotesForAddress } from '../../hooks/useVotesForAddress';
-import { VoteList } from '../../components/VoteList';
 import { FallbackProp } from '../../lib/util/swr';
 import { useRouter } from 'next/router';
 import { viem } from '../../lib/wagmi';
-import { formatAddress } from '../../lib/util/format';
+import { ensureTitleCase, formatAddress } from '../../lib/util/format';
 import { Address } from 'wagmi';
+import React, { useMemo } from 'react';
+import { PaginatedVoteList } from '../../compositions/PaginatedVoteList';
 
 type VoterPageProps = {
   address: Address;
@@ -21,20 +20,31 @@ type VoterPageParams = {
 };
 
 export default function Voter({ fallback, address, ensName }: VoterPageProps) {
-  const { votes = [] } = useVotesForAddress(address);
   const { isFallback } = useRouter();
+
+  const name = useMemo(
+    () =>
+      !isFallback
+        ? ensName
+          ? ensureTitleCase(ensName)
+          : formatAddress(address)
+        : null,
+    [address, ensName, isFallback]
+  );
 
   if (isFallback) {
     return <Page title="Votes" />;
   }
 
-  const name = ensName || formatAddress(address);
-
   return (
     <Page title={`${name} Votes`} fallback={fallback}>
-      <section>
-        <h1>{name}</h1>
-        <VoteList votes={votes} />
+      <section className="w-full">
+        <h1 className="text-3xl text-center font-semibold  mb-4 px-4">
+          {name} Votes
+        </h1>
+        <div className="flex flex-col justify-center items-center w-full">
+          <PaginatedVoteList voterId={address} />
+        </div>
       </section>
     </Page>
   );
@@ -69,18 +79,18 @@ export const getStaticProps: GetStaticProps<
       address,
     });
   }
-  const votes = await subgraphService.getVotes({
-    order: 'desc',
-    voterId: address,
-  });
+  // const votes = await subgraphService.getVotes({
+  //   order: 'desc',
+  //   voterId: address,
+  //   offset: 0,
+  //   limit: 5,
+  // });
 
   return {
     props: {
       address,
       ensName,
-      fallback: {
-        [`/api/votes?voterId=${address}`]: votes,
-      },
+      fallback: {},
     },
     revalidate: 30,
   };
