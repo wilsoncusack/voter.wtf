@@ -67,9 +67,16 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
         </div>
         <div className="md:w-2/3 md:ml-auto">
           <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-            {selectedProposal
-              ? `${selectedProposal.id}: ${selectedProposal.title}`
-              : 'Vote Timeline'}
+            {selectedProposal ? (
+              <a
+                href={`https://nouns.wtf/vote/${selectedProposal.id}`}
+                target="_blank"
+              >
+                {selectedProposal.id}: ${selectedProposal.title}
+              </a>
+            ) : (
+              'Vote Timeline'
+            )}
           </h1>
           <div className="flex flex-wrap justify-left m-4">
             {selectedProposal ? (
