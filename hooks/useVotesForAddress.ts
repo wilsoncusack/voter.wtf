@@ -1,11 +1,9 @@
 import useSWR from 'swr';
-import { VoteWithLikes } from '../lib/types/VoteWithLikes';
 import { useVoteDirections } from './useVoteDirections';
+import { Vote } from '../types/Vote';
 
 export function useVotesForAddress(address: string) {
-  const { data, ...rest } = useSWR<VoteWithLikes[]>(
-    `/api/votes?voterId=${address}`
-  );
+  const { data, ...rest } = useSWR<Vote[]>(`/api/votes?voterId=${address}`);
 
   const { forVotes, againstVotes } = useVoteDirections(data);
 

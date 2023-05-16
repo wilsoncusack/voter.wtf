@@ -1,8 +1,10 @@
-import { Vote } from './services/subgraph.service';
+import { Vote } from '../types/Vote';
+import { Vote as GqlVote } from '../types/generated/nounsSubgraph';
 import { supabase } from './supabaseClient';
-import { VoteWithLikes } from './types/VoteWithLikes';
 
-export const buildVotesWithLikes = async (votes: Vote[]) => {
+export const buildVotesWithLikes = async (
+  votes: GqlVote[]
+): Promise<Vote[]> => {
   const voteIds = votes.map(vote => `${vote.proposal.id}-${vote.voter.id}`);
   const voteLikes = await supabase
     .from('vote_likes')
@@ -12,8 +14,7 @@ export const buildVotesWithLikes = async (votes: Vote[]) => {
     const id = `${vote.proposal.id}-${vote.voter.id}`;
     const likes = voteLikes.data.filter(like => like.vote_id === id);
     return {
-      nounHolderLikes: likes.filter(like => like.is_nouns_voter),
-      nonNounHolderLikes: likes.filter(like => !like.is_nouns_voter),
+      likes,
       ...vote,
     };
   });

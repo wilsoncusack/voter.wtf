@@ -1,16 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Address,
+  useAccount,
   useEnsAvatar,
   useEnsName,
   useSigner,
-  useAccount,
 } from 'wagmi';
-import {
-  getEtherscanLink,
-  getNounsLink,
-  replaceURLsWithLink,
-} from '../lib/util/link';
+import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
 import { TimeAgo } from './TimeAgo';
@@ -18,48 +14,36 @@ import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 import axios from 'axios';
 import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
-import { Like } from '../lib/types/VoteWithLikes';
+import { Like, Vote } from '../types/Vote';
 import Link from 'next/link';
 
 interface VoteReasonProps {
-  votes: number;
-  address: Address;
-  isFor: number;
-  reason: string;
-  proposalTitle: string;
-  proposalId: string;
-  block: number;
-  nounHolderLikes: Like[];
-  nonNounHolderLikes: Like[];
+  vote: Vote;
 }
 
-export function VoteReasons({
-  address,
-  isFor,
-  proposalId,
-  proposalTitle,
-  votes,
-  reason: rawReason,
-  block,
-  nounHolderLikes,
-  nonNounHolderLikes,
-}: VoteReasonProps) {
+export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
-  const { data: rawEnsName } = useEnsName({ address });
-  const { data: ensAvatar } = useEnsAvatar({ address });
-  const { data: timestamp } = useBlockTimestamp(BigInt(block));
+  const { data: rawEnsName } = useEnsName({
+    address: vote.voter.id as Address,
+  });
+  const { data: ensAvatar } = useEnsAvatar({
+    address: vote.voter.id as Address,
+  });
+  const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
   const [liked, setLiked] = useState(false);
+  const [voterLikes, setVoterLikes] = useState<Like[]>([]);
+  const [nonVoterLikes, setNonVoterLikes] = useState<Like[]>([]);
 
   const ensName = useMemo(
-    () => (rawEnsName ? rawEnsName : address.slice(0, 8)),
-    [address, rawEnsName]
+    () => (rawEnsName ? rawEnsName : vote.voter.id.slice(0, 8)),
+    [vote.voter, rawEnsName]
   );
 
   const reason = useMemo(
-    () => (rawReason ? replaceURLsWithLink(rawReason) : 'no reason :('),
-    [rawReason]
+    () => (vote.reason ? replaceURLsWithLink(vote.reason) : ''),
+    [vote.reason]
   );
 
   const handleLikeClick = async () => {
@@ -67,13 +51,13 @@ export function VoteReasons({
       return;
     }
 
-    const message = `like vote by ${address} on ${proposalId}`;
+    const message = `like vote by ${vote.voter.id} on ${vote.proposal.id}`;
 
     try {
       const signedMessage = await signer.signMessage(message);
       const response = await axios.post('/api/likeVote', {
-        prop_id: proposalId,
-        voter: address,
+        prop_id: vote.proposal.id,
+        voter: vote.voter.id,
         signed_message: signedMessage,
         user: account,
       });
@@ -89,97 +73,127 @@ export function VoteReasons({
   };
 
   useEffect(() => {
-    if (!account || !nonNounHolderLikes || !nounHolderLikes) return;
+    if (!account || !vote.likes) return;
 
-    if (
-      nounHolderLikes.find(like => like.user === account) ||
-      nonNounHolderLikes.find(like => like.user === account)
-    ) {
-      setLiked(true);
+    const vLikes = [];
+    const nVLikes = [];
+
+    for (const like of vote.likes) {
+      if (like.is_nouns_voter) {
+        vLikes.push(like);
+      } else {
+        nVLikes.push(like);
+      }
+      if (like.user === account) {
+        setLiked(true);
+      }
     }
-  }, [account, nonNounHolderLikes, nounHolderLikes]);
+
+    setVoterLikes(vLikes);
+    setNonVoterLikes(nVLikes);
+  }, [account, vote.likes]);
 
   if (!isMounted) return null;
 
   return (
-    <div className="flex mb-4 p-4 bg-gray-800 rounded-lg shadow-md">
-      <div className="mr-4">
-        <Link href={`/voter/${encodeURIComponent(address)}`}>
-          <div
-            className={classNames('rounded-full w-16 h-16 overflow-hidden', {
-              'avatar-image': !!ensAvatar,
-              'bg-gray-700': !ensAvatar,
-            })}
-          >
-            <img
-              className={classNames('w-16 h-16', {
-                hidden: !ensAvatar,
+    <div
+      className={`flex p-4 mb-2 ${
+        reason != '' ? 'bg-gray-800' : ''
+      } rounded-lg shadow-md`}
+    >
+      {reason != '' && (
+        <div className="mr-4">
+          <Link href={`/voter/${encodeURIComponent(vote.voter.id)}`}>
+            <div
+              className={classNames('rounded-full w-12 h-12 overflow-hidden', {
+                'avatar-image': !!ensAvatar,
+                'bg-gray-700': !ensAvatar,
               })}
-              src={ensAvatar}
-              alt={`Ens Avatar for ${address}`}
-            />
-          </div>
-        </Link>
-        <div>
-          <div className={'flex mt-4 justify-center'}>
-            {nounHolderLikes && nounHolderLikes.length > 0 && (
+            >
+              <img
+                className={classNames('w-12 h-12', {
+                  hidden: !ensAvatar,
+                })}
+                src={ensAvatar}
+                alt={`Ens Avatar for ${vote.voter.id}`}
+              />
+            </div>
+          </Link>
+          <div>
+            <div className={'flex mt-4 justify-center'}>
+              {voterLikes.length > 0 && (
+                <>
+                  <Image
+                    height={30}
+                    width={30}
+                    alt="test"
+                    src="/nounHeart.svg"
+                  />
+                  <p className="text-gray-500 font-semibold">
+                    {' '}
+                    {voterLikes.length}{' '}
+                  </p>
+                </>
+              )}
+            </div>
+            {nonVoterLikes.length > 0 && (
               <>
-                <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
-                <p className="text-gray-500 font-semibold">
-                  {' '}
-                  {nounHolderLikes.length}{' '}
-                </p>
+                <div className={'flex justify-center'}>
+                  <SolidHeartIcon
+                    height={25}
+                    width={25}
+                    className="ml-1 text-gray-500"
+                  />
+                  <p className="ml-1 text-gray-500 font-semibold">
+                    {' '}
+                    {nonVoterLikes.length}{' '}
+                  </p>
+                </div>
               </>
             )}
           </div>
-          {nonNounHolderLikes && nonNounHolderLikes.length > 0 && (
-            <>
-              <div className={'flex justify-center'}>
-                <SolidHeartIcon
-                  height={25}
-                  width={25}
-                  className="ml-1 text-gray-500"
-                />
-                <p className="ml-1 text-gray-500 font-semibold">
-                  {' '}
-                  {nonNounHolderLikes.length}{' '}
-                </p>
-              </div>
-            </>
-          )}
         </div>
-      </div>
+      )}
       <div>
-        <div className="text-gray-400">
-          <Link href={`/voter/${encodeURIComponent(address)}`}>{ensName}</Link>{' '}
-          voted{' '}
+        <div className="text-gray-300">
+          <Link
+            href={`/voter/${encodeURIComponent(vote.voter.id)}`}
+            className="hover:underline"
+          >
+            {ensName}
+          </Link>
+          {': '}
           <span
             className={classNames('font-semibold', {
-              'text-green-400': isFor == 1,
-              'text-red-400': isFor == 0,
-              'text-gray-400': isFor !== 1 && isFor !== 0,
+              'text-green-400': vote.supportDetailed == 1,
+              'text-red-400': vote.supportDetailed == 0,
+              'text-gray-400':
+                vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
             })}
           >
-            {isFor == 1 ? 'FOR' : isFor == 0 ? 'AGAINST' : 'ABSTAIN'}{' '}
-          </span>
-          <span>
-            <a
-              href={getNounsLink(proposalId)}
-              className="hover:underline font-semibold"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Proposal {proposalId}: {proposalTitle}{' '}
-            </a>
-            with {votes} {`vote${votes > 1 ? 's' : ''}`}
+            {' '}
+            <span className=" w-5 rounded-full ">{vote.votes} </span>
+            {vote.supportDetailed == 1
+              ? 'FOR'
+              : vote.supportDetailed == 0
+              ? 'AGAINST'
+              : 'ABSTAIN'}{' '}
           </span>
         </div>
+        <a
+          href={getNounsLink(vote.proposal.id)}
+          className="hover:underline text-gray-400 text-sm line-clamp-1"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Prop {vote.proposal.id}: {vote.proposal.title}{' '}
+        </a>
         <div
           className={classNames(
             `whitespace-pre-line break-words overflow-wrap mb-2 mt-2`,
             {
-              'text-gray-300': rawReason,
-              'text-gray-500': !rawReason,
+              'text-gray-300': vote.reason,
+              'text-gray-500': !vote.reason,
             }
           )}
           dangerouslySetInnerHTML={{
@@ -191,28 +205,30 @@ export function VoteReasons({
           timestamp={timestamp}
           as="div"
         />
-        <div className={'flex justify-end'}>
-          <button
-            onClick={handleLikeClick}
-            disabled={!signer || liked}
-            className={`p-2 ${
-              liked
-                ? ''
-                : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
-            }`}
-          >
-            {liked ? (
-              <Image
-                height={30}
-                width={30}
-                alt="test"
-                src="/coloredNounHeart.svg"
-              />
-            ) : (
-              <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
-            )}
-          </button>
-        </div>
+        {reason != '' && (
+          <div className={'flex justify-end'}>
+            <button
+              onClick={handleLikeClick}
+              disabled={!signer || liked}
+              className={`p-2 ${
+                liked
+                  ? ''
+                  : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
+              }`}
+            >
+              {liked ? (
+                <Image
+                  height={30}
+                  width={30}
+                  alt="test"
+                  src="/coloredNounHeart.svg"
+                />
+              ) : (
+                <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

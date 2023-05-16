@@ -31,9 +31,20 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <WagmiConfig client={client}>
         <ConnectKitProvider theme="nouns">
-          <div className="m-4 flex justify-end">
-            <ConnectKitButton />
+          <div className="flex justify-between w-full">
+            <div className="ml-8 justify-start">
+              <img
+                src="noun652head.svg"
+                alt="Noun652 Head"
+                className="w-auto h-12"
+              />
+              <h1 className="neon mb-4 md:mb-0">VwR</h1>
+            </div>
+            <div className="m-4 flex justify-end">
+              <ConnectKitButton />
+            </div>
           </div>
+
           <SWRConfig
             value={{
               refreshInterval,

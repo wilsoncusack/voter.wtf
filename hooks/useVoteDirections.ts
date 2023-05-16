@@ -1,25 +1,28 @@
 import { useMemo } from 'react';
-import { VoteWithLikes } from '../lib/types/VoteWithLikes';
+import { Vote } from '../types/Vote';
 
-const sortOnLikes = (a: VoteWithLikes, b: VoteWithLikes) => {
-  if (!a.nounHolderLikes || !b.nounHolderLikes) return 0;
-  return (
-    b.nonNounHolderLikes.length +
-    b.nounHolderLikes.length -
-    (a.nonNounHolderLikes.length + a.nounHolderLikes.length)
-  );
+const sortOnLikes = (a: Vote, b: Vote) => {
+  if (!a.likes || !b.likes) return 0;
+  if (a.reason && !b.reason) return -1;
+  if (!a.reason && b.reason) return 1;
+
+  const likeDiff = b.likes.length - a.likes.length;
+
+  if (likeDiff === 0) {
+    return b.votes - a.votes;
+  }
+
+  return likeDiff;
 };
 
-export function useVoteDirections<T extends VoteWithLikes>(votes: T[] = []) {
+export function useVoteDirections<T extends Vote>(votes: T[] = []) {
   const forVotes = useMemo(
-    () =>
-      votes?.filter((vote: VoteWithLikes) => vote.support).sort(sortOnLikes),
+    () => votes?.filter((vote: Vote) => vote.support).sort(sortOnLikes),
     [votes]
   );
 
   const againstVotes = useMemo(
-    () =>
-      votes?.filter((vote: VoteWithLikes) => !vote.support).sort(sortOnLikes),
+    () => votes?.filter((vote: Vote) => !vote.support).sort(sortOnLikes),
     [votes]
   );
 

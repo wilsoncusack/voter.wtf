@@ -1,4 +1,3 @@
-import { Proposal } from '../lib/services/subgraph.service';
 import {
   MobileForAgainstToggle,
   VoteType,
@@ -7,6 +6,7 @@ import { VoteList } from '../components/VoteList';
 import { useVotesForProposal } from '../hooks/useVotesForProposal';
 import { clsx as classNames } from 'clsx';
 import { useState } from 'react';
+import { Proposal } from '../types/Proposal';
 
 interface SelectedProposalVoteViewProps {
   selectedProposal: Proposal;
@@ -33,25 +33,29 @@ export function SelectedProposalVoteView({
       <div className="w-full grid gap-4 px-4 md:grid-cols-2 sm:grid-cols-1">
         <div
           className={classNames([
-            'md:block',
+            'md:block relative',
             voteType === 'for' ? 'block' : 'hidden',
           ])}
         >
-          <h2 className="md:block hidden text-white text-xl mb-4 font-bold uppercase">
+          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
             <span className="text-green-400">For</span>
           </h2>
-          <VoteList votes={forVotes} />
+          <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
+            <VoteList votes={forVotes} />
+          </div>
         </div>
         <div
           className={classNames([
-            'md:block',
+            'md:block relative',
             voteType === 'against' ? 'block' : 'hidden',
           ])}
         >
-          <h2 className="md:block hidden text-white text-xl mb-4 font-bold uppercase">
+          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
             <span className="text-red-400">Against</span>
           </h2>
-          <VoteList votes={againstVotes} />
+          <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
+            <VoteList votes={againstVotes} />
+          </div>
         </div>
       </div>
     </>

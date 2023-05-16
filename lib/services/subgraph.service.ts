@@ -1,40 +1,12 @@
 import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
-import { Address } from 'wagmi';
 import { SUBGRAPH_URL } from '../constants';
 import { VOTE_FRAGMENT } from './fragments';
-
-export interface Vote {
-  id: string;
-  vote: number;
-  votes: number;
-  support: boolean;
-  supportDetailed: number;
-  reason: string;
-  voter: {
-    id: Address;
-  };
-  proposal: {
-    id: string;
-    title: string;
-  };
-  blockNumber: number;
-}
-
-export interface Proposal {
-  id: string;
-  title: string;
-  description: string;
-  startBlock: number;
-  endBlock: number;
-  forVotes: number;
-  againstVotes: number;
-  status: string;
-}
+import { Vote, Proposal } from '../../types/generated/nounsSubgraph';
 
 export type Order = 'desc' | 'asc';
 
 const GET_VOTES = gql`
-  query GetVotes($order: String, $limit: Int, $offset: Int) {
+  query GetVotes($order: OrderDirection, $limit: Int, $offset: Int) {
     votes(
       orderBy: blockNumber
       orderDirection: $order
@@ -65,7 +37,7 @@ const GET_VOTES_BY_VOTER = gql`
 const GET_VOTES_FOR_PROPOSAL = gql`
   query GetVotesForProposal(
     $proposalId: String!
-    $order: String
+    $order: OrderDirection
     $limit: Int
     $offset: Int
   ) {
@@ -82,15 +54,16 @@ const GET_VOTES_FOR_PROPOSAL = gql`
   ${VOTE_FRAGMENT}
 `;
 
-const GET_OPEN_PROPOSALS = gql`
-  query GetOpenProposals(
-    $currentBlock: String
-    $order: String
+const GET_PROPOSALS = gql`
+  query GetProposals(
+    $startBlockLimit: BigInt
+    $endBlockLimit: BigInt
+    $order: OrderDirection
     $limit: Int
     $offset: Int
   ) {
-    openProposals: proposals(
-      where: { endBlock_gt: $currentBlock, startBlock_lte: $currentBlock }
+    proposals: proposals(
+      where: { endBlock_gt: $endBlockLimit, startBlock_lte: $startBlockLimit }
       orderBy: endBlock
       orderDirection: $order
       first: $limit
@@ -100,7 +73,17 @@ const GET_OPEN_PROPOSALS = gql`
       title
       forVotes
       againstVotes
+      abstainVotes
+      totalSupply
+      minQuorumVotesBPS
+      maxQuorumVotesBPS
+      quorumCoefficient
+      createdTimestamp
+      createdBlock
+      startBlock
+      status
       endBlock
+      quorumVotes
     }
   }
 `;
@@ -122,22 +105,25 @@ export class SubgraphService {
     });
   }
 
-  public async getOpenProposals(
-    currentBlock: string,
+  public async getProposals(
+    startBlockLimit: string,
+    endBlockLimit: string,
     order: Order,
     limit: number,
     offset: number
-  ) {
+  ): Promise<Proposal[]> {
     const { data } = await this.client.query({
-      query: GET_OPEN_PROPOSALS,
+      query: GET_PROPOSALS,
       variables: {
-        currentBlock,
+        startBlockLimit,
+        endBlockLimit,
         order,
         limit,
         offset,
       },
+      fetchPolicy: 'network-only',
     });
-    return data?.openProposals || [];
+    return data?.proposals || [];
   }
 
   public async getVotes(
@@ -153,6 +139,7 @@ export class SubgraphService {
         order,
         ...(limit && offset && { limit, offset }),
       },
+      fetchPolicy: 'network-only',
     });
     return data?.votes || [];
   }
@@ -170,6 +157,7 @@ export class SubgraphService {
         order,
         ...(limit && offset && { limit, offset }),
       },
+      fetchPolicy: 'network-only',
     });
     return data?.votes || [];
   }

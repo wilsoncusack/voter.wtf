@@ -6,7 +6,7 @@ import { buildVotesWithLikes } from '../../../lib';
 
 const QuerySchema = z.object({
   page: z.coerce.number().default(1),
-  limit: z.coerce.number().default(5),
+  limit: z.coerce.number().default(10),
   order: z.enum(['desc', 'asc']).default('desc'),
   voterId: z.string().optional(),
 });
