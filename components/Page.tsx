@@ -21,22 +21,24 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
         <Head>
           <title>{title}</title>
         </Head>
-        <Link href="/" className="flex justify-between w-full">
-          <div className="ml-8 justify-start">
-            <Image
-              src={HeadSVG}
-              alt="Noun652 Head"
-              className="w-auto h-12"
-              width={48}
-              height={48}
-            />
-            <h1 className="neon mb-4 md:mb-0">VwR</h1>
-          </div>
-          <div className="m-4 flex justify-end">
-            <ConnectKitButton />
-          </div>
-        </Link>
-        <div className="bg-gray-900 min-h-screen text-white font-sans">
+        <header className="fixed top-0 right-0 w-full">
+          <Link href="/" className="flex justify-between w-full">
+            <div className="ml-8 justify-start">
+              <Image
+                src={HeadSVG}
+                alt="Noun652 Head"
+                className="w-auto h-12"
+                width={48}
+                height={48}
+              />
+              <h1 className="neon mb-4 md:mb-0">VwR</h1>
+            </div>
+            <div className="m-4 flex justify-end">
+              <ConnectKitButton />
+            </div>
+          </Link>
+        </header>
+        <div className="bg-gray-900 min-h-screen text-white font-sans pt-20">
           {children}
         </div>
       </main>

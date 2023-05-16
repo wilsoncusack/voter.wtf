@@ -7,16 +7,18 @@ export type VoteListOptions = {
   voterId?: string;
 };
 
-export const getKey = (pageIndex, previousPageData) => {
+export const getKey = (pageIndex, previousPageData, voterId?: string) => {
   if (previousPageData && !previousPageData.length) return null; // reached the end
-  return `/api/votes?page=${pageIndex + 1}`; // SWR key
+  return `/api/votes?page=${pageIndex + 1}${
+    voterId ? `&voterId=${voterId}` : ''
+  }`;
 };
 
 export function PaginatedVoteList({ voterId }: VoteListOptions) {
   const observer = useRef<IntersectionObserver | null>(null);
 
   const { data, error, isLoading, isValidating, size, setSize } =
-    useSWRInfinite(getKey, fetcher);
+    useSWRInfinite((...args) => getKey(...args, voterId), fetcher);
 
   const lastVoteElementRef = useCallback(
     async (node: HTMLDivElement) => {

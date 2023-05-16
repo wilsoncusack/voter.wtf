@@ -7,7 +7,12 @@ import { viem } from '../../lib/wagmi';
 import { ensureTitleCase, formatAddress } from '../../lib/util/format';
 import { Address } from 'wagmi';
 import React, { useMemo } from 'react';
-import { PaginatedVoteList } from '../../compositions/PaginatedVoteList';
+import {
+  getKey,
+  PaginatedVoteList,
+} from '../../compositions/PaginatedVoteList';
+import { subgraphService } from '../../lib/services/subgraph.service';
+import { unstable_serialize } from 'swr/infinite';
 
 type VoterPageProps = {
   address: Address;
@@ -79,18 +84,20 @@ export const getStaticProps: GetStaticProps<
       address,
     });
   }
-  // const votes = await subgraphService.getVotes({
-  //   order: 'desc',
-  //   voterId: address,
-  //   offset: 0,
-  //   limit: 5,
-  // });
+  const votes = await subgraphService.getVotes({
+    order: 'desc',
+    voterId: address,
+    offset: 0,
+    limit: 10,
+  });
 
   return {
     props: {
       address,
       ensName,
-      fallback: {},
+      fallback: {
+        [unstable_serialize((...args) => getKey(...args, address))]: votes,
+      },
     },
     revalidate: 30,
   };
