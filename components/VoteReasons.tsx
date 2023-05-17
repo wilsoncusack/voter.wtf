@@ -1,16 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Address,
-  useEnsAvatar,
-  useEnsName,
-  useSigner,
-  useAccount,
-} from 'wagmi';
-import {
-  getEtherscanLink,
-  getNounsLink,
-  replaceURLsWithLink,
-} from '../lib/util/link';
+import { useAccount, useEnsAvatar, useEnsName, useSigner } from 'wagmi';
+import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
 import { TimeAgo } from './TimeAgo';
@@ -19,6 +9,8 @@ import axios from 'axios';
 import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like, Vote } from '../types/Vote';
+import Link from 'next/link';
+import { getAddress } from 'viem';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -26,11 +18,13 @@ interface VoteReasonProps {
 
 export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
+  // TODO - checksum to ensure correct lookup for ens traits, need to add a zod schema to validate & transform on fetch
+  const checksum = getAddress(vote.voter.id);
   const { data: rawEnsName } = useEnsName({
-    address: vote.voter.id as Address,
+    address: checksum,
   });
   const { data: ensAvatar } = useEnsAvatar({
-    address: vote.voter.id as Address,
+    address: checksum,
   });
   const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
   const { data: signer } = useSigner();
@@ -58,6 +52,9 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 
     try {
       const signedMessage = await signer.signMessage(message);
+      setLiked(true);
+      // TODO pass in some isNounHolder from the top level
+      // and update vote count based on this
       const response = await axios.post('/api/likeVote', {
         prop_id: vote.proposal.id,
         voter: vote.voter.id,
@@ -65,12 +62,11 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         user: account,
       });
 
-      if (response.status === 200) {
-        setLiked(true);
-        // TODO pass in some isNounHolder from the top level
-        // and update vote count based on this
+      if (response.status != 200) {
+        setLiked(false);
       }
     } catch (error) {
+      setLiked(false);
       console.error('Error liking the vote:', error);
     }
   };
@@ -106,16 +102,15 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     >
       {reason != '' && (
         <div className="mr-4">
-          <a
-            href={getEtherscanLink(vote.voter.id as Address)}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <Link href={`/voters/${encodeURIComponent(vote.voter.id)}`}>
             <div
-              className={classNames('rounded-full w-12 h-12 overflow-hidden', {
-                'avatar-image': !!ensAvatar,
-                'bg-gray-700': !ensAvatar,
-              })}
+              className={classNames(
+                'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border',
+                {
+                  'avatar-image': !!ensAvatar,
+                  'bg-gray-700': !ensAvatar,
+                }
+              )}
             >
               <img
                 className={classNames('w-12 h-12', {
@@ -125,9 +120,9 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 alt={`Ens Avatar for ${vote.voter.id}`}
               />
             </div>
-          </a>
+          </Link>
           <div>
-            <div className={'flex mt-4 justify-center'}>
+            <div className="flex mt-4 justify-center">
               {voterLikes.length > 0 && (
                 <>
                   <Image
@@ -163,14 +158,12 @@ export function VoteReasons({ vote }: VoteReasonProps) {
       )}
       <div>
         <div className="text-gray-300">
-          <a
-            href={getEtherscanLink(vote.voter.id as Address)}
+          <Link
             className="hover:underline"
-            target="_blank"
-            rel="noreferrer"
+            href={`/voters/${encodeURIComponent(vote.voter.id)}`}
           >
             {ensName}
-          </a>
+          </Link>
           {': '}
           <span
             className={classNames('font-semibold', {

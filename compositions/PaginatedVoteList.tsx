@@ -3,15 +3,22 @@ import { VoteList } from '../components/VoteList';
 import useSWRInfinite from 'swr/infinite';
 import { fetcher } from '../lib/util/swr';
 
-export const getKey = (pageIndex, previousPageData) => {
-  if (previousPageData && !previousPageData.length) return null; // reached the end
-  return `/api/votes?page=${pageIndex + 1}`; // SWR key
+export type VoteListOptions = {
+  voterId?: string;
 };
 
-export function PaginatedVoteList() {
+export const getKey = (pageIndex, previousPageData, voterId?: string) => {
+  if (previousPageData && !previousPageData.length) return null; // reached the end
+  return `/api/votes?page=${pageIndex + 1}${
+    voterId ? `&voterId=${voterId}` : ''
+  }`;
+};
+
+export function PaginatedVoteList({ voterId }: VoteListOptions) {
   const observer = useRef<IntersectionObserver | null>(null);
+
   const { data, error, isLoading, isValidating, size, setSize } =
-    useSWRInfinite(getKey, fetcher);
+    useSWRInfinite((...args) => getKey(...args, voterId), fetcher);
 
   const lastVoteElementRef = useCallback(
     async (node: HTMLDivElement) => {
@@ -27,6 +34,20 @@ export function PaginatedVoteList() {
   );
 
   const votes = useMemo(() => data?.flat() || [], [data]);
+  const isLoadingMore = useMemo(
+    () =>
+      isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined'),
+    [data, isLoading, size]
+  );
+  const isEmpty = useMemo(() => data?.[0]?.length === 0, []);
+  const isReachingEnd = useMemo(
+    () => isEmpty || (data && data[data.length - 1]?.length < 10),
+    [data, isEmpty]
+  );
+  const isRefreshing = useMemo(
+    () => isValidating && data && data.length === size,
+    [data, isValidating, size]
+  );
 
   if (!votes) {
     return <div>Loading...</div>;
@@ -39,11 +60,11 @@ export function PaginatedVoteList() {
   return (
     <div className="flex flex-col justify-center items-center">
       <VoteList votes={votes} />
-      {isLoading || isValidating ? (
+      {isLoadingMore || isRefreshing ? (
         <h6 className="text-gray-600 text-s">Loading...</h6>
-      ) : (
+      ) : !isReachingEnd ? (
         <div ref={lastVoteElementRef} className="h-4" />
-      )}
+      ) : null}
     </div>
   );
 }

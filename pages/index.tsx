@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
 import { subgraphService } from '../lib/services/subgraph.service';
-import { SWRConfig } from 'swr';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
-import { Proposal } from '../types/Proposal';
+import { Proposal, ProposalStatus } from '../types/Proposal';
 import axios from 'axios';
 import { getProposals } from '../lib/proposals';
 import { getNounsLink } from '../lib/util/link';
+import { Page } from '../components/Page';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -24,7 +24,6 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
   );
 
   const toggleProposalsType = async (type: 'active' | 'all') => {
-    console.log(type);
     let proposals;
     if (type == 'active') {
       const block = await viem.getBlockNumber();
@@ -38,6 +37,9 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           offset: 0,
         },
       });
+      proposals = proposals.data.filter(
+        proposal => proposal.status != ProposalStatus.Cancelled
+      );
     } else {
       const block = await viem.getBlockNumber();
       proposals = await axios.get('/api/proposals', {
@@ -50,13 +52,13 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           offset: 0,
         },
       });
-      console.log(proposals);
+      proposals = proposals.data;
     }
-    setProposals(proposals.data);
+    setProposals(proposals);
   };
 
   return (
-    <SWRConfig value={{ fallback }}>
+    <Page title="Home" fallback={fallback}>
       <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
         <div className="md:fixed md:overflow-y-auto md:w-1/3 md:max-h-screen">
           <ProposalContainer
@@ -92,15 +94,19 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           </div>
         </div>
       </div>
-    </SWRConfig>
+    </Page>
   );
 }
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes('desc', 10, 0);
+  const votes = await subgraphService.getVotes({
+    order: 'desc',
+    limit: 10,
+    offset: 0,
+  });
   const block = await viem.getBlockNumber();
-  const proposals = await getProposals(
+  let proposals = await getProposals(
     block,
     block.toString(),
     block.toString(),
@@ -109,8 +115,14 @@ export async function getStaticProps() {
     0
   );
 
+  proposals = proposals.filter(
+    proposal => proposal.status != ProposalStatus.Cancelled
+  );
+
   const prefetchedVotes = await Promise.all(
-    proposals.map(p => subgraphService.getVotesForProposal(p.id, 'desc'))
+    proposals
+      .slice(0, 3)
+      .map(p => subgraphService.getVotesForProposal(p.id, 'desc'))
   );
 
   const voteFallback = prefetchedVotes.reduce((acc, votes, idx) => {
