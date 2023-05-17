@@ -137,7 +137,8 @@ export class SubgraphService {
           voterId: voterId.toLowerCase(),
         }),
         order,
-        ...(limit && offset && { limit, offset }),
+        limit,
+        offset,
       },
       fetchPolicy: 'network-only',
     });
@@ -155,7 +156,8 @@ export class SubgraphService {
       variables: {
         proposalId,
         order,
-        ...(limit && offset && { limit, offset }),
+        limit,
+        offset,
       },
       fetchPolicy: 'network-only',
     });
