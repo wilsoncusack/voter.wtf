@@ -10,6 +10,7 @@ import { unstable_serialize } from 'swr/infinite';
 import { Proposal } from '../types/Proposal';
 import axios from 'axios';
 import { getProposals } from '../lib/proposals';
+import { getNounsLink } from '../lib/util/link';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -69,7 +70,7 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
           <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
             {selectedProposal ? (
               <a
-                href={`https://nouns.wtf/vote/${selectedProposal.id}`}
+                href={getNounsLink(selectedProposal.id)}
                 target="_blank"
                 rel="noreferrer"
                 className="hover:underline"
