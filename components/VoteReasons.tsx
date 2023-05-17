@@ -58,6 +58,9 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 
     try {
       const signedMessage = await signer.signMessage(message);
+      setLiked(true);
+      // TODO pass in some isNounHolder from the top level
+      // and update vote count based on this
       const response = await axios.post('/api/likeVote', {
         prop_id: vote.proposal.id,
         voter: vote.voter.id,
@@ -65,12 +68,11 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         user: account,
       });
 
-      if (response.status === 200) {
-        setLiked(true);
-        // TODO pass in some isNounHolder from the top level
-        // and update vote count based on this
+      if (response.status != 200) {
+        setLiked(false);
       }
     } catch (error) {
+      setLiked(false);
       console.error('Error liking the vote:', error);
     }
   };
