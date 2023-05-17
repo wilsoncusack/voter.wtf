@@ -71,6 +71,8 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
               <a
                 href={`https://nouns.wtf/vote/${selectedProposal.id}`}
                 target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
               >
                 {selectedProposal.id}: ${selectedProposal.title}
               </a>
