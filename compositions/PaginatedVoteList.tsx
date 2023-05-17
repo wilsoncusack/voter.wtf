@@ -39,7 +39,7 @@ export function PaginatedVoteList({ voterId }: VoteListOptions) {
       isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined'),
     [data, isLoading, size]
   );
-  const isEmpty = useMemo(() => data?.[0]?.length === 0, []);
+  const isEmpty = useMemo(() => data?.[0]?.length === 0, [data]);
   const isReachingEnd = useMemo(
     () => isEmpty || (data && data[data.length - 1]?.length < 10),
     [data, isEmpty]

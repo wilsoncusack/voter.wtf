@@ -14,7 +14,7 @@ type PageProps = {
 };
 
 export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
-  const title = pageTitle + ' - Nounsvote.wtf';
+  const title = pageTitle + ' - voter.wtf';
   return (
     <SWRConfig value={{ fallback }}>
       <main>

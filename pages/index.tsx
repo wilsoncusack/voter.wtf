@@ -11,13 +11,20 @@ import axios from 'axios';
 import { getProposals } from '../lib/proposals';
 import { getNounsLink } from '../lib/util/link';
 import { Page } from '../components/Page';
+import StatsCard, { WeeklyStats } from '../components/StatsCard';
+import { weeklyStats } from '../lib/stats';
 
 type HomePageProps = {
   fallback: FallbackProp;
   openProposals: Proposal[];
+  stats: WeeklyStats;
 };
 
-export default function Home({ openProposals, fallback }: HomePageProps) {
+export default function Home({
+  openProposals,
+  fallback,
+  stats,
+}: HomePageProps) {
   const [propososals, setProposals] = useState<Proposal[]>(openProposals);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
@@ -68,30 +75,37 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
             toggleProposalsType={toggleProposalsType}
           />
         </div>
-        <div className="md:w-2/3 md:ml-auto">
-          <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-            {selectedProposal ? (
-              <a
-                href={getNounsLink(selectedProposal.id)}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:underline"
-              >
-                {selectedProposal.id}: ${selectedProposal.title}
-              </a>
-            ) : (
-              'Vote Timeline'
-            )}
-          </h1>
-          <div className="flex flex-wrap justify-left m-4">
-            {selectedProposal ? (
-              <SelectedProposalVoteView selectedProposal={selectedProposal} />
-            ) : (
-              <div className="flex justify-center items-center">
-                <PaginatedVoteList />
-              </div>
-            )}
+        <div className="flex md:w-2/3 md:ml-auto relative">
+          <div className={selectedProposal ? '' : 'md:w-2/3'}>
+            <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+              {selectedProposal ? (
+                <a
+                  href={getNounsLink(selectedProposal.id)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:underline"
+                >
+                  {selectedProposal.id}: {selectedProposal.title}
+                </a>
+              ) : (
+                'Vote Timeline'
+              )}
+            </h1>
+            <div className="flex flex-wrap justify-left m-4">
+              {selectedProposal ? (
+                <SelectedProposalVoteView selectedProposal={selectedProposal} />
+              ) : (
+                <div>
+                  <PaginatedVoteList />
+                </div>
+              )}
+            </div>
           </div>
+          {!selectedProposal && (
+            <div className="fixed right-0 top-20">
+              <StatsCard stats={stats} />
+            </div>
+          )}
         </div>
       </div>
     </Page>
@@ -140,6 +154,7 @@ export async function getStaticProps() {
         [unstable_serialize(getKey)]: votes,
         ...voteFallback,
       },
+      stats: await weeklyStats(),
     },
     revalidate: 10,
   };
