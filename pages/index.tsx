@@ -9,6 +9,7 @@ import { unstable_serialize } from 'swr/infinite';
 import { Proposal, ProposalStatus } from '../types/Proposal';
 import axios from 'axios';
 import { getProposals } from '../lib/proposals';
+import { getNounsLink } from '../lib/util/link';
 import { Page } from '../components/Page';
 
 type HomePageProps = {
@@ -69,9 +70,18 @@ export default function Home({ openProposals, fallback }: HomePageProps) {
         </div>
         <div className="md:w-2/3 md:ml-auto">
           <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-            {selectedProposal
-              ? `${selectedProposal.id}: ${selectedProposal.title}`
-              : 'Vote Timeline'}
+            {selectedProposal ? (
+              <a
+                href={getNounsLink(selectedProposal.id)}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
+              >
+                {selectedProposal.id}: ${selectedProposal.title}
+              </a>
+            ) : (
+              'Vote Timeline'
+            )}
           </h1>
           <div className="flex flex-wrap justify-left m-4">
             {selectedProposal ? (
