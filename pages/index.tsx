@@ -102,7 +102,7 @@ export default function Home({
             </div>
           </div>
           {!selectedProposal && (
-            <div className="fixed right-0 top-20">
+            <div className="hidden md:block fixed right-0 top-20">
               <StatsCard stats={stats} />
             </div>
           )}
