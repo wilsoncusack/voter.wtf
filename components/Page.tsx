@@ -21,9 +21,9 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
         <Head>
           <title>{title}</title>
         </Head>
-        <header className="fixed top-0 right-0 w-full">
+        <header className="bg-gray-900 md:bg-transparent z-10 fixed top-0 right-0 w-full">
           <Link href="/" className="flex justify-between w-full">
-            <div className="ml-8 justify-start">
+            <div className="bg-gray-900 ml-8 justify-start">
               <Image
                 src={HeadSVG}
                 alt="Noun652 Head"

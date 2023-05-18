@@ -30,7 +30,7 @@ export function SelectedProposalVoteView({
         setMobileVoteType={setVoteType}
         mobileVoteType={voteType}
       />
-      <div className="w-full grid gap-4 px-4 md:grid-cols-2 sm:grid-cols-1">
+      <div className="z-0 w-full grid gap-4 px-4 md:grid-cols-2 sm:grid-cols-1">
         <div
           className={classNames([
             'md:block relative',
