@@ -1,12 +1,9 @@
-import {
-  MobileForAgainstToggle,
-  VoteType,
-} from '../components/MobileForAgainstToggle';
 import { VoteList } from '../components/VoteList';
 import { useVotesForProposal } from '../hooks/useVotesForProposal';
-import { clsx as classNames } from 'clsx';
 import { useState } from 'react';
 import { Proposal } from '../types/Proposal';
+import { ForAgainstView } from '../components/ForAgainstView';
+import { ClockIcon, TableCellsIcon } from '@heroicons/react/24/outline';
 
 interface SelectedProposalVoteViewProps {
   selectedProposal: Proposal;
@@ -15,49 +12,36 @@ interface SelectedProposalVoteViewProps {
 export function SelectedProposalVoteView({
   selectedProposal,
 }: SelectedProposalVoteViewProps) {
-  const [voteType, setVoteType] = useState<VoteType>('for');
-  const { forVotes = [], againstVotes = [] } = useVotesForProposal(
-    selectedProposal.id
-  );
+  const { votes } = useVotesForProposal(selectedProposal.id);
+  const [timelineView, setTimelineView] = useState(false);
 
-  if (!forVotes || !againstVotes) {
+  if (!votes) {
     return <div>Loading...</div>;
   }
 
   return (
-    <>
-      <MobileForAgainstToggle
-        setMobileVoteType={setVoteType}
-        mobileVoteType={voteType}
-      />
-      <div className="z-0 w-full grid gap-4 px-4 md:grid-cols-2 sm:grid-cols-1">
-        <div
-          className={classNames([
-            'md:block relative',
-            voteType === 'for' ? 'block' : 'hidden',
-          ])}
+    <div>
+      <div className="flex mb-2">
+        <button
+          className={`rounded-md p-2 m-1 ${timelineView ? 'bg-gray-700 ' : ''}`}
+          onClick={() => setTimelineView(true)}
         >
-          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
-            <span className="text-green-400">For</span>
-          </h2>
-          <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
-            <VoteList votes={forVotes} />
-          </div>
-        </div>
-        <div
-          className={classNames([
-            'md:block relative',
-            voteType === 'against' ? 'block' : 'hidden',
-          ])}
+          <ClockIcon height={25} width={25} />
+        </button>
+        <button
+          className={`rounded-md p-2 m-1 ${
+            !timelineView ? 'bg-gray-700 ' : ''
+          }`}
+          onClick={() => setTimelineView(false)}
         >
-          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
-            <span className="text-red-400">Against</span>
-          </h2>
-          <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
-            <VoteList votes={againstVotes} />
-          </div>
-        </div>
+          <TableCellsIcon height={25} width={25} />
+        </button>
       </div>
-    </>
+      {timelineView ? (
+        <VoteList votes={votes} />
+      ) : (
+        <ForAgainstView votes={votes} />
+      )}
+    </div>
   );
 }
