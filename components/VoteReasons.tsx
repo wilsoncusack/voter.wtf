@@ -96,20 +96,10 @@ export function VoteReasons({ vote }: VoteReasonProps) {
           <Link href={`/voters/${encodeURIComponent(vote.voter.id)}`}>
             <div
               className={classNames(
-                'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border',
-                {
-                  'avatar-image': !!vote.voter.ensAvatar,
-                  'bg-gray-700': !vote.voter.ensAvatar,
-                }
+                'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border bg-gray-700'
               )}
             >
-              <img
-                className={classNames('w-12 h-12', {
-                  hidden: !vote.voter.ensAvatar,
-                })}
-                src={vote.voter.ensAvatar}
-                alt={`Ens Avatar for ${vote.voter.id}`}
-              />
+              {vote.voter.ensAvatar && <EnsImage url={vote.voter.ensAvatar} />}
             </div>
           </Link>
           <div>
@@ -228,3 +218,28 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 }
 
 export default VoteReasons;
+
+function EnsImage({ url }) {
+  const [error, setError] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+
+  useEffect(() => {
+    setImageUrl('/api/image?url=' + encodeURIComponent(url));
+  }, [url]);
+
+  const handleError = () => {
+    setError(true);
+  };
+
+  return error ? (
+    <div className="rounded-full w-12 h-12 bg-gray-700"></div>
+  ) : (
+    <Image
+      src={imageUrl}
+      width={48}
+      height={48}
+      alt={`Ens Avatar`}
+      onError={handleError}
+    />
+  );
+}
