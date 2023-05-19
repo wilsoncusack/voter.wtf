@@ -1,9 +1,6 @@
-import { getAddress } from 'viem';
 import { Vote } from '../types/Vote';
 import { Vote as GqlVote } from '../types/generated/nounsSubgraph';
 import { supabase } from './supabaseClient';
-import { viem } from './wagmi';
-import { normalize } from 'path';
 import {
   FilterParams,
   Order,
@@ -44,17 +41,22 @@ export const buildVoteFromGqlVote = async (
     votes.map(async vote => {
       const id = `${vote.proposal.id}-${vote.voter.id}`;
       const likes = voteLikes.data.filter(like => like.vote_id === id);
-      const voterAddress = getAddress(vote.voter.id);
-      const ensName = await viem.getEnsName({ address: voterAddress });
-      const ensAvatar = ensName
-        ? await viem.getEnsAvatar({ name: normalize(ensName) })
-        : null;
+      const ensInfo = await fetch(
+        `https://api.ensideas.com/ens/resolve/${vote.voter.id}`
+      ).then(res => res.json());
+      const ensName = ensInfo.displayName;
+      const ensAvatar = ensInfo.avatar;
+      //   const voterAddress = getAddress(vote.voter.id);
+      //   const ensName = await viem.getEnsName({ address: voterAddress });
+      //   const ensAvatar = ensName
+      //     ? await viem.getEnsAvatar({ name: normalize(ensName) })
+      //     : null;
       return {
         likes,
         ...vote,
         voter: {
           ensAvatar: ensAvatar,
-          ensName: ensName ? ensName : voterAddress.slice(0, 8),
+          ensName: ensName ? ensName : vote.voter.id.slice(0, 8),
           ...vote.voter,
         },
       };

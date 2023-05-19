@@ -124,7 +124,7 @@ export async function getStaticProps() {
     block.toString(),
     block.toString(),
     'asc',
-    10,
+    20,
     0
   );
 
