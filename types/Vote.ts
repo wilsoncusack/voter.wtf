@@ -1,4 +1,4 @@
-import { Vote as GqlVote } from './generated/nounsSubgraph';
+import { Vote as GqlVote, Delegate } from './generated/nounsSubgraph';
 
 export interface Like {
   id?: string;
@@ -8,6 +8,12 @@ export interface Like {
   vote_id: string;
 }
 
-export interface Vote extends GqlVote {
+export interface Voter extends Delegate {
+  ensName: string | null;
+  ensAvatar: string | null;
+}
+
+export interface Vote extends Omit<GqlVote, 'voter'> {
   likes: Like[];
+  voter: Voter;
 }

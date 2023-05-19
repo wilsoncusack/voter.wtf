@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
-import { subgraphService } from '../lib/services/subgraph.service';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
 import { FallbackProp } from '../lib/util/swr';
 import { viem } from '../lib/wagmi';
@@ -13,6 +12,7 @@ import { getNounsLink } from '../lib/util/link';
 import { Page } from '../components/Page';
 import StatsCard, { WeeklyStats } from '../components/StatsCard';
 import { weeklyStats } from '../lib/stats';
+import { getVotes, getVotesForProposal } from '../lib/votes';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -113,8 +113,7 @@ export default function Home({
 }
 
 export async function getStaticProps() {
-  // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes({
+  const votes = await getVotes({
     order: 'desc',
     limit: 10,
     offset: 0,
@@ -125,7 +124,7 @@ export async function getStaticProps() {
     block.toString(),
     block.toString(),
     'asc',
-    10,
+    20,
     0
   );
 
@@ -134,9 +133,7 @@ export async function getStaticProps() {
   );
 
   const prefetchedVotes = await Promise.all(
-    proposals
-      .slice(0, 3)
-      .map(p => subgraphService.getVotesForProposal(p.id, 'desc'))
+    proposals.slice(0, 3).map(p => getVotesForProposal(p.id, 'desc'))
   );
 
   const voteFallback = prefetchedVotes.reduce((acc, votes, idx) => {

@@ -88,7 +88,7 @@ const GET_PROPOSALS = gql`
   }
 `;
 
-type FilterParams<T = object> = T & {
+export type FilterParams<T = object> = T & {
   order: Order;
   limit?: number;
   offset?: number;
