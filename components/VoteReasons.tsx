@@ -103,7 +103,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 }
               )}
             >
-              {vote.voter.ensAvatar && EnsImage(vote.voter.ensAvatar)}
+              {vote.voter.ensAvatar && <EnsImage url={vote.voter.ensAvatar} />}
             </div>
           </Link>
           <div>
@@ -223,7 +223,25 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 
 export default VoteReasons;
 
-function EnsImage(url: string) {
-  const imageUrl = '/api/image?url=' + url;
-  return <Image src={imageUrl} width={48} height={48} alt={`Ens Avatar`} />;
+function EnsImage({ url }) {
+  const [error, setError] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+
+  useEffect(() => {
+    setImageUrl('/api/image?url=' + encodeURIComponent(url));
+  }, [url]);
+
+  const handleError = () => {
+    setError(true);
+  };
+
+  return error ? null : (
+    <Image
+      src={imageUrl}
+      width={48}
+      height={48}
+      alt={`Ens Avatar`}
+      onError={handleError}
+    />
+  );
 }
