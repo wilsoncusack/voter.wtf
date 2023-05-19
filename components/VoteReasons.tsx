@@ -235,7 +235,9 @@ function EnsImage({ url }) {
     setError(true);
   };
 
-  return error ? null : (
+  return error ? (
+    <div className="rounded-full w-12 h-12 bg-gray-700"></div>
+  ) : (
     <Image
       src={imageUrl}
       width={48}
