@@ -4,7 +4,33 @@ import { Vote as GqlVote } from '../types/generated/nounsSubgraph';
 import { supabase } from './supabaseClient';
 import { viem } from './wagmi';
 import { normalize } from 'path';
-import { FilterParams, subgraphService } from './services/subgraph.service';
+import {
+  FilterParams,
+  Order,
+  subgraphService,
+} from './services/subgraph.service';
+
+export const getVotesForProposal = async (
+  proposalId: string,
+  order: Order,
+  limit?: number,
+  offset?: number
+): Promise<Vote[]> => {
+  const gqlVotes = await subgraphService.getVotesForProposal(
+    proposalId,
+    order,
+    limit,
+    offset
+  );
+  return await buildVoteFromGqlVote(gqlVotes);
+};
+
+export const getVotes = async (
+  params: FilterParams<{ voterId?: string }>
+): Promise<Vote[]> => {
+  const gqlVotes = await subgraphService.getVotes(params);
+  return await buildVoteFromGqlVote(gqlVotes);
+};
 
 export const buildVoteFromGqlVote = async (
   votes: GqlVote[]
@@ -20,23 +46,18 @@ export const buildVoteFromGqlVote = async (
       const likes = voteLikes.data.filter(like => like.vote_id === id);
       const voterAddress = getAddress(vote.voter.id);
       const ensName = await viem.getEnsName({ address: voterAddress });
-      const ensAvatar = await viem.getEnsAvatar({ name: normalize(ensName) });
+      const ensAvatar = ensName
+        ? await viem.getEnsAvatar({ name: normalize(ensName) })
+        : null;
       return {
         likes,
         ...vote,
         voter: {
           ensAvatar: ensAvatar,
-          ensName: ensName,
+          ensName: ensName ? ensName : voterAddress.slice(0, 8),
           ...vote.voter,
         },
       };
     })
   );
-};
-
-export const getVotes = async (
-  params: FilterParams<{ voterId?: string }>
-): Promise<Vote[]> => {
-  const gqlVotes = await subgraphService.getVotes(params);
-  return await buildVoteFromGqlVote(gqlVotes);
 };
