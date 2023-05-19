@@ -13,6 +13,7 @@ import { getNounsLink } from '../lib/util/link';
 import { Page } from '../components/Page';
 import StatsCard, { WeeklyStats } from '../components/StatsCard';
 import { weeklyStats } from '../lib/stats';
+import { getVotes } from '../lib/votes';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -114,7 +115,7 @@ export default function Home({
 
 export async function getStaticProps() {
   // TODO - update service with sensible defaults for use cross app
-  const votes = await subgraphService.getVotes({
+  const votes = await getVotes({
     order: 'desc',
     limit: 10,
     offset: 0,

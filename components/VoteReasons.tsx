@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAccount, useEnsAvatar, useEnsName, useSigner } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
@@ -10,7 +10,6 @@ import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like, Vote } from '../types/Vote';
 import Link from 'next/link';
-import { getAddress } from 'viem';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -18,14 +17,6 @@ interface VoteReasonProps {
 
 export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
-  // TODO - checksum to ensure correct lookup for ens traits, need to add a zod schema to validate & transform on fetch
-  const checksum = getAddress(vote.voter.id);
-  const { data: rawEnsName } = useEnsName({
-    address: checksum,
-  });
-  const { data: ensAvatar } = useEnsAvatar({
-    address: checksum,
-  });
   const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
@@ -34,8 +25,8 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   const [nonVoterLikes, setNonVoterLikes] = useState<Like[]>([]);
 
   const ensName = useMemo(
-    () => (rawEnsName ? rawEnsName : vote.voter.id.slice(0, 8)),
-    [vote.voter, rawEnsName]
+    () => (vote.voter.ensName ? vote.voter.ensName : vote.voter.id.slice(0, 8)),
+    [vote.voter.id, vote.voter.ensName]
   );
 
   const reason = useMemo(
@@ -107,16 +98,16 @@ export function VoteReasons({ vote }: VoteReasonProps) {
               className={classNames(
                 'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border',
                 {
-                  'avatar-image': !!ensAvatar,
-                  'bg-gray-700': !ensAvatar,
+                  'avatar-image': !!vote.voter.ensAvatar,
+                  'bg-gray-700': !vote.voter.ensAvatar,
                 }
               )}
             >
               <img
                 className={classNames('w-12 h-12', {
-                  hidden: !ensAvatar,
+                  hidden: !vote.voter.ensAvatar,
                 })}
-                src={ensAvatar}
+                src={vote.voter.ensAvatar}
                 alt={`Ens Avatar for ${vote.voter.id}`}
               />
             </div>
