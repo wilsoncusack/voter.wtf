@@ -1,10 +1,10 @@
 import { getAddress } from 'viem';
 
-export function formatAddress(address: string, chars = 8) {
+export function formatAddress(address: string) {
   const checksum = getAddress(address);
-  const prefixLength = chars / 2;
-  const suffixLength = chars - prefixLength;
-  const prefix = '0x' + checksum.slice(0, prefixLength);
+  const prefixLength = 5;
+  const suffixLength = 3;
+  const prefix = checksum.slice(0, prefixLength);
   const suffix = '...' + checksum.slice(-suffixLength);
   return prefix + suffix;
 }

@@ -4,16 +4,16 @@ import { getAddress, isAddress } from 'viem';
 import { FallbackProp } from '../../lib/util/swr';
 import { useRouter } from 'next/router';
 import { viem } from '../../lib/wagmi';
-import { ensureTitleCase, formatAddress } from '../../lib/util/format';
+import { formatAddress } from '../../lib/util/format';
 import { Address } from 'wagmi';
 import React, { useMemo } from 'react';
 import {
   getKey,
   PaginatedVoteList,
 } from '../../compositions/PaginatedVoteList';
-import { subgraphService } from '../../lib/services/subgraph.service';
 import { unstable_serialize } from 'swr/infinite';
 import { getEtherscanLink } from '../../lib/util/link';
+import { getVotes } from '../../lib/votes';
 
 type VoterPageProps = {
   address: Address;
@@ -29,12 +29,7 @@ export default function Voter({ fallback, address, ensName }: VoterPageProps) {
   const { isFallback } = useRouter();
 
   const name = useMemo(
-    () =>
-      !isFallback
-        ? ensName
-          ? ensureTitleCase(ensName)
-          : formatAddress(address)
-        : null,
+    () => (!isFallback ? (ensName ? ensName : formatAddress(address)) : null),
     [address, ensName, isFallback]
   );
 
@@ -95,7 +90,7 @@ export const getStaticProps: GetStaticProps<
       address,
     });
   }
-  const votes = await subgraphService.getVotes({
+  const votes = await getVotes({
     order: 'desc',
     voterId: address,
     offset: 0,
