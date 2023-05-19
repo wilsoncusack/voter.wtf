@@ -96,11 +96,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
           <Link href={`/voters/${encodeURIComponent(vote.voter.id)}`}>
             <div
               className={classNames(
-                'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border',
-                {
-                  'avatar-image': !!vote.voter.ensAvatar,
-                  'bg-gray-700': !vote.voter.ensAvatar,
-                }
+                'rounded-full w-12 h-12 overflow-hidden transition-all border-transparent border-2 duration-100 hover:border-gray-500 box-border bg-gray-700'
               )}
             >
               {vote.voter.ensAvatar && <EnsImage url={vote.voter.ensAvatar} />}
