@@ -103,13 +103,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 }
               )}
             >
-              <img
-                className={classNames('w-12 h-12', {
-                  hidden: !vote.voter.ensAvatar,
-                })}
-                src={vote.voter.ensAvatar}
-                alt={`Ens Avatar for ${vote.voter.id}`}
-              />
+              {vote.voter.ensAvatar && EnsImage(vote.voter.ensAvatar)}
             </div>
           </Link>
           <div>
@@ -228,3 +222,8 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 }
 
 export default VoteReasons;
+
+function EnsImage(url: string) {
+  const imageUrl = '/api/image?url=' + url;
+  return <Image src={imageUrl} width={48} height={48} alt={`Ens Avatar`} />;
+}
