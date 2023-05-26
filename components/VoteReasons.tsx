@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like, Vote } from '../types/Vote';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -171,18 +172,41 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         >
           Prop {vote.proposal.id}: {vote.proposal.title}{' '}
         </a>
-        <div
-          className={classNames(
-            `whitespace-pre-line break-words overflow-wrap mb-2 mt-2`,
-            {
-              'text-gray-300': vote.reason,
-              'text-gray-500': !vote.reason,
-            }
-          )}
-          dangerouslySetInnerHTML={{
-            __html: reason,
-          }}
-        />
+        <div className="whitespace-pre-line break-words overflow-wrap mb-2 mt-2 text-gray-200">
+          <ReactMarkdown
+            components={{
+              a: ({ ...props }) => (
+                <a
+                  style={{
+                    wordBreak: 'break-word',
+                    textDecoration: 'underline',
+                  }}
+                  {...props}
+                />
+              ),
+              blockquote: ({ ...props }) => (
+                <blockquote
+                  className="pl-4 border-l-4 border-gray-400 italic"
+                  {...props}
+                />
+              ),
+              code: ({ inline, className, children, ...props }) => {
+                const match = /language-(\w+)/.exec(className || '');
+                return !inline && match ? (
+                  <pre style={{ whiteSpace: 'pre-wrap' }} {...props}>
+                    <code className={`language-${match[1]}`}>{children}</code>
+                  </pre>
+                ) : (
+                  <code style={{ whiteSpace: 'pre-wrap' }} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {vote.reason}
+          </ReactMarkdown>
+        </div>
         <TimeAgo
           className="text-gray-500 text-sm"
           timestamp={timestamp}
