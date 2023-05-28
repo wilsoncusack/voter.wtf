@@ -190,6 +190,26 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                   {...props}
                 />
               ),
+              p: ({ children, ...props }) => {
+                const newChildren = [];
+                children.forEach(child => {
+                  if (typeof child === 'string') {
+                    const parts = child.split(/(\S{15,})/g);
+                    parts.forEach(part => {
+                      if (part.length > 15) {
+                        newChildren.push(
+                          <span style={{ wordBreak: 'break-all' }}>{part}</span>
+                        );
+                      } else {
+                        newChildren.push(part);
+                      }
+                    });
+                  } else {
+                    newChildren.push(child);
+                  }
+                });
+                return <p {...props}>{newChildren}</p>;
+              },
               code: ({ inline, className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || '');
                 return !inline && match ? (
