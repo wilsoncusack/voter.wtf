@@ -194,14 +194,17 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 const newChildren = [];
                 children.forEach(child => {
                   if (typeof child === 'string') {
-                    const parts = child.split(/(\S{15,})/g);
-                    parts.forEach(part => {
+                    const parts = child.split(' ');
+                    parts.forEach((part, index) => {
                       if (part.length > 15) {
                         newChildren.push(
                           <span style={{ wordBreak: 'break-all' }}>{part}</span>
                         );
                       } else {
                         newChildren.push(part);
+                      }
+                      if (index !== parts.length - 1) {
+                        newChildren.push(' ');
                       }
                     });
                   } else {
