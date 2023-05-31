@@ -5,7 +5,7 @@ import {
   FilterParams,
   Order,
   subgraphService,
-} from './services/subgraph.service';
+} from './services/nounsSubgraph.service';
 
 export const getVotesForProposal = async (
   proposalId: string,

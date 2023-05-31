@@ -1,6 +1,6 @@
 import { Proposal, ProposalStatus } from '../types/Proposal';
 import { Proposal as GqlProposal } from '../types/generated/nounsSubgraph';
-import { Order, subgraphService } from './services/subgraph.service';
+import { Order, subgraphService } from './services/nounsSubgraph.service';
 
 export const getProposals = async (
   currentBlock: bigint,

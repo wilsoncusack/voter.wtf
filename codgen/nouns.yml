@@ -1,8 +1,8 @@
 overwrite: true
 schema: 'https://api.thegraph.com/subgraphs/name/nounsdao/nouns-subgraph'
-documents: './**/*.ts'
+documents: './graphql/nouns.ts'
 generates:
-  types/generated/nounsSubgraph.ts: # Adjust this to your desired output file
+  types/generated/nounsSubgraph.ts: 
     plugins:
       - 'typescript'
       - 'typescript-operations'
