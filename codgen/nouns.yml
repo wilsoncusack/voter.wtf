@@ -2,7 +2,7 @@ overwrite: true
 schema: 'https://api.thegraph.com/subgraphs/name/nounsdao/nouns-subgraph'
 documents: './graphql/nouns.ts'
 generates:
-  types/generated/nounsSubgraph.ts: 
+  types/generated/nounsSubgraph.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'

@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "yarn next",
-    "build": "yarn next build",
+    "dev": "yarn graphql:generate && yarn next",
+    "build": "yarn graphql:generate && yarn next build",
     "start": "next start",
     "format": "prettier --write .",
     "type-check": "tsc",

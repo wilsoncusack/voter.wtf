@@ -35,7 +35,12 @@ export const GET_VOTES = gql`
 `;
 
 export const GET_VOTES_BY_VOTER = gql`
-  query GetVotesByVoter($order: OrderDirection, $limit: Int, $offset: Int, $voterId: String) {
+  query GetVotesByVoter(
+    $order: OrderDirection
+    $limit: Int
+    $offset: Int
+    $voterId: String
+  ) {
     votes(
       where: { voter: $voterId }
       orderBy: blockNumber

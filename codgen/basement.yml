@@ -2,7 +2,7 @@ overwrite: true
 schema: 'https://beta.basement.dev/v2/graphql'
 documents: './graphql/basement.graphql'
 generates:
-  types/generated/basement.ts: 
+  types/generated/basement.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'

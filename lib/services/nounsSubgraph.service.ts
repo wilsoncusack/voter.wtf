@@ -1,7 +1,12 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { SUBGRAPH_URL } from '../constants';
 import { Vote, Proposal } from '../../types/generated/nounsSubgraph';
-import { GET_PROPOSALS, GET_VOTES, GET_VOTES_BY_VOTER, GET_VOTES_FOR_PROPOSAL } from '../../graphql/nouns';
+import {
+  GET_PROPOSALS,
+  GET_VOTES,
+  GET_VOTES_BY_VOTER,
+  GET_VOTES_FOR_PROPOSAL,
+} from '../../graphql/nouns';
 
 export type Order = 'desc' | 'asc';
 

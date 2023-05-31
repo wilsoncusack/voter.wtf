@@ -7,6 +7,7 @@ fragment ProfileFields on Profile {
 
 query GetENSInfo($addresses: [String!]!) {
   addresses(addresses: $addresses) {
+    address
     reverseProfile {
       ...ProfileFields
     }
