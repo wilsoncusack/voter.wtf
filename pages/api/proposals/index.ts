@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getProposals } from '../../../lib/proposals';
-import { Order } from '../../../lib/services/subgraph.service';
+import { Order } from '../../../lib/services/nounsSubgraph.service';
 
 export default async function handler(
   req: NextApiRequest,

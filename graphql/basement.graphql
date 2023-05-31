@@ -1,0 +1,15 @@
+fragment ProfileFields on Profile {
+  name
+  avatar
+  twitter: text(key: "com.twitter")
+  email: text(key: "email")
+}
+
+query GetENSInfo($addresses: [String!]!) {
+  addresses(addresses: $addresses) {
+    address
+    reverseProfile {
+      ...ProfileFields
+    }
+  }
+}

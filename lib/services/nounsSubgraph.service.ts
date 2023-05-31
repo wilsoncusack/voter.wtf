@@ -1,92 +1,14 @@
-import { ApolloClient, gql, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { SUBGRAPH_URL } from '../constants';
-import { VOTE_FRAGMENT } from './fragments';
 import { Vote, Proposal } from '../../types/generated/nounsSubgraph';
+import {
+  GET_PROPOSALS,
+  GET_VOTES,
+  GET_VOTES_BY_VOTER,
+  GET_VOTES_FOR_PROPOSAL,
+} from '../../graphql/nouns';
 
 export type Order = 'desc' | 'asc';
-
-const GET_VOTES = gql`
-  query GetVotes($order: OrderDirection, $limit: Int, $offset: Int) {
-    votes(
-      orderBy: blockNumber
-      orderDirection: $order
-      first: $limit
-      skip: $offset
-    ) {
-      ...VoteFragment
-    }
-  }
-  ${VOTE_FRAGMENT}
-`;
-
-const GET_VOTES_BY_VOTER = gql`
-  query GetVotes($order: String, $limit: Int, $offset: Int, $voterId: String) {
-    votes(
-      where: { voter: $voterId }
-      orderBy: blockNumber
-      orderDirection: $order
-      first: $limit
-      skip: $offset
-    ) {
-      ...VoteFragment
-    }
-  }
-  ${VOTE_FRAGMENT}
-`;
-
-const GET_VOTES_FOR_PROPOSAL = gql`
-  query GetVotesForProposal(
-    $proposalId: String!
-    $order: OrderDirection
-    $limit: Int
-    $offset: Int
-  ) {
-    votes(
-      where: { proposal: $proposalId }
-      orderBy: blockNumber
-      orderDirection: $order
-      first: $limit
-      skip: $offset
-    ) {
-      ...VoteFragment
-    }
-  }
-  ${VOTE_FRAGMENT}
-`;
-
-const GET_PROPOSALS = gql`
-  query GetProposals(
-    $startBlockLimit: BigInt
-    $endBlockLimit: BigInt
-    $order: OrderDirection
-    $limit: Int
-    $offset: Int
-  ) {
-    proposals: proposals(
-      where: { endBlock_gt: $endBlockLimit, startBlock_lte: $startBlockLimit }
-      orderBy: endBlock
-      orderDirection: $order
-      first: $limit
-      skip: $offset
-    ) {
-      id
-      title
-      forVotes
-      againstVotes
-      abstainVotes
-      totalSupply
-      minQuorumVotesBPS
-      maxQuorumVotesBPS
-      quorumCoefficient
-      createdTimestamp
-      createdBlock
-      startBlock
-      status
-      endBlock
-      quorumVotes
-    }
-  }
-`;
 
 export type FilterParams<T = object> = T & {
   order: Order;
