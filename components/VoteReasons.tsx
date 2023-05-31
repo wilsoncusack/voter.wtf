@@ -110,7 +110,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                   <Image
                     height={30}
                     width={30}
-                    alt="test"
+                    alt="nouns heart"
                     src="/nounHeart.svg"
                   />
                   <p className="text-gray-500 font-semibold">
@@ -138,7 +138,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
           </div>
         </div>
       )}
-      <div>
+      <div className="w-full">
         <div className="text-gray-300">
           <Link
             className="hover:underline"
