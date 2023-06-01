@@ -2343,10 +2343,7 @@ export function usePrepareNounsTokenRenounceOwnership(
     address: nounsTokenAddress[1],
     functionName: 'renounceOwnership',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsTokenABI,
-    'renounceOwnership'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsTokenABI, 'renounceOwnership'>);
 }
 
 /**
@@ -2384,10 +2381,7 @@ export function usePrepareNounsTokenSetApprovalForAll(
     address: nounsTokenAddress[1],
     functionName: 'setApprovalForAll',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsTokenABI,
-    'setApprovalForAll'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsTokenABI, 'setApprovalForAll'>);
 }
 
 /**
@@ -2406,10 +2400,7 @@ export function usePrepareNounsTokenSetContractUriHash(
     address: nounsTokenAddress[1],
     functionName: 'setContractURIHash',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsTokenABI,
-    'setContractURIHash'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsTokenABI, 'setContractURIHash'>);
 }
 
 /**
@@ -2523,10 +2514,7 @@ export function usePrepareNounsTokenTransferOwnership(
     address: nounsTokenAddress[1],
     functionName: 'transferOwnership',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsTokenABI,
-    'transferOwnership'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsTokenABI, 'transferOwnership'>);
 }
 
 /**

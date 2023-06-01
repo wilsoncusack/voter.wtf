@@ -1164,11 +1164,7 @@ export function useNounsDaoLogicV2Read<
     abi: nounsDaoLogicV2ABI,
     address: nounsDaoLogicV2Address[1],
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1194,11 +1190,7 @@ export function useNounsDaoLogicV2BallotTypehash<
     address: nounsDaoLogicV2Address[1],
     functionName: 'BALLOT_TYPEHASH',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1224,11 +1216,7 @@ export function useNounsDaoLogicV2DomainTypehash<
     address: nounsDaoLogicV2Address[1],
     functionName: 'DOMAIN_TYPEHASH',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1254,11 +1242,7 @@ export function useNounsDaoLogicV2MaxProposalThresholdBps<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_PROPOSAL_THRESHOLD_BPS',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1284,11 +1268,7 @@ export function useNounsDaoLogicV2MaxQuorumVotesBps<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_QUORUM_VOTES_BPS',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1314,11 +1294,7 @@ export function useNounsDaoLogicV2MaxQuorumVotesBpsUpperBound<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_QUORUM_VOTES_BPS_UPPER_BOUND',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1344,11 +1320,7 @@ export function useNounsDaoLogicV2MaxRefundBaseFee<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_REFUND_BASE_FEE',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1374,11 +1346,7 @@ export function useNounsDaoLogicV2MaxRefundGasUsed<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_REFUND_GAS_USED',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1404,11 +1372,7 @@ export function useNounsDaoLogicV2MaxRefundPriorityFee<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_REFUND_PRIORITY_FEE',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1434,11 +1398,7 @@ export function useNounsDaoLogicV2MaxVotingDelay<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_VOTING_DELAY',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1464,11 +1424,7 @@ export function useNounsDaoLogicV2MaxVotingPeriod<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MAX_VOTING_PERIOD',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1494,11 +1450,7 @@ export function useNounsDaoLogicV2MinProposalThresholdBps<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MIN_PROPOSAL_THRESHOLD_BPS',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1524,11 +1476,7 @@ export function useNounsDaoLogicV2MinQuorumVotesBpsLowerBound<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MIN_QUORUM_VOTES_BPS_LOWER_BOUND',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1554,11 +1502,7 @@ export function useNounsDaoLogicV2MinQuorumVotesBpsUpperBound<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MIN_QUORUM_VOTES_BPS_UPPER_BOUND',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1584,11 +1528,7 @@ export function useNounsDaoLogicV2MinVotingDelay<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MIN_VOTING_DELAY',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1614,11 +1554,7 @@ export function useNounsDaoLogicV2MinVotingPeriod<
     address: nounsDaoLogicV2Address[1],
     functionName: 'MIN_VOTING_PERIOD',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1644,11 +1580,7 @@ export function useNounsDaoLogicV2RefundBaseGas<
     address: nounsDaoLogicV2Address[1],
     functionName: 'REFUND_BASE_GAS',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1674,11 +1606,7 @@ export function useNounsDaoLogicV2Admin<
     address: nounsDaoLogicV2Address[1],
     functionName: 'admin',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1704,11 +1632,7 @@ export function useNounsDaoLogicV2DynamicQuorumVotes<
     address: nounsDaoLogicV2Address[1],
     functionName: 'dynamicQuorumVotes',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1734,11 +1658,7 @@ export function useNounsDaoLogicV2GetActions<
     address: nounsDaoLogicV2Address[1],
     functionName: 'getActions',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1764,11 +1684,7 @@ export function useNounsDaoLogicV2GetDynamicQuorumParamsAt<
     address: nounsDaoLogicV2Address[1],
     functionName: 'getDynamicQuorumParamsAt',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1794,11 +1710,7 @@ export function useNounsDaoLogicV2GetReceipt<
     address: nounsDaoLogicV2Address[1],
     functionName: 'getReceipt',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1824,11 +1736,7 @@ export function useNounsDaoLogicV2Implementation<
     address: nounsDaoLogicV2Address[1],
     functionName: 'implementation',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1854,11 +1762,7 @@ export function useNounsDaoLogicV2LatestProposalIds<
     address: nounsDaoLogicV2Address[1],
     functionName: 'latestProposalIds',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1884,11 +1788,7 @@ export function useNounsDaoLogicV2MaxQuorumVotes<
     address: nounsDaoLogicV2Address[1],
     functionName: 'maxQuorumVotes',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1914,11 +1814,7 @@ export function useNounsDaoLogicV2MinQuorumVotes<
     address: nounsDaoLogicV2Address[1],
     functionName: 'minQuorumVotes',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1944,11 +1840,7 @@ export function useNounsDaoLogicV2Name<
     address: nounsDaoLogicV2Address[1],
     functionName: 'name',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -1974,11 +1866,7 @@ export function useNounsDaoLogicV2Nouns<
     address: nounsDaoLogicV2Address[1],
     functionName: 'nouns',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2004,11 +1892,7 @@ export function useNounsDaoLogicV2PendingAdmin<
     address: nounsDaoLogicV2Address[1],
     functionName: 'pendingAdmin',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2034,11 +1918,7 @@ export function useNounsDaoLogicV2PendingVetoer<
     address: nounsDaoLogicV2Address[1],
     functionName: 'pendingVetoer',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2064,11 +1944,7 @@ export function useNounsDaoLogicV2ProposalCount<
     address: nounsDaoLogicV2Address[1],
     functionName: 'proposalCount',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2094,11 +1970,7 @@ export function useNounsDaoLogicV2ProposalMaxOperations<
     address: nounsDaoLogicV2Address[1],
     functionName: 'proposalMaxOperations',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2124,11 +1996,7 @@ export function useNounsDaoLogicV2ProposalThreshold<
     address: nounsDaoLogicV2Address[1],
     functionName: 'proposalThreshold',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2154,11 +2022,7 @@ export function useNounsDaoLogicV2ProposalThresholdBps<
     address: nounsDaoLogicV2Address[1],
     functionName: 'proposalThresholdBPS',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2184,11 +2048,7 @@ export function useNounsDaoLogicV2Proposals<
     address: nounsDaoLogicV2Address[1],
     functionName: 'proposals',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2214,11 +2074,7 @@ export function useNounsDaoLogicV2QuorumParamsCheckpoints<
     address: nounsDaoLogicV2Address[1],
     functionName: 'quorumParamsCheckpoints',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2244,11 +2100,7 @@ export function useNounsDaoLogicV2QuorumVotes<
     address: nounsDaoLogicV2Address[1],
     functionName: 'quorumVotes',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2274,11 +2126,7 @@ export function useNounsDaoLogicV2QuorumVotesBps<
     address: nounsDaoLogicV2Address[1],
     functionName: 'quorumVotesBPS',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2304,11 +2152,7 @@ export function useNounsDaoLogicV2State<
     address: nounsDaoLogicV2Address[1],
     functionName: 'state',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2334,11 +2178,7 @@ export function useNounsDaoLogicV2Timelock<
     address: nounsDaoLogicV2Address[1],
     functionName: 'timelock',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2364,11 +2204,7 @@ export function useNounsDaoLogicV2Vetoer<
     address: nounsDaoLogicV2Address[1],
     functionName: 'vetoer',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2394,11 +2230,7 @@ export function useNounsDaoLogicV2VotingDelay<
     address: nounsDaoLogicV2Address[1],
     functionName: 'votingDelay',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2424,11 +2256,7 @@ export function useNounsDaoLogicV2VotingPeriod<
     address: nounsDaoLogicV2Address[1],
     functionName: 'votingPeriod',
     ...config,
-  } as UseContractReadConfig<
-    typeof nounsDaoLogicV2ABI,
-    TFunctionName,
-    TSelectData
-  >);
+  } as UseContractReadConfig<typeof nounsDaoLogicV2ABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -3461,10 +3289,7 @@ export function usePrepareNounsDaoLogicV2AcceptAdmin(
     address: nounsDaoLogicV2Address[1],
     functionName: '_acceptAdmin',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_acceptAdmin'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_acceptAdmin'>);
 }
 
 /**
@@ -3483,10 +3308,7 @@ export function usePrepareNounsDaoLogicV2AcceptVetoer(
     address: nounsDaoLogicV2Address[1],
     functionName: '_acceptVetoer',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_acceptVetoer'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_acceptVetoer'>);
 }
 
 /**
@@ -3505,10 +3327,7 @@ export function usePrepareNounsDaoLogicV2BurnVetoPower(
     address: nounsDaoLogicV2Address[1],
     functionName: '_burnVetoPower',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_burnVetoPower'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_burnVetoPower'>);
 }
 
 /**
@@ -3530,10 +3349,7 @@ export function usePrepareNounsDaoLogicV2SetDynamicQuorumParams(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setDynamicQuorumParams',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setDynamicQuorumParams'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setDynamicQuorumParams'>);
 }
 
 /**
@@ -3555,10 +3371,7 @@ export function usePrepareNounsDaoLogicV2SetMaxQuorumVotesBps(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setMaxQuorumVotesBPS',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setMaxQuorumVotesBPS'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setMaxQuorumVotesBPS'>);
 }
 
 /**
@@ -3580,10 +3393,7 @@ export function usePrepareNounsDaoLogicV2SetMinQuorumVotesBps(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setMinQuorumVotesBPS',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setMinQuorumVotesBPS'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setMinQuorumVotesBPS'>);
 }
 
 /**
@@ -3605,10 +3415,7 @@ export function usePrepareNounsDaoLogicV2SetPendingAdmin(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setPendingAdmin',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setPendingAdmin'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setPendingAdmin'>);
 }
 
 /**
@@ -3630,10 +3437,7 @@ export function usePrepareNounsDaoLogicV2SetPendingVetoer(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setPendingVetoer',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setPendingVetoer'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setPendingVetoer'>);
 }
 
 /**
@@ -3655,10 +3459,7 @@ export function usePrepareNounsDaoLogicV2SetProposalThresholdBps(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setProposalThresholdBPS',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setProposalThresholdBPS'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setProposalThresholdBPS'>);
 }
 
 /**
@@ -3680,10 +3481,7 @@ export function usePrepareNounsDaoLogicV2SetQuorumCoefficient(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setQuorumCoefficient',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setQuorumCoefficient'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setQuorumCoefficient'>);
 }
 
 /**
@@ -3702,10 +3500,7 @@ export function usePrepareNounsDaoLogicV2SetVotingDelay(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setVotingDelay',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setVotingDelay'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setVotingDelay'>);
 }
 
 /**
@@ -3727,10 +3522,7 @@ export function usePrepareNounsDaoLogicV2SetVotingPeriod(
     address: nounsDaoLogicV2Address[1],
     functionName: '_setVotingPeriod',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    '_setVotingPeriod'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, '_setVotingPeriod'>);
 }
 
 /**
@@ -3790,10 +3582,7 @@ export function usePrepareNounsDaoLogicV2CastRefundableVote(
     address: nounsDaoLogicV2Address[1],
     functionName: 'castRefundableVote',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    'castRefundableVote'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, 'castRefundableVote'>);
 }
 
 /**
@@ -3815,10 +3604,7 @@ export function usePrepareNounsDaoLogicV2CastRefundableVoteWithReason(
     address: nounsDaoLogicV2Address[1],
     functionName: 'castRefundableVoteWithReason',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    'castRefundableVoteWithReason'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, 'castRefundableVoteWithReason'>);
 }
 
 /**
@@ -3856,10 +3642,7 @@ export function usePrepareNounsDaoLogicV2CastVoteBySig(
     address: nounsDaoLogicV2Address[1],
     functionName: 'castVoteBySig',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    'castVoteBySig'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, 'castVoteBySig'>);
 }
 
 /**
@@ -3881,10 +3664,7 @@ export function usePrepareNounsDaoLogicV2CastVoteWithReason(
     address: nounsDaoLogicV2Address[1],
     functionName: 'castVoteWithReason',
     ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nounsDaoLogicV2ABI,
-    'castVoteWithReason'
-  >);
+  } as UsePrepareContractWriteConfig<typeof nounsDaoLogicV2ABI, 'castVoteWithReason'>);
 }
 
 /**
@@ -4016,10 +3796,7 @@ export function useNounsDaoLogicV2MaxQuorumVotesBpsSetEvent(
     address: nounsDaoLogicV2Address[1],
     eventName: 'MaxQuorumVotesBPSSet',
     ...config,
-  } as UseContractEventConfig<
-    typeof nounsDaoLogicV2ABI,
-    'MaxQuorumVotesBPSSet'
-  >);
+  } as UseContractEventConfig<typeof nounsDaoLogicV2ABI, 'MaxQuorumVotesBPSSet'>);
 }
 
 /**
@@ -4038,10 +3815,7 @@ export function useNounsDaoLogicV2MinQuorumVotesBpsSetEvent(
     address: nounsDaoLogicV2Address[1],
     eventName: 'MinQuorumVotesBPSSet',
     ...config,
-  } as UseContractEventConfig<
-    typeof nounsDaoLogicV2ABI,
-    'MinQuorumVotesBPSSet'
-  >);
+  } as UseContractEventConfig<typeof nounsDaoLogicV2ABI, 'MinQuorumVotesBPSSet'>);
 }
 
 /**
@@ -4196,10 +3970,7 @@ export function useNounsDaoLogicV2ProposalCreatedWithRequirementsEvent(
     address: nounsDaoLogicV2Address[1],
     eventName: 'ProposalCreatedWithRequirements',
     ...config,
-  } as UseContractEventConfig<
-    typeof nounsDaoLogicV2ABI,
-    'ProposalCreatedWithRequirements'
-  >);
+  } as UseContractEventConfig<typeof nounsDaoLogicV2ABI, 'ProposalCreatedWithRequirements'>);
 }
 
 /**
@@ -4259,10 +4030,7 @@ export function useNounsDaoLogicV2ProposalThresholdBpsSetEvent(
     address: nounsDaoLogicV2Address[1],
     eventName: 'ProposalThresholdBPSSet',
     ...config,
-  } as UseContractEventConfig<
-    typeof nounsDaoLogicV2ABI,
-    'ProposalThresholdBPSSet'
-  >);
+  } as UseContractEventConfig<typeof nounsDaoLogicV2ABI, 'ProposalThresholdBPSSet'>);
 }
 
 /**
@@ -4300,10 +4068,7 @@ export function useNounsDaoLogicV2QuorumCoefficientSetEvent(
     address: nounsDaoLogicV2Address[1],
     eventName: 'QuorumCoefficientSet',
     ...config,
-  } as UseContractEventConfig<
-    typeof nounsDaoLogicV2ABI,
-    'QuorumCoefficientSet'
-  >);
+  } as UseContractEventConfig<typeof nounsDaoLogicV2ABI, 'QuorumCoefficientSet'>);
 }
 
 /**

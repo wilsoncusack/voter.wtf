@@ -1,6 +1,6 @@
-import { defineConfig } from '@wagmi/cli'
-import { etherscan, react } from '@wagmi/cli/plugins'
-import { mainnet } from 'wagmi/chains'
+import { defineConfig } from '@wagmi/cli';
+import { etherscan, react } from '@wagmi/cli/plugins';
+import { mainnet } from 'wagmi/chains';
 
 export default defineConfig({
   out: 'abis/generated/nouns.ts',
@@ -19,4 +19,4 @@ export default defineConfig({
     }),
     react(),
   ],
-})
+});
