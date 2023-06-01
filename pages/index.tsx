@@ -7,7 +7,7 @@ import { viem } from '../lib/wagmi';
 import { unstable_serialize } from 'swr/infinite';
 import { Proposal, ProposalStatus } from '../types/Proposal';
 import axios from 'axios';
-import { getProposals } from '../lib/proposals';
+import { getActiveProposals } from '../lib/proposals';
 import { getNounsLink } from '../lib/util/link';
 import { Page } from '../components/Page';
 import StatsCard, { WeeklyStats } from '../components/StatsCard';
@@ -37,7 +37,7 @@ export default function Home({
       proposals = await axios.get('/api/proposals', {
         params: {
           currentBlock: block.toString(),
-          startBlockLimit: block.toString(),
+          startBlockLimit: (block + BigInt(100000)).toString(),
           endBlockLimit: block.toString(),
           order: 'asc',
           limit: 10,
@@ -119,14 +119,7 @@ export async function getStaticProps() {
     offset: 0,
   });
   const block = await viem.getBlockNumber();
-  let proposals = await getProposals(
-    block,
-    block.toString(),
-    block.toString(),
-    'asc',
-    20,
-    0
-  );
+  let proposals = await getActiveProposals(block);
 
   proposals = proposals.filter(
     proposal => proposal.status != ProposalStatus.Cancelled

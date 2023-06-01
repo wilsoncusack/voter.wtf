@@ -2,6 +2,19 @@ import { Proposal, ProposalStatus } from '../types/Proposal';
 import { Proposal as GqlProposal } from '../types/generated/nounsSubgraph';
 import { Order, subgraphService } from './services/nounsSubgraph.service';
 
+export const getActiveProposals = async (
+  currentBlock: bigint
+): Promise<Proposal[]> => {
+  return await getProposals(
+    currentBlock,
+    (currentBlock + BigInt(100000)).toString(),
+    currentBlock.toString(),
+    'asc',
+    100,
+    0
+  );
+};
+
 export const getProposals = async (
   currentBlock: bigint,
   startBlockLimit: string,
@@ -61,7 +74,7 @@ export const deriveProposalStatus = (
     currentBlock >= proposal.startBlock &&
     currentBlock <= proposal.endBlock
   ) {
-    return ProposalStatus.Active;
+    return ProposalStatus.Voting;
   } else if (currentBlock > proposal.endBlock) {
     if (proposal.forVotes >= dynamicQuorum) {
       return ProposalStatus.Succeeded;

@@ -2,7 +2,7 @@ import { Proposal as GqlProposal } from './generated/nounsSubgraph'; // replace 
 
 export enum ProposalStatus {
   Pending = 'Pending',
-  Active = 'Active',
+  Voting = 'Voting',
   Succeeded = 'Succeeded',
   Defeated = 'Defeated',
   Cancelled = 'Cancelled',

@@ -18,7 +18,9 @@ interface VoteReasonProps {
 
 export function VoteReasons({ vote }: VoteReasonProps) {
   const isMounted = useIsMounted();
-  const { data: timestamp } = useBlockTimestamp(BigInt(vote.blockNumber));
+  const { data: timestamp } = useBlockTimestamp(
+    BigInt(vote.blockNumber ? vote.blockNumber : 0)
+  );
   const { data: signer } = useSigner();
   const { address: account } = useAccount();
   const [liked, setLiked] = useState(false);
