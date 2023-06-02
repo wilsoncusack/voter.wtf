@@ -5,7 +5,7 @@ import { getDefaultConfig } from 'connectkit';
 
 const RPC_URL = 'https://rpc.eth.gateway.fm';
 
-const { provider } = configureChains(
+const { publicClient } = configureChains(
   [mainnet],
   [
     jsonRpcProvider({
@@ -18,15 +18,10 @@ const { provider } = configureChains(
 
 export const config = createConfig(
   getDefaultConfig({
-    provider: provider,
-
-    // Required
-    appName: 'Your App Name',
-
-    // Optional
-    appDescription: 'A Nouns Voting Console',
-    appUrl: 'https://voter.wtf',
-    appLogo: '/public/noun652head.svg',
+    appName: 'voter.wtf',
+    publicClient: publicClient,
+    chains: [mainnet],
+    walletConnectProjectId: '350569e85a7ff1842b079dc92cf87b48',
   })
 );
 
