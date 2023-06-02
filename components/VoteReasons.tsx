@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { useWalletClient } from 'wagmi';
 import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
@@ -7,7 +8,6 @@ import { TimeAgo } from './TimeAgo';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 import axios from 'axios';
 import Image from 'next/image';
-import { HeartIcon as SolidHeartIcon } from '@heroicons/react/24/solid';
 import { Like, Vote } from '../types/Vote';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -21,7 +21,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   const { data: timestamp } = useBlockTimestamp(
     BigInt(vote.blockNumber ? vote.blockNumber : 0)
   );
-  const { data: signer } = useSigner();
+  const { data: walletClient } = useWalletClient();
   const { address: account } = useAccount();
   const [liked, setLiked] = useState(false);
   const [voterLikes, setVoterLikes] = useState<Like[]>([]);
@@ -45,7 +45,10 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     const message = `like vote by ${vote.voter.id} on ${vote.proposal.id}`;
 
     try {
-      const signedMessage = await signer.signMessage(message);
+      const signedMessage = await walletClient.signMessage({
+        account,
+        message: message,
+      });
       setLiked(true);
       // TODO pass in some isNounHolder from the top level
       // and update vote count based on this
@@ -89,13 +92,13 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   if (!isMounted) return null;
 
   return (
-    <div
-      className={`flex p-4 mb-2 ${
-        reason != '' ? 'bg-gray-800' : ''
-      } rounded-lg shadow-md`}
-    >
-      {reason != '' && (
-        <div className="mr-4">
+    <div>
+      <div
+        className={`flex  p-3 mb-2 ${
+          reason != '' ? 'bg-gray-800' : ''
+        } rounded-lg shadow-md`}
+      >
+        <div className="mr-2">
           <Link href={`/voters/${encodeURIComponent(vote.voter.id)}`}>
             <div
               className={classNames(
@@ -105,162 +108,149 @@ export function VoteReasons({ vote }: VoteReasonProps) {
               {vote.voter.ensAvatar && <EnsImage url={vote.voter.ensAvatar} />}
             </div>
           </Link>
-          <div>
-            <div className="flex mt-4 justify-center">
-              {voterLikes.length > 0 && (
-                <>
+        </div>
+
+        <div className="w-full">
+          <div className="flex text-sm text-gray-300">
+            <Link
+              className="hover:underline"
+              href={`/voters/${encodeURIComponent(vote.voter.id)}`}
+            >
+              {ensName}
+            </Link>
+            {'  '}
+            <span
+              className={classNames(' ml-1 font-semibold', {
+                'text-green-400': vote.supportDetailed == 1,
+                'text-red-400': vote.supportDetailed == 0,
+                'text-gray-400':
+                  vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
+              })}
+            >
+              {' '}
+              <span className=" w-5 rounded-full ">{vote.votes} </span>
+              {vote.supportDetailed == 1
+                ? 'FOR'
+                : vote.supportDetailed == 0
+                ? 'AGAINST'
+                : 'ABSTAIN'}{' '}
+            </span>
+            <span className="text-gray-500 mx-1"> · </span>
+            <TimeAgo
+              className="text-gray-500"
+              timestamp={timestamp || 0}
+              as="div"
+            />
+          </div>
+          <a
+            href={getNounsLink(vote.proposal.id)}
+            className="hover:underline text-gray-400 text-sm line-clamp-1"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Prop {vote.proposal.id}: {vote.proposal.title}{' '}
+          </a>
+
+          <div className="mt-5 text-sm whitespace-pre-line break-words overflow-wrap mb-2 mt-2 text-gray-200">
+            <ReactMarkdown
+              components={{
+                a: ({ ...props }) => (
+                  <a
+                    style={{
+                      wordBreak: 'break-word',
+                      textDecoration: 'underline',
+                    }}
+                    {...props}
+                  />
+                ),
+                blockquote: ({ ...props }) => (
+                  <blockquote
+                    className="pl-4 border-l-4 border-gray-400 italic"
+                    {...props}
+                  />
+                ),
+                p: ({ children, ...props }) => {
+                  const newChildren = [];
+                  children.forEach(child => {
+                    if (typeof child === 'string') {
+                      const parts = child.split(' ');
+                      parts.forEach((part, index) => {
+                        if (part.length > 15) {
+                          newChildren.push(
+                            <span style={{ wordBreak: 'break-all' }}>
+                              {part}
+                            </span>
+                          );
+                        } else {
+                          newChildren.push(part);
+                        }
+                        if (index !== parts.length - 1) {
+                          newChildren.push(' ');
+                        }
+                      });
+                    } else {
+                      newChildren.push(child);
+                    }
+                  });
+                  return <p {...props}>{newChildren}</p>;
+                },
+                code: ({ inline, className, children, ...props }) => {
+                  const match = /language-(\w+)/.exec(className || '');
+                  return !inline && match ? (
+                    <pre style={{ whiteSpace: 'pre-wrap' }} {...props}>
+                      <code className={`language-${match[1]}`}>{children}</code>
+                    </pre>
+                  ) : (
+                    <code style={{ whiteSpace: 'pre-wrap' }} {...props}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {vote.reason}
+            </ReactMarkdown>
+          </div>
+
+          {reason != '' && (
+            <div className={'flex justify-end mr-2'}>
+              <button
+                onClick={handleLikeClick}
+                disabled={!walletClient || liked}
+                className={` ${
+                  liked
+                    ? ''
+                    : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
+                }`}
+              >
+                {liked ? (
                   <Image
                     height={30}
                     width={30}
-                    alt="nouns heart"
+                    alt="test"
+                    src="/coloredNounHeart.svg"
+                  />
+                ) : (
+                  <Image
+                    height={30}
+                    width={30}
+                    alt="test"
                     src="/nounHeart.svg"
                   />
-                  <p className="text-gray-500 font-semibold">
-                    {' '}
-                    {voterLikes.length}{' '}
-                  </p>
-                </>
-              )}
+                )}
+              </button>
+              <p
+                className={`ml-1 font-semibold ${
+                  voterLikes.length + nonVoterLikes.length == 0
+                    ? 'text-gray-800'
+                    : 'text-gray-500'
+                }`}
+              >
+                {voterLikes.length + nonVoterLikes.length}
+              </p>
             </div>
-            {nonVoterLikes.length > 0 && (
-              <>
-                <div className={'flex justify-center'}>
-                  <SolidHeartIcon
-                    height={25}
-                    width={25}
-                    className="ml-1 text-gray-500"
-                  />
-                  <p className="ml-1 text-gray-500 font-semibold">
-                    {' '}
-                    {nonVoterLikes.length}{' '}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
+          )}
         </div>
-      )}
-      <div className="w-full">
-        <div className="text-gray-300">
-          <Link
-            className="hover:underline"
-            href={`/voters/${encodeURIComponent(vote.voter.id)}`}
-          >
-            {ensName}
-          </Link>
-          {': '}
-          <span
-            className={classNames('font-semibold', {
-              'text-green-400': vote.supportDetailed == 1,
-              'text-red-400': vote.supportDetailed == 0,
-              'text-gray-400':
-                vote.supportDetailed !== 1 && vote.supportDetailed !== 0,
-            })}
-          >
-            {' '}
-            <span className=" w-5 rounded-full ">{vote.votes} </span>
-            {vote.supportDetailed == 1
-              ? 'FOR'
-              : vote.supportDetailed == 0
-              ? 'AGAINST'
-              : 'ABSTAIN'}{' '}
-          </span>
-        </div>
-        <a
-          href={getNounsLink(vote.proposal.id)}
-          className="hover:underline text-gray-400 text-sm line-clamp-1"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Prop {vote.proposal.id}: {vote.proposal.title}{' '}
-        </a>
-        <div className="whitespace-pre-line break-words overflow-wrap mb-2 mt-2 text-gray-200">
-          <ReactMarkdown
-            components={{
-              a: ({ ...props }) => (
-                <a
-                  style={{
-                    wordBreak: 'break-word',
-                    textDecoration: 'underline',
-                  }}
-                  {...props}
-                />
-              ),
-              blockquote: ({ ...props }) => (
-                <blockquote
-                  className="pl-4 border-l-4 border-gray-400 italic"
-                  {...props}
-                />
-              ),
-              p: ({ children, ...props }) => {
-                const newChildren = [];
-                children.forEach(child => {
-                  if (typeof child === 'string') {
-                    const parts = child.split(' ');
-                    parts.forEach((part, index) => {
-                      if (part.length > 15) {
-                        newChildren.push(
-                          <span style={{ wordBreak: 'break-all' }}>{part}</span>
-                        );
-                      } else {
-                        newChildren.push(part);
-                      }
-                      if (index !== parts.length - 1) {
-                        newChildren.push(' ');
-                      }
-                    });
-                  } else {
-                    newChildren.push(child);
-                  }
-                });
-                return <p {...props}>{newChildren}</p>;
-              },
-              code: ({ inline, className, children, ...props }) => {
-                const match = /language-(\w+)/.exec(className || '');
-                return !inline && match ? (
-                  <pre style={{ whiteSpace: 'pre-wrap' }} {...props}>
-                    <code className={`language-${match[1]}`}>{children}</code>
-                  </pre>
-                ) : (
-                  <code style={{ whiteSpace: 'pre-wrap' }} {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
-            {vote.reason}
-          </ReactMarkdown>
-        </div>
-        <TimeAgo
-          className="text-gray-500 text-sm"
-          timestamp={timestamp}
-          as="div"
-        />
-        {reason != '' && (
-          <div className={'flex justify-end'}>
-            <button
-              onClick={handleLikeClick}
-              disabled={!signer || liked}
-              className={`p-2 ${
-                liked
-                  ? ''
-                  : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
-              }`}
-            >
-              {liked ? (
-                <Image
-                  height={30}
-                  width={30}
-                  alt="test"
-                  src="/coloredNounHeart.svg"
-                />
-              ) : (
-                <Image height={30} width={30} alt="test" src="/nounHeart.svg" />
-              )}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

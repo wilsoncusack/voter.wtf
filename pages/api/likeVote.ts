@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { recoverAddress, hashMessage } from 'viem';
 import { supabase } from '../../lib/supabaseClient';
-import NounsAbi from '../../abis/NounsAbi.json';
+import { nounsTokenABI } from '../../abis/generated/nouns';
 import { viem } from '../../lib/wagmi';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
       const votes = await viem.readContract({
         address: '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
-        abi: NounsAbi,
+        abi: nounsTokenABI,
         functionName: 'getCurrentVotes',
         args: [user],
       });

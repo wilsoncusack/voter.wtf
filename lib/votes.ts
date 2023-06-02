@@ -50,7 +50,7 @@ export const buildVoteFromGqlVote = async (
       let ensAvatar;
       if (ens.reverseProfile) {
         ensName = ens.reverseProfile.name;
-        ensAvatar = ens.reverseProfile.avatar;
+        ensAvatar = ens.reverseProfile.avatarUrl;
       }
 
       return {

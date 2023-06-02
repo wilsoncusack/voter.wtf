@@ -39,10 +39,10 @@ export const DesktopProposalCard: React.FC<DesktopProposalCardProps> = ({
               proposal.status
             )}`}
           >
-            {proposal.endBlock > blockNumber
+            {blockNumber && proposal.endBlock > blockNumber
               ? proposal.startBlock < blockNumber
-                ? formatDuration((proposal.endBlock - blockNumber) * 12)
-                : formatDuration((proposal.startBlock - blockNumber) * 12)
+                ? formatDuration(BigInt(proposal.endBlock), blockNumber)
+                : formatDuration(BigInt(proposal.startBlock), blockNumber)
               : proposal.status}
           </p>
         </div>
@@ -67,7 +67,9 @@ export const DesktopProposalCard: React.FC<DesktopProposalCardProps> = ({
   );
 };
 
-function formatDuration(duration) {
+function formatDuration(futureBlock: bigint, currentBlock: bigint) {
+  const duration = parseInt((futureBlock - currentBlock).toString()) * 12;
+
   let remaining = Math.abs(duration);
 
   const days = Math.floor(remaining / (60 * 60 * 24));
