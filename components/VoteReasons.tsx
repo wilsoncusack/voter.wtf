@@ -38,7 +38,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   );
 
   const handleLikeClick = async () => {
-    if (liked) {
+    if (liked || !walletClient) {
       return;
     }
 
@@ -71,8 +71,8 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   useEffect(() => {
     if (!account || !vote.likes) return;
 
-    const vLikes = [];
-    const nVLikes = [];
+    const vLikes: Like[] = [];
+    const nVLikes: Like[] = [];
 
     for (const like of vote.likes) {
       if (like.is_nouns_voter) {
@@ -111,7 +111,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
         </div>
 
         <div className="w-full">
-          <div className="flex text-sm text-gray-300">
+          <div className="flex text-gray-300">
             <Link
               className="hover:underline"
               href={`/voters/${encodeURIComponent(vote.voter.id)}`}
@@ -151,7 +151,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
             Prop {vote.proposal.id}: {vote.proposal.title}{' '}
           </a>
 
-          <div className="mt-5 text-sm whitespace-pre-line break-words overflow-wrap mb-2 mt-2 text-gray-200">
+          <div className="mt-5 whitespace-pre-line break-words overflow-wrap mb-2 mt-2 text-gray-200">
             <ReactMarkdown
               components={{
                 a: ({ ...props }) => (
