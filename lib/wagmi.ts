@@ -20,7 +20,6 @@ export const config = createConfig(
   getDefaultConfig({
     appName: 'voter.wtf',
     publicClient: publicClient,
-    chains: [mainnet],
     walletConnectProjectId: '350569e85a7ff1842b079dc92cf87b48',
   })
 );
