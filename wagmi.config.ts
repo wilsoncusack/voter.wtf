@@ -10,9 +10,9 @@ export default defineConfig({
       chainId: mainnet.id,
       contracts: [
         {
-          name: 'NounsToken',
+          name: 'NounsDAOLogicV2',
           address: {
-            [mainnet.id]: '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
+            [mainnet.id]: '0x51c7d7c47e440d937208bd987140d6db6b1e4051',
           },
         },
       ],
