@@ -22,7 +22,7 @@ const timeAgo = (timestamp: number): string => {
   for (const [unit, seconds] of Object.entries(units)) {
     const count = Math.floor(timeDifference / seconds);
     if (count >= 1) {
-      return `${count} ${unit}${count > 1 ? 's' : ''} ago`;
+      return `${count}${unit.slice(0, 1)}${count > 1 ? '' : ''}`;
     }
   }
 
