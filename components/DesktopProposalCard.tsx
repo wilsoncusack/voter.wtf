@@ -41,8 +41,10 @@ export const DesktopProposalCard: React.FC<DesktopProposalCardProps> = ({
           >
             {proposal.endBlock > blockNumber
               ? proposal.startBlock < blockNumber
-                ? formatDuration((proposal.endBlock - blockNumber) * 12)
-                : formatDuration((proposal.startBlock - blockNumber) * 12)
+                ? formatDuration((proposal.endBlock - blockNumber) * BigInt(12))
+                : formatDuration(
+                    (proposal.startBlock - blockNumber) * BigInt(12)
+                  )
               : proposal.status}
           </p>
         </div>
