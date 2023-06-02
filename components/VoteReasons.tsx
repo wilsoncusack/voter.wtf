@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { useWalletClient } from 'wagmi';
 import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
@@ -21,7 +22,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   const { data: timestamp } = useBlockTimestamp(
     BigInt(vote.blockNumber ? vote.blockNumber : 0)
   );
-  const { data: signer } = useSigner();
+  const { data: walletClient } = useWalletClient();
   const { address: account } = useAccount();
   const [liked, setLiked] = useState(false);
   const [voterLikes, setVoterLikes] = useState<Like[]>([]);
@@ -45,7 +46,10 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     const message = `like vote by ${vote.voter.id} on ${vote.proposal.id}`;
 
     try {
-      const signedMessage = await signer.signMessage(message);
+      const signedMessage = await walletClient.signMessage({
+        account,
+        message: message,
+      });
       setLiked(true);
       // TODO pass in some isNounHolder from the top level
       // and update vote count based on this
@@ -241,7 +245,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
           <div className={'flex justify-end'}>
             <button
               onClick={handleLikeClick}
-              disabled={!signer || liked}
+              disabled={!walletClient || liked}
               className={`p-2 ${
                 liked
                   ? ''

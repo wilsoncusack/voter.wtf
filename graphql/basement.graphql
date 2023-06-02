@@ -1,6 +1,7 @@
 fragment ProfileFields on Profile {
   name
   avatar
+  avatarUrl
   twitter: text(key: "com.twitter")
   email: text(key: "email")
 }

@@ -1,10 +1,11 @@
-import { configureChains, createClient, mainnet } from 'wagmi';
+import { createConfig, configureChains, mainnet } from 'wagmi';
 import { createPublicClient, http } from 'viem';
-import { getDefaultClient } from 'connectkit';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
+import { getDefaultConfig } from 'connectkit';
 
 const RPC_URL = 'https://rpc.eth.gateway.fm';
-export const { provider, webSocketProvider } = configureChains(
+
+const { provider } = configureChains(
   [mainnet],
   [
     jsonRpcProvider({
@@ -15,11 +16,17 @@ export const { provider, webSocketProvider } = configureChains(
   ]
 );
 
-export const client = createClient(
-  getDefaultClient({
-    appName: 'Nouns Vote',
-    provider,
-    webSocketProvider,
+export const config = createConfig(
+  getDefaultConfig({
+    provider: provider,
+
+    // Required
+    appName: 'Your App Name',
+
+    // Optional
+    appDescription: 'A Nouns Voting Console',
+    appUrl: 'https://voter.wtf',
+    appLogo: '/public/noun652head.svg',
   })
 );
 

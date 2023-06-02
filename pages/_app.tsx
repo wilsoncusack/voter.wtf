@@ -1,20 +1,15 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { WagmiConfig } from 'wagmi';
-import { useEffect } from 'react';
-import { client } from '../lib/wagmi';
+import { config } from '../lib/wagmi';
 import { SWRConfig } from 'swr';
 import { ConnectKitProvider } from 'connectkit';
 import { Analytics } from '@vercel/analytics/react';
+import { WagmiConfig } from 'wagmi';
 
 const refreshInterval = 1000 * 60; // 1 minute
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(() => {
-    client.autoConnect().then();
-  }, []);
-
   return (
     <div>
       <Head>
@@ -29,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         ></link>
       </Head>
-      <WagmiConfig client={client}>
+      <WagmiConfig config={config}>
         <ConnectKitProvider theme="nouns">
           <SWRConfig
             value={{
