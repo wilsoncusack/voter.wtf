@@ -175,7 +175,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                     if (typeof child === 'string') {
                       const parts = child.split(' ');
                       parts.forEach((part, index) => {
-                        if (part.length > 15) {
+                        if (part.length > 20) {
                           newChildren.push(
                             <span style={{ wordBreak: 'break-all' }}>
                               {part}
