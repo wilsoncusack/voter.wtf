@@ -31,7 +31,7 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
           setSelectedProposal(proposal);
         }
       }}
-      className={`my-1 ml-2 p-4 w-40 rounded-lg md:w-full md:border-tiny md:m-0 md:rounded-none md:border-gray-700 ${
+      className={`my-1 ml-2 p-4 w-48 rounded-lg md:w-full md:border-tiny md:m-0 md:rounded-none md:border-gray-700 ${
         selectedProposal && selectedProposal.id === proposal.id
           ? 'bg-gray-600'
           : 'bg-gray-800'
@@ -76,7 +76,9 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
         <span className="text-gray-500 text-lg mx-1"> · </span>
         <div className="text-sm text-red-500">{againstVotes}</div>
         <span className="text-gray-500 text-lg mx-1"> · </span>
-        <div className="text-sm text-gray-500">{proposal.quorumVotes}</div>
+        <div className="text-sm text-gray-500">
+          Quorum {proposal.quorumVotes}
+        </div>
       </div>
     </div>
   );
