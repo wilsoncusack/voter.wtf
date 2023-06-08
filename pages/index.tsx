@@ -67,7 +67,7 @@ export default function Home({
   return (
     <Page title="Home" fallback={fallback}>
       <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
-        <div className="md:fixed md:overflow-y-auto md:w-1/3 md:max-h-screen">
+        <div className="md:fixed md:bottom-0 md:top-20 md:w-1/3 ">
           <ProposalContainer
             proposals={propososals}
             selectedProposal={selectedProposal}

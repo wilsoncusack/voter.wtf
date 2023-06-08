@@ -1127,7 +1127,7 @@ export const nounsDaoLogicV2ABI = [
  * [__View Contract on Ethereum Etherscan__](https://etherscan.io/address/0x51c7d7c47e440d937208bd987140d6db6b1e4051)
  */
 export const nounsDaoLogicV2Address = {
-  1: '0x51C7D7C47E440d937208bD987140D6db6B1E4051',
+  1: '0x6f3e6272a167e8accb32072d08e0957f9c79223d',
 } as const;
 
 /**
