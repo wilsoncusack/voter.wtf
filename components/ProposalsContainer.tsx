@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { MobileProposalCard } from './MobileProposalCard';
-import { DesktopProposalCard } from './DesktopProposalCard';
+import { ProposalCard } from './ProposalCard';
+import React from 'react';
 
 export function ProposalContainer({
   proposals,
@@ -11,8 +11,8 @@ export function ProposalContainer({
   const [selectedSegment, setSelectedSegment] = useState('active');
 
   return (
-    <div className="md:ml-5 mt-4 flex flex-col w-full md:w-96">
-      <div className="bg-gray-800 p-2 md:mb-2  rounded-lg shadow-md">
+    <div className="md:ml-5 mt-4 flex flex-col ">
+      <div className="bg-gray-800 p-2 md:mb-2  rounded-lg shadow-md ">
         <div className="flex">
           <button
             onClick={() => {
@@ -42,25 +42,15 @@ export function ProposalContainer({
           </button>
         </div>
       </div>
-      <div className="py-4 md:py-0 bg-gray-700 md:bg-gray-800 flex flex-row md:flex-col overflow-y-hidden md:overflow-x-hidden">
+      <div className="py-4 md:py-0 bg-gray-700 md:bg-gray-800 flex flex-row md:flex-col overflow-y-auto  max-h-screen hide-scrollbar">
         {proposals.map((proposal, i) => (
           <div key={i}>
-            <div className="md:hidden">
-              <MobileProposalCard
-                proposal={proposal}
-                selectedProposal={selectedProposal}
-                setSelectedProposal={setSelectedProposal}
-                key={proposal.id}
-              />
-            </div>
-            <div className="hidden md:block">
-              <DesktopProposalCard
-                proposal={proposal}
-                selectedProposal={selectedProposal}
-                setSelectedProposal={setSelectedProposal}
-                key={proposal.id}
-              />
-            </div>
+            <ProposalCard
+              proposal={proposal}
+              selectedProposal={selectedProposal}
+              setSelectedProposal={setSelectedProposal}
+              key={proposal.id}
+            />
           </div>
         ))}
       </div>

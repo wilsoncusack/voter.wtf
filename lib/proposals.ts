@@ -85,3 +85,16 @@ export const deriveProposalStatus = (
     throw new Error('Unable to determine proposal status');
   }
 };
+
+export function getStatusColor(status: ProposalStatus) {
+  switch (status) {
+    case ProposalStatus.Voting:
+      return 'text-green-400';
+    case ProposalStatus.Succeeded:
+      return 'text-green-600';
+    case ProposalStatus.Defeated:
+      return 'text-red-500';
+    default:
+      return 'text-gray-500';
+  }
+}
