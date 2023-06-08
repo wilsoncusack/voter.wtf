@@ -77,7 +77,7 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
         <div className="text-sm text-red-500">{againstVotes}</div>
         <span className="text-gray-500 text-lg mx-1"> · </span>
         <div className="text-sm text-gray-500">
-          Quorum {proposal.quorumVotes}
+          Threshold {proposal.quorumVotes}
         </div>
       </div>
     </div>
