@@ -2,11 +2,14 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { restrictHandlerMethods } from '../../../lib/util/api';
 import { z } from 'zod';
 import { getVotes } from '../../../lib/votes';
+import { OrderDirection } from '../../../types/generated/nounsSubgraph';
 
 const QuerySchema = z.object({
   page: z.coerce.number().default(1),
   limit: z.coerce.number().default(10),
-  order: z.enum(['desc', 'asc']).default('desc'),
+  order: z
+    .enum([OrderDirection.Desc, OrderDirection.Asc])
+    .default(OrderDirection.Desc),
   voterId: z.string().optional(),
 });
 

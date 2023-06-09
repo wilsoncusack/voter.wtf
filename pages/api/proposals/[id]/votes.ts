@@ -2,12 +2,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 import { restrictHandlerMethods } from '../../../../lib/util/api';
 import { getVotesForProposal } from '../../../../lib/votes';
+import { OrderDirection } from '../../../../types/generated/nounsSubgraph';
 
 const QuerySchema = z.object({
   id: z.string(),
   page: z.number().optional(),
   limit: z.number().optional(),
-  order: z.enum(['desc', 'asc']).default('desc'),
+  order: z
+    .enum([OrderDirection.Desc, OrderDirection.Asc])
+    .default(OrderDirection.Desc),
 });
 
 type Query = z.infer<typeof QuerySchema>;

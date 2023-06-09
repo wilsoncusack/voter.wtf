@@ -6,6 +6,8 @@ import { SWRConfig } from 'swr';
 import { ConnectKitProvider } from 'connectkit';
 import { Analytics } from '@vercel/analytics/react';
 import { WagmiConfig } from 'wagmi';
+import { ActiveProposalsProvider } from '../providers/ActiveProposalsProvider';
+import React from 'react';
 
 const refreshInterval = 1000 * 60; // 1 minute
 
@@ -33,7 +35,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 fetch(resource, init).then(res => res.json()),
             }}
           >
-            <Component {...pageProps} />
+            <ActiveProposalsProvider>
+              <Component {...pageProps} />
+            </ActiveProposalsProvider>
           </SWRConfig>
         </ConnectKitProvider>
       </WagmiConfig>

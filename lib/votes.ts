@@ -1,16 +1,19 @@
 import { Vote } from '../types/Vote';
-import { Vote as GqlVote } from '../types/generated/nounsSubgraph';
+import {
+  GetVotesForProposalQuery,
+  Vote as GqlVote,
+  OrderDirection,
+} from '../types/generated/nounsSubgraph';
 import { supabase } from './supabaseClient';
 import {
   FilterParams,
-  Order,
   subgraphService,
 } from './services/nounsSubgraph.service';
 import { getENSInfo } from './services/basement.service';
 
 export const getVotesForProposal = async (
   proposalId: string,
-  order: Order,
+  order: OrderDirection,
   limit?: number,
   offset?: number
 ): Promise<Vote[]> => {
@@ -20,14 +23,14 @@ export const getVotesForProposal = async (
     limit,
     offset
   );
-  return await buildVoteFromGqlVote(gqlVotes);
+  return await buildVoteFromGqlVote(gqlVotes as Vote[]);
 };
 
 export const getVotes = async (
   params: FilterParams<{ voterId?: string }>
 ): Promise<Vote[]> => {
   const gqlVotes = await subgraphService.getVotes(params);
-  return await buildVoteFromGqlVote(gqlVotes);
+  return await buildVoteFromGqlVote(gqlVotes as Vote[]);
 };
 
 export const buildVoteFromGqlVote = async (
@@ -42,13 +45,13 @@ export const buildVoteFromGqlVote = async (
   return await Promise.all(
     votes.map(async vote => {
       const id = `${vote.proposal.id}-${vote.voter.id}`;
-      const likes = voteLikes.data.filter(like => like.vote_id === id);
+      const likes = voteLikes.data?.filter(like => like.vote_id === id) || [];
       const ens = ensInfo.find(
         ens => ens.address.toLowerCase() === vote.voter.id
       );
       let ensName;
       let ensAvatar;
-      if (ens.reverseProfile) {
+      if (ens && ens.reverseProfile) {
         ensName = ens.reverseProfile.name;
         ensAvatar = ens.reverseProfile.avatarUrl;
       }

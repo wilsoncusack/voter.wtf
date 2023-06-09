@@ -1,6 +1,9 @@
 import { Proposal, ProposalStatus } from '../types/Proposal';
-import { Proposal as GqlProposal } from '../types/generated/nounsSubgraph';
-import { Order, subgraphService } from './services/nounsSubgraph.service';
+import {
+  Proposal as GqlProposal,
+  OrderDirection,
+} from '../types/generated/nounsSubgraph';
+import { subgraphService } from './services/nounsSubgraph.service';
 
 export const getActiveProposals = async (
   currentBlock: bigint
@@ -9,7 +12,7 @@ export const getActiveProposals = async (
     currentBlock,
     (currentBlock + BigInt(100000)).toString(),
     currentBlock.toString(),
-    'asc',
+    OrderDirection.Asc,
     100,
     0
   );
@@ -19,17 +22,17 @@ export const getProposals = async (
   currentBlock: bigint,
   startBlockLimit: string,
   endBlockLimit: string,
-  order: Order,
+  order: OrderDirection,
   limit: number,
   offset: number
 ): Promise<Proposal[]> => {
-  const gqlProposals = await subgraphService.getProposals(
+  const gqlProposals = (await subgraphService.getProposals(
     startBlockLimit,
     endBlockLimit,
     order,
     limit,
     offset
-  );
+  )) as GqlProposal[];
 
   return gqlProposals.map((gqlProposal: GqlProposal): Proposal => {
     const dynamicQuorum = computeProposalQuorumVotes(gqlProposal);

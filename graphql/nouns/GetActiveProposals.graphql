@@ -1,0 +1,16 @@
+query GetActiveProposals (
+    $currentBlock: BigInt
+  ) {
+    proposals: proposals(
+      where: { endBlock_gt: $currentBlock, startBlock_lte: $currentBlock }
+      orderBy: endBlock
+      orderDirection: desc
+    ) {
+      ...ProposalFragment,
+      votes {
+        voter {
+          id
+        }
+      }
+    }
+  }
