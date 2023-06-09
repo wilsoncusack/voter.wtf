@@ -69,18 +69,19 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   };
 
   useEffect(() => {
-    if (!account || !vote.likes) return;
+    if (!vote.likes) return;
 
     const vLikes: Like[] = [];
     const nVLikes: Like[] = [];
 
     for (const like of vote.likes) {
+      console.log('here');
       if (like.is_nouns_voter) {
         vLikes.push(like);
       } else {
         nVLikes.push(like);
       }
-      if (like.user === account) {
+      if (account && like.user === account) {
         setLiked(true);
       }
     }
