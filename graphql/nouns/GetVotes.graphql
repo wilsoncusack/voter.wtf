@@ -1,10 +1,10 @@
 query GetVotes($order: OrderDirection, $limit: Int, $offset: Int) {
-    votes(
-      orderBy: blockNumber
-      orderDirection: $order
-      first: $limit
-      skip: $offset
-    ) {
-      ...VoteFragment
-    }
+  votes(
+    orderBy: blockNumber
+    orderDirection: $order
+    first: $limit
+    skip: $offset
+  ) {
+    ...VoteFragment
   }
+}

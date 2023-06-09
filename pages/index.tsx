@@ -14,6 +14,7 @@ import StatsCard, { WeeklyStats } from '../components/StatsCard';
 import { weeklyStats } from '../lib/stats';
 import { getVotes, getVotesForProposal } from '../lib/votes';
 import { OrderDirection } from '../types/generated/nounsSubgraph';
+import { useActiveProposals } from '../hooks/useActiveProposals';
 
 type HomePageProps = {
   fallback: FallbackProp;

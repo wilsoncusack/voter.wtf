@@ -1,16 +1,16 @@
 query GetVotesByVoter(
-    $order: OrderDirection
-    $limit: Int
-    $offset: Int
-    $voterId: String
+  $order: OrderDirection
+  $limit: Int
+  $offset: Int
+  $voterId: String
+) {
+  votes(
+    where: { voter: $voterId }
+    orderBy: blockNumber
+    orderDirection: $order
+    first: $limit
+    skip: $offset
   ) {
-    votes(
-      where: { voter: $voterId }
-      orderBy: blockNumber
-      orderDirection: $order
-      first: $limit
-      skip: $offset
-    ) {
-      ...VoteFragment
-    }
+    ...VoteFragment
   }
+}
