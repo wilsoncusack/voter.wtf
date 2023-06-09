@@ -1,0 +1,17 @@
+query GetProposals(
+  $startBlockLimit: BigInt
+  $endBlockLimit: BigInt
+  $order: OrderDirection
+  $limit: Int
+  $offset: Int
+) {
+  proposals: proposals(
+    where: { endBlock_gt: $endBlockLimit, startBlock_lte: $startBlockLimit }
+    orderBy: endBlock
+    orderDirection: $order
+    first: $limit
+    skip: $offset
+  ) {
+    ...ProposalFragment
+  }
+}

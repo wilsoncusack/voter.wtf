@@ -1,0 +1,17 @@
+fragment ProposalFragment on Proposal {
+  id
+  title
+  forVotes
+  againstVotes
+  abstainVotes
+  totalSupply
+  minQuorumVotesBPS
+  maxQuorumVotesBPS
+  quorumCoefficient
+  createdTimestamp
+  createdBlock
+  startBlock
+  status
+  endBlock
+  quorumVotes
+}

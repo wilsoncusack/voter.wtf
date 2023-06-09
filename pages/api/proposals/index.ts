@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getProposals } from '../../../lib/proposals';
-import { Order } from '../../../lib/services/nounsSubgraph.service';
+import { OrderDirection } from '../../../types/generated/nounsSubgraph';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,7 +10,7 @@ export default async function handler(
     const currentBlock = BigInt(req.query.currentBlock as string);
     const startBlockLimit = req.query.startBlockLimit as string;
     const endBlockLimit = req.query.endBlockLimit as string;
-    const order = req.query.order as Order;
+    const order = req.query.order as OrderDirection;
     const limit = Number(req.query.limit);
     const offset = Number(req.query.offset);
 

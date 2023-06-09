@@ -1,17 +1,22 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { SUBGRAPH_URL } from '../constants';
-import { Vote, Proposal } from '../../types/generated/nounsSubgraph';
 import {
-  GET_PROPOSALS,
-  GET_VOTES,
-  GET_VOTES_BY_VOTER,
-  GET_VOTES_FOR_PROPOSAL,
-} from '../../graphql/nouns';
-
-export type Order = 'desc' | 'asc';
+  GetVotesQuery,
+  GetVotesForProposalQuery,
+  GetActiveProposalsQuery,
+} from '../../types/generated/nounsSubgraph';
+import {
+  GetProposalsDocument,
+  GetProposalsQuery,
+  OrderDirection,
+  GetVotesDocument,
+  GetVotesByVoterDocument,
+  GetVotesForProposalDocument,
+  GetActiveProposalsDocument,
+} from '../../types/generated/nounsSubgraph';
 
 export type FilterParams<T = object> = T & {
-  order: Order;
+  order: OrderDirection;
   limit?: number;
   offset?: number;
 };
@@ -30,12 +35,12 @@ export class SubgraphService {
   public async getProposals(
     startBlockLimit: string,
     endBlockLimit: string,
-    order: Order,
+    order: OrderDirection,
     limit: number,
     offset: number
-  ): Promise<Proposal[]> {
+  ): Promise<GetProposalsQuery['proposals']> {
     const { data } = await this.client.query({
-      query: GET_PROPOSALS,
+      query: GetProposalsDocument,
       variables: {
         startBlockLimit,
         endBlockLimit,
@@ -50,10 +55,10 @@ export class SubgraphService {
 
   public async getVotes(
     params: FilterParams<{ voterId?: string }>
-  ): Promise<Vote[]> {
+  ): Promise<GetVotesQuery['votes']> {
     const { order, limit = null, offset = 0, voterId } = params;
     const { data } = await this.client.query({
-      query: params.voterId ? GET_VOTES_BY_VOTER : GET_VOTES,
+      query: params.voterId ? GetVotesByVoterDocument : GetVotesDocument,
       variables: {
         ...(voterId && {
           voterId: voterId.toLowerCase(),
@@ -67,14 +72,26 @@ export class SubgraphService {
     return data?.votes || [];
   }
 
+  public async getActiveProposals(
+    currentBlock: string
+  ): Promise<GetActiveProposalsQuery['proposals']> {
+    const { data } = await this.client.query({
+      query: GetActiveProposalsDocument, // This is your GraphQL query
+      variables: { currentBlock },
+      fetchPolicy: 'network-only',
+    });
+
+    return data?.proposals || [];
+  }
+
   public async getVotesForProposal(
     proposalId: string,
-    order: Order,
+    order: OrderDirection,
     limit?: number,
     offset?: number
-  ): Promise<Vote[]> {
+  ): Promise<GetVotesForProposalQuery['votes']> {
     const { data } = await this.client.query({
-      query: GET_VOTES_FOR_PROPOSAL,
+      query: GetVotesForProposalDocument,
       variables: {
         proposalId,
         order,

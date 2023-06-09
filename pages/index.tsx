@@ -13,6 +13,8 @@ import { Page } from '../components/Page';
 import StatsCard, { WeeklyStats } from '../components/StatsCard';
 import { weeklyStats } from '../lib/stats';
 import { getVotes, getVotesForProposal } from '../lib/votes';
+import { OrderDirection } from '../types/generated/nounsSubgraph';
+import { useActiveProposals } from '../hooks/useActiveProposals';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -114,7 +116,7 @@ export default function Home({
 
 export async function getStaticProps() {
   const votes = await getVotes({
-    order: 'desc',
+    order: OrderDirection.Desc,
     limit: 10,
     offset: 0,
   });
@@ -126,7 +128,9 @@ export async function getStaticProps() {
   );
 
   const prefetchedVotes = await Promise.all(
-    proposals.slice(0, 3).map(p => getVotesForProposal(p.id, 'desc'))
+    proposals
+      .slice(0, 3)
+      .map(p => getVotesForProposal(p.id, OrderDirection.Desc))
   );
 
   const voteFallback = prefetchedVotes.reduce((acc, votes, idx) => {

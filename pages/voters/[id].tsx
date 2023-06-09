@@ -14,6 +14,7 @@ import {
 import { unstable_serialize } from 'swr/infinite';
 import { getEtherscanLink } from '../../lib/util/link';
 import { getVotes } from '../../lib/votes';
+import { OrderDirection } from '../../types/generated/nounsSubgraph';
 
 type VoterPageProps = {
   address: Address;
@@ -91,7 +92,7 @@ export const getStaticProps: GetStaticProps<
     });
   }
   const votes = await getVotes({
-    order: 'desc',
+    order: OrderDirection.Desc,
     voterId: address,
     offset: 0,
     limit: 10,

@@ -1,0 +1,16 @@
+query GetVotesForProposal(
+  $proposalId: String!
+  $order: OrderDirection
+  $limit: Int
+  $offset: Int
+) {
+  votes(
+    where: { proposal: $proposalId }
+    orderBy: blockNumber
+    orderDirection: $order
+    first: $limit
+    skip: $offset
+  ) {
+    ...VoteFragment
+  }
+}
