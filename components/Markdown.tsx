@@ -23,7 +23,7 @@ export function Markdown({ text }: { text: string }) {
             />
           ),
           p: ({ children, ...props }) => {
-            const newChildren = [];
+            const newChildren: React.ReactNode & React.ReactNode[] = [];
             children.forEach(child => {
               if (typeof child === 'string') {
                 const parts = child.split(' ');

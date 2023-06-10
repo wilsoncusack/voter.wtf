@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
 import { ProposalCard } from './ProposalCard';
 import React from 'react';
+import { Proposal } from '../types/Proposal';
 
 export function ProposalContainer({
   proposals,
   selectedProposal,
   setSelectedProposal,
   toggleProposalsType,
+}: {
+  proposals: Proposal[];
+  selectedProposal: Proposal | null;
+  setSelectedProposal: (proposal: Proposal | null) => void;
+  toggleProposalsType: (type: 'active' | 'all') => void;
 }) {
   // 1. Initialize state
   const [scrollDivHeight, setScrollDivHeight] = useState(0);

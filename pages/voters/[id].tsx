@@ -74,12 +74,16 @@ export const getStaticProps: GetStaticProps<
   VoterPageParams
 > = async context => {
   const params = context.params;
+  if (!params) return { notFound: true };
   let address: Address = params.id as Address;
   let ensName;
   if (params.id.includes('.eth')) {
-    address = await viem.getEnsAddress({
+    const result = await viem.getEnsAddress({
       name: params.id,
     });
+    if (result) {
+      address = result;
+    }
     ensName = params.id;
   } else {
     const isValid = isAddress(address);

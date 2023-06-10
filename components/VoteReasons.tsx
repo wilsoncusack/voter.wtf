@@ -202,7 +202,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 
 export default VoteReasons;
 
-function EnsImage({ url }) {
+function EnsImage({ url }: { url: string }) {
   const [error, setError] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
 

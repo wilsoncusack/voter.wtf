@@ -2,12 +2,17 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { VoteList } from '../components/VoteList';
 import useSWRInfinite from 'swr/infinite';
 import { fetcher } from '../lib/util/swr';
+import { Vote } from '../types/Vote';
 
 export type VoteListOptions = {
   voterId?: string;
 };
 
-export const getKey = (pageIndex, previousPageData, voterId?: string) => {
+export const getKey = (
+  pageIndex: number,
+  previousPageData: Vote[],
+  voterId?: string
+) => {
   if (previousPageData && !previousPageData.length) return null; // reached the end
   return `/api/votes?page=${pageIndex + 1}${
     voterId ? `&voterId=${voterId}` : ''

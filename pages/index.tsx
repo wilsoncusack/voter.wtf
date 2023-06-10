@@ -32,10 +32,10 @@ export default function Home({
   );
 
   const toggleProposalsType = async (type: 'active' | 'all') => {
-    let proposals;
+    let proposals: Proposal[] = [];
     if (type == 'active') {
       const block = await viem.getBlockNumber();
-      proposals = await axios.get('/api/proposals', {
+      const proposalsResp = await axios.get('/api/proposals', {
         params: {
           currentBlock: block.toString(),
           startBlockLimit: (block + BigInt(100000)).toString(),
@@ -45,12 +45,12 @@ export default function Home({
           offset: 0,
         },
       });
-      proposals = proposals.data.filter(
-        proposal => proposal.status != ProposalStatus.Cancelled
+      proposals = proposalsResp.data.filter(
+        (proposal: Proposal) => proposal.status != ProposalStatus.Cancelled
       );
     } else {
       const block = await viem.getBlockNumber();
-      proposals = await axios.get('/api/proposals', {
+      const proposalsResp = await axios.get('/api/proposals', {
         params: {
           currentBlock: block.toString(),
           startBlockLimit: (block + BigInt(100000)).toString(),
@@ -60,7 +60,7 @@ export default function Home({
           offset: 0,
         },
       });
-      proposals = proposals.data;
+      proposals = proposalsResp.data;
     }
     setProposals(proposals);
   };
