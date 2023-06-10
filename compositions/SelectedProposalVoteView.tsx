@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Proposal } from '../types/Proposal';
 import { ForAgainstView } from '../components/ForAgainstView';
 import { ClockIcon, TableCellsIcon } from '@heroicons/react/24/outline';
+import React from 'react';
 
 interface SelectedProposalVoteViewProps {
   selectedProposal: Proposal;

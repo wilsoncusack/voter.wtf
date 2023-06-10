@@ -7,6 +7,10 @@ body {
   background: rgba(17, 24, 39, 90);
 }
 
+textarea:focus {
+  outline: none;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

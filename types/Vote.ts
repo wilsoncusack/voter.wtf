@@ -1,5 +1,11 @@
 import { Vote as GqlVote, Delegate } from './generated/nounsSubgraph';
 
+export enum SupportDetailed {
+  Against = 0,
+  For = 1,
+  Abstain = 2,
+}
+
 export interface Like {
   id?: string;
   is_nouns_voter: boolean;
