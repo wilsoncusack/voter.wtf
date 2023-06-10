@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNounsDaoLogicV2CastRefundableVoteWithReason as vwr } from '../abis/generated/nounsDAOLogicV2';
+import {
+  usePrepareNounsDaoLogicV2CastRefundableVoteWithReason as prepareVWR,
+  useNounsDaoLogicV2CastRefundableVoteWithReason as vwr,
+} from '../abis/generated/nounsDAOLogicV2';
 import { useActiveProposals } from '../hooks/useActiveProposals';
 import { useAccount } from 'wagmi';
 import { Markdown } from './Markdown';
@@ -14,9 +17,13 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
   const [support, setSupport] = useState<number>(SupportDetailed.For);
   const [reason, setReason] = useState<string>('\n\n*sent from voter.wtf*');
   const [preview, setPreview] = useState(false);
-  const { isLoading, isSuccess, write } = vwr({
-    args: [BigInt(selectedProposalId), support, reason],
-  });
+  const args: [bigint, number, string] = [
+    BigInt(selectedProposalId),
+    support,
+    reason,
+  ];
+  //   const {config, error} = prepareVWR({args: check})
+  const { isLoading, isSuccess, write } = vwr({ args: args });
 
   const handleVote = (support: number) => {
     setSupport(support);

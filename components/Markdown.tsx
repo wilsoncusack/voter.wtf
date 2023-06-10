@@ -6,7 +6,6 @@ export function Markdown({ text }: { text: string }) {
     <div className="whitespace-pre-line">
       {' '}
       <ReactMarkdown
-        breaks
         components={{
           a: ({ ...props }) => (
             <a

@@ -42,12 +42,12 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
             </div>
             <div className="flex items-center">
               {address && (
-                <button
+                <div
                   onClick={toggleModal}
                   className="p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
                 >
                   <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </div>
               )}
               <div className="m-4 ml-2 flex justify-end">
                 <ConnectKitButton />
