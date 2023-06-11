@@ -26,7 +26,7 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
     if (address) {
       setShowVote(true);
     }
-  }, [address])
+  }, [address]);
 
   const title = pageTitle + ' - voter.wtf';
   return (
@@ -71,5 +71,3 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
     </SWRConfig>
   );
 }
-
-
