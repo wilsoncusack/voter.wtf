@@ -28,17 +28,17 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <WagmiConfig config={config}>
         {/* <ConnectKitProvider theme="nouns"> */}
-          <SWRConfig
-            value={{
-              refreshInterval,
-              fetcher: (resource, init) =>
-                fetch(resource, init).then(res => res.json()),
-            }}
-          >
-            <ActiveProposalsProvider>
-              <Component {...pageProps} />
-            </ActiveProposalsProvider>
-          </SWRConfig>
+        <SWRConfig
+          value={{
+            refreshInterval,
+            fetcher: (resource, init) =>
+              fetch(resource, init).then(res => res.json()),
+          }}
+        >
+          <ActiveProposalsProvider>
+            <Component {...pageProps} />
+          </ActiveProposalsProvider>
+        </SWRConfig>
         {/* </ConnectKitProvider> */}
       </WagmiConfig>
       <Analytics />
