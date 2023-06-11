@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { FallbackProp } from '../lib/util/swr';
 import { SWRConfig } from 'swr';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ConnectKitButton } from 'connectkit';
 import HeadSVG from '../public/noun652head.svg';
 import Image from 'next/image';
@@ -20,6 +20,13 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => setShowModal(!showModal);
   const { address } = useAccount();
+  const [showVote, setShowVote] = useState(false);
+
+  useEffect(() => {
+    if (address) {
+      setShowVote(true);
+    }
+  }, [address])
 
   const title = pageTitle + ' - voter.wtf';
   return (
@@ -41,7 +48,7 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
               <h1 className="neon mb-4 md:mb-0">VwR</h1>
             </div>
             <div className="flex items-center">
-              {address && (
+              {showVote && (
                 <div
                   onClick={toggleModal}
                   className="p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
@@ -64,3 +71,5 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
     </SWRConfig>
   );
 }
+
+
