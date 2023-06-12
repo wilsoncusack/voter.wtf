@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type VoteType = 'for' | 'against';
 interface MobileForAgainstToggle {
   setMobileVoteType: (type: VoteType) => void;

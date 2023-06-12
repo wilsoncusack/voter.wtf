@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 export function useBlockTimestamp(blockNumber: bigint) {
   const { data: block, ...rest } = useSWR<Block>(
     ['block', blockNumber],
-    ([, blockNumber]) => {
+    ([, blockNumber]: [string, bigint]) => {
       return viem.getBlock({ blockNumber });
     }
   );

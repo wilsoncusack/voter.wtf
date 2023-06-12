@@ -26,7 +26,7 @@ export function ForAgainstView({ votes }: { votes: Vote[] }) {
             voteType === 'for' ? 'block' : 'hidden',
           ])}
         >
-          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
+          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-1">
             <span className="text-green-400">For</span>
           </h2>
           <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">
@@ -39,7 +39,7 @@ export function ForAgainstView({ votes }: { votes: Vote[] }) {
             voteType === 'against' ? 'block' : 'hidden',
           ])}
         >
-          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-10">
+          <h2 className="md:block absolute top-0 left-0 text-white text-xl mb-4 font-bold uppercase z-1">
             <span className="text-red-400">Against</span>
           </h2>
           <div className="md:overflow-y-auto h-[80vh] mt-8 hide-scrollbar">

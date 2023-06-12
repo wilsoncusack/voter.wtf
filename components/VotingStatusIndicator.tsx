@@ -13,7 +13,6 @@ export function VotingStatusIndicator({
   proposalId,
   address,
 }: VotingStatusIndicatorProps) {
-  console.log(address);
   const { data, isLoading, isError } = useNounsDaoLogicV2GetReceipt({
     args: [BigInt(proposalId), address],
   });

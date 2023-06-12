@@ -1,7 +1,7 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { GetEnsInfoDocument } from '../../types/generated/basement';
 
-const BASEMENT_API_KEY = process.env.BASEMENT_API_KEY;
+const BASEMENT_API_KEY = process.env.BASEMENT_API_KEY || '';
 
 const client = new ApolloClient({
   link: new HttpLink({

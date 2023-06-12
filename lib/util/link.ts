@@ -6,7 +6,7 @@ export function getNounsLink(id: number | string, type = 'vote') {
   return `https://nouns.wtf/${type}/${id}`;
 }
 
-export function replaceURLsWithLink(text) {
+export function replaceURLsWithLink(text: string) {
   const urlRegex =
     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
 

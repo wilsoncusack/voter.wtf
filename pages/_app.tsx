@@ -3,10 +3,10 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { config } from '../lib/wagmi';
 import { SWRConfig } from 'swr';
-import { ConnectKitProvider } from 'connectkit';
 import { Analytics } from '@vercel/analytics/react';
-import { WagmiConfig } from 'wagmi';
+import { WagmiConfig, mainnet } from 'wagmi';
 import { ActiveProposalsProvider } from '../providers/ActiveProposalsProvider';
+import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import React from 'react';
 
 const refreshInterval = 1000 * 60; // 1 minute
@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         ></link>
       </Head>
       <WagmiConfig config={config}>
-        <ConnectKitProvider theme="nouns">
+        <RainbowKitProvider chains={[mainnet]} theme={darkTheme()}>
           <SWRConfig
             value={{
               refreshInterval,
@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
             </ActiveProposalsProvider>
           </SWRConfig>
-        </ConnectKitProvider>
+        </RainbowKitProvider>
       </WagmiConfig>
       <Analytics />
     </div>

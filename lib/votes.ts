@@ -1,6 +1,5 @@
 import { Vote } from '../types/Vote';
 import {
-  GetVotesForProposalQuery,
   Vote as GqlVote,
   OrderDirection,
 } from '../types/generated/nounsSubgraph';
