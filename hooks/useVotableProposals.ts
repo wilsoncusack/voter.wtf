@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useActiveProposals } from './useActiveProposals';
-import { GetActiveProposalsQuery } from '../types/generated/nounsSubgraph';
+import {
+  GetActiveProposalsQuery,
+  ProposalStatus,
+} from '../types/generated/nounsSubgraph';
 
 export function useVotableProposals(): GetActiveProposalsQuery['proposals'] {
   const { proposals } = useActiveProposals();
@@ -10,7 +13,9 @@ export function useVotableProposals(): GetActiveProposalsQuery['proposals'] {
   const votableProposals = useMemo(() => {
     return proposals.filter(
       proposal =>
-        !proposal.votes.some(vote => vote.voter.id === address?.toLowerCase())
+        !proposal.votes.some(
+          vote => vote.voter.id === address?.toLowerCase()
+        ) && proposal.status != ProposalStatus.Cancelled
     );
   }, [proposals, address]);
 
