@@ -14,7 +14,6 @@ import StatsCard, { WeeklyStats } from '../components/StatsCard';
 import { weeklyStats } from '../lib/stats';
 import { getVotes, getVotesForProposal } from '../lib/votes';
 import { OrderDirection } from '../types/generated/nounsSubgraph';
-import { SWRConfig } from 'swr';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -67,53 +66,49 @@ export default function Home({
   };
 
   return (
-    <Page title="Home">
-      <SWRConfig value={{ fallback }}>
-        <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
-          <div className="md:fixed md:bottom-0 md:top-20 md:w-1/3 ">
-            <ProposalContainer
-              proposals={propososals}
-              selectedProposal={selectedProposal}
-              setSelectedProposal={setSelectedProposal}
-              toggleProposalsType={toggleProposalsType}
-            />
-          </div>
-          <div className="flex md:w-2/3 md:ml-auto relative">
-            <div className={selectedProposal ? '' : 'md:w-2/3'}>
-              <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
-                {selectedProposal ? (
-                  <a
-                    href={getNounsLink(selectedProposal.id)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:underline"
-                  >
-                    {selectedProposal.id}: {selectedProposal.title}
-                  </a>
-                ) : (
-                  'Vote Timeline'
-                )}
-              </h1>
-              <div className="flex flex-wrap justify-left m-4">
-                {selectedProposal ? (
-                  <SelectedProposalVoteView
-                    selectedProposal={selectedProposal}
-                  />
-                ) : (
-                  <div>
-                    <PaginatedVoteList />
-                  </div>
-                )}
-              </div>
-            </div>
-            {!selectedProposal && (
-              <div className="hidden md:block fixed right-0 top-20">
-                <StatsCard stats={stats} />
-              </div>
-            )}
-          </div>
+    <Page title="Home" fallback={fallback}>
+      <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
+        <div className="md:fixed md:bottom-0 md:top-20 md:w-1/3 ">
+          <ProposalContainer
+            proposals={propososals}
+            selectedProposal={selectedProposal}
+            setSelectedProposal={setSelectedProposal}
+            toggleProposalsType={toggleProposalsType}
+          />
         </div>
-      </SWRConfig>
+        <div className="flex md:w-2/3 md:ml-auto relative">
+          <div className={selectedProposal ? '' : 'md:w-2/3'}>
+            <h1 className="text-3xl font-semibold  m-4 px-2 pt-2">
+              {selectedProposal ? (
+                <a
+                  href={getNounsLink(selectedProposal.id)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:underline"
+                >
+                  {selectedProposal.id}: {selectedProposal.title}
+                </a>
+              ) : (
+                'Vote Timeline'
+              )}
+            </h1>
+            <div className="flex flex-wrap justify-left m-4">
+              {selectedProposal ? (
+                <SelectedProposalVoteView selectedProposal={selectedProposal} />
+              ) : (
+                <div>
+                  <PaginatedVoteList />
+                </div>
+              )}
+            </div>
+          </div>
+          {!selectedProposal && (
+            <div className="hidden md:block fixed right-0 top-20">
+              <StatsCard stats={stats} />
+            </div>
+          )}
+        </div>
+      </div>
     </Page>
   );
 }
