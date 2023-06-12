@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         ></link>
       </Head>
       <WagmiConfig config={config}>
-        {/* <ConnectKitProvider theme="nouns"> */}
+        <ConnectKitProvider theme="nouns">
           <SWRConfig
             value={{
               refreshInterval,
@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
             </ActiveProposalsProvider>
           </SWRConfig>
-        {/* </ConnectKitProvider> */}
+        </ConnectKitProvider>
       </WagmiConfig>
       <Analytics />
     </div>

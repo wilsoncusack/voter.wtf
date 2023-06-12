@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { VoteModal } from './VoteModal';
 import { useAccount } from 'wagmi';
-import { ConnectKitProvider } from 'connectkit';
 
 type PageProps = {
   title: string;
@@ -32,7 +31,6 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
   const title = pageTitle + ' - voter.wtf';
   return (
     <SWRConfig value={{ fallback }}>
-      <ConnectKitProvider>
       <main>
         <Head>
           <title>{title}</title>
@@ -51,12 +49,12 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
             </div>
             <div className="flex items-center">
               {showVote && (
-                <button
+                <div
                   onClick={toggleModal}
                   className="p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
                 >
                   <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </div>
               )}
               <div className="m-4 ml-2 flex justify-end">
                 <ConnectKitButton />
@@ -70,7 +68,6 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
           {children}
         </div>
       </main>
-      </ConnectKitProvider>
     </SWRConfig>
   );
 }
