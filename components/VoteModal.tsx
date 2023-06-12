@@ -1,44 +1,34 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNounsDaoLogicV2CastRefundableVoteWithReason as vwr } from '../abis/generated/nounsDAOLogicV2';
-import { useActiveProposals } from '../hooks/useActiveProposals';
-import { useAccount } from 'wagmi';
 import { Markdown } from './Markdown';
 import { SupportDetailed } from '../types/Vote';
+import { useShowVoteModal } from '../hooks/useShowVoteModal';
+import { useVoteDetail } from '../hooks/useVoteDetail';
+import { useVotableProposals } from '../hooks/useVotableProposals';
 
-export function VoteModal({ cancel }: { cancel: () => void }) {
-  const { proposals } = useActiveProposals();
-  const { address: account } = useAccount();
-  const [selectedProposalId, setSelectedProposalId] = useState<string>('');
-  const [support, setSupport] = useState<number>(SupportDetailed.For);
-  const [reason, setReason] = useState<string>('\n\n*sent from voter.wtf*');
+export function VoteModal() {
+  const { setShowVoteModal } = useShowVoteModal();
+  const proposals = useVotableProposals();
+  const { voteDetail, setVoteDetail } = useVoteDetail();
+  //   const [reason, setReason] = useState<string>(voteReason);
   const [preview, setPreview] = useState(false);
   const { isLoading, isSuccess, write } = vwr({
-    args: [BigInt(selectedProposalId), support, reason],
+    args: [
+      BigInt(voteDetail.proposalId),
+      voteDetail.support,
+      voteDetail.reason,
+    ],
   });
 
-  const filteredProposals = useMemo(() => {
-    return proposals.filter(
-      proposal =>
-        !proposal.votes.some(vote => vote.voter.id === account?.toLowerCase())
-    );
-  }, [proposals, account]);
-
-  useEffect(() => {
-    if (selectedProposalId == '') {
-      setSelectedProposalId(filteredProposals[0].id.toString());
-    }
-  }, [filteredProposals, selectedProposalId]);
-
-  const handleVote = (support: number) => {
-    setSupport(support);
+  const handleVote = () => {
     write();
   };
 
   useEffect(() => {
     if (isSuccess) {
-      cancel();
+      setShowVoteModal(false);
     }
-  }, [isSuccess, cancel]);
+  }, [isSuccess, setShowVoteModal]);
 
   return (
     <div
@@ -69,10 +59,13 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
               </label>
               <select
                 id="proposal"
-                onChange={e => setSelectedProposalId(e.target.value)}
+                onChange={e =>
+                  setVoteDetail({ ...voteDetail, proposalId: e.target.value })
+                }
+                value={voteDetail.proposalId}
                 className="mt-1 p-2 block w-full bg-gray-700 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2"
               >
-                {filteredProposals.map(proposal => (
+                {proposals.map(proposal => (
                   <option
                     key={proposal.id.toString()}
                     value={proposal.id.toString()}
@@ -89,7 +82,12 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
               </label>
               <select
                 id="vote"
-                onChange={e => setSupport(Number(e.target.value))}
+                onChange={e =>
+                  setVoteDetail({
+                    ...voteDetail,
+                    support: Number(e.target.value),
+                  })
+                }
                 className="mt-1 p-2 block w-full bg-gray-700 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2"
               >
                 <option value={SupportDetailed.For}>For</option>
@@ -123,8 +121,10 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
               {!preview && (
                 <textarea
                   id="reason"
-                  value={reason}
-                  onChange={e => setReason(e.target.value)}
+                  value={voteDetail.reason}
+                  onChange={e =>
+                    setVoteDetail({ ...voteDetail, reason: e.target.value })
+                  }
                   className="p-2 rounded-none block w-full bg-gray-700 text-white shadow-sm h-48"
                 ></textarea>
               )}
@@ -133,7 +133,7 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
                   className=" p-4 bg-gray-700 text-white shadow-sm h-48 overflow-auto"
                   style={{ whiteSpace: 'pre-wrap' }}
                 >
-                  <Markdown text={reason} />
+                  <Markdown text={voteDetail.reason} />
                 </div>
               )}
             </div>
@@ -141,13 +141,13 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
           <div className="bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
               disabled={isLoading}
-              onClick={() => handleVote(support)}
+              onClick={handleVote}
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-gray-800 bg-gray-200 text-base font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
               {isLoading ? 'Check Wallet' : 'Vote'}
             </button>
             <button
-              onClick={cancel}
+              onClick={() => setShowVoteModal(false)}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-700 shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 sm:mt-0 sm:w-auto sm:text-sm"
             >
               Cancel

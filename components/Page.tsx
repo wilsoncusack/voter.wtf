@@ -9,6 +9,7 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { VoteModal } from './VoteModal';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useShowVoteModal } from '../hooks/useShowVoteModal';
 
 type PageProps = {
   title: string;
@@ -17,10 +18,9 @@ type PageProps = {
 };
 
 export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
-  const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => setShowModal(!showModal);
   const { address } = useAccount();
   const [showVote, setShowVote] = useState(false);
+  const { showVoteModal, setShowVoteModal } = useShowVoteModal();
 
   useEffect(() => {
     if (address) {
@@ -50,7 +50,7 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
             <div className="flex items-center">
               {showVote && (
                 <button
-                  onClick={toggleModal}
+                  onClick={() => setShowVoteModal(true)}
                   className="p-2 rounded-md text-gray-400 hover:text-white focus:outline-none"
                 >
                   <PencilSquareIcon className="h-6 w-6" aria-hidden="true" />
@@ -62,7 +62,7 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
             </div>
           </Link>
         </header>
-        {showModal && <VoteModal cancel={() => setShowModal(false)} />}
+        {showVoteModal && <VoteModal />}
 
         <div className="bg-gray-900 min-h-screen text-white font-sans pt-20">
           {children}
