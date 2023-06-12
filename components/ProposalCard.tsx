@@ -44,7 +44,7 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
               {' '}
               {proposal.startBlock < blockNumber ? (
                 <div className="flex justify-between">
-                  <p>
+                  <p className="">
                     ends in{' '}
                     {formatDuration(BigInt(proposal.endBlock), blockNumber)}
                   </p>
@@ -68,7 +68,7 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
         </div>
       </div>
 
-      <div className="mt-2 text-lg text-white line-clamp-2">
+      <div className="mt-2 h-14 md:h-auto text-lg text-white line-clamp-2">
         {id}: {title}
       </div>
       <div className="mt-2 flex items-center">
