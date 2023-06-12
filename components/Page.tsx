@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { VoteModal } from './VoteModal';
 import { useAccount } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 type PageProps = {
   title: string;
@@ -57,7 +58,7 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
                 </button>
               )}
               <div className="m-4 ml-2 flex justify-end">
-                <ConnectKitButton />
+                <ConnectButton showBalance={false} />
               </div>
             </div>
           </Link>
