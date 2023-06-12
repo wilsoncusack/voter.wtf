@@ -11,6 +11,10 @@ import Image from 'next/image';
 import { Like, Vote } from '../types/Vote';
 import Link from 'next/link';
 import { Markdown } from './Markdown';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { useVoteDetail } from '../hooks/useVoteDetail';
+import { useShowVoteModal } from '../hooks/useShowVoteModal';
+import { useVotableProposals } from '../hooks/useVotableProposals';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -26,6 +30,14 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   const [liked, setLiked] = useState(false);
   const [voterLikes, setVoterLikes] = useState<Like[]>([]);
   const [nonVoterLikes, setNonVoterLikes] = useState<Like[]>([]);
+  const { setVoteDetail } = useVoteDetail();
+  const { setShowVoteModal } = useShowVoteModal();
+  const proposals = useVotableProposals();
+
+  const isVotable = useMemo(() => {
+    if (!proposals || !vote.proposal.id) return false;
+    return proposals.some(p => p.id === vote.proposal.id);
+  }, [proposals, vote.proposal.id]);
 
   const ensName = useMemo(
     () => (vote.voter.ensName ? vote.voter.ensName : vote.voter.id.slice(0, 8)),
@@ -75,7 +87,6 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     const nVLikes: Like[] = [];
 
     for (const like of vote.likes) {
-      console.log('here');
       if (like.is_nouns_voter) {
         vLikes.push(like);
       } else {
@@ -157,7 +168,24 @@ export function VoteReasons({ vote }: VoteReasonProps) {
           </div>
 
           {reason != '' && (
-            <div className={'flex justify-end mr-2'}>
+            <div className={'flex items-center justify-end mr-2'}>
+              <button
+                onClick={() => {
+                  setVoteDetail({
+                    support: vote.supportDetailed,
+                    reason: `reVoteWithReason from ${ensName}\n> ${vote.reason?.replace(
+                      /\n\n/g,
+                      '\n'
+                    )} \n\n*sent from voter.wtf*`,
+                    proposalId: vote.proposal.id.toString(),
+                  });
+                  setShowVoteModal(true);
+                }}
+              >
+                {isVotable && (
+                  <ArrowPathIcon className="h-5 w-5 text-gray-500 mr-2" />
+                )}
+              </button>
               <button
                 onClick={handleLikeClick}
                 disabled={!walletClient || liked}
@@ -184,7 +212,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 )}
               </button>
               <p
-                className={`ml-1 font-semibold ${
+                className={`ml-1 mb-1 font-semibold ${
                   voterLikes.length + nonVoterLikes.length == 0
                     ? 'text-gray-800'
                     : 'text-gray-500'

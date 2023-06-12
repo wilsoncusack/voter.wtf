@@ -8,6 +8,8 @@ import { WagmiConfig, mainnet } from 'wagmi';
 import { ActiveProposalsProvider } from '../providers/ActiveProposalsProvider';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import React from 'react';
+import { ShowVoteModalProvider } from '../providers/ShowVoteModalProvider';
+import { VoteReasonProvider } from '../providers/VoteDetailProvider';
 
 const refreshInterval = 1000 * 60; // 1 minute
 
@@ -36,7 +38,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             }}
           >
             <ActiveProposalsProvider>
-              <Component {...pageProps} />
+              <ShowVoteModalProvider>
+                <VoteReasonProvider>
+                  <Component {...pageProps} />
+                </VoteReasonProvider>
+              </ShowVoteModalProvider>
             </ActiveProposalsProvider>
           </SWRConfig>
         </RainbowKitProvider>
