@@ -1,11 +1,11 @@
 import { createConfig, configureChains, mainnet } from 'wagmi';
 import { createPublicClient, http } from 'viem';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
-import { getDefaultConfig } from 'connectkit';
+import { getDefaultWallets } from '@rainbow-me/rainbowkit';
 
 const RPC_URL = 'https://rpc.eth.gateway.fm';
 
-const { publicClient } = configureChains(
+const { chains, publicClient } = configureChains(
   [mainnet],
   [
     jsonRpcProvider({
@@ -16,13 +16,17 @@ const { publicClient } = configureChains(
   ]
 );
 
-export const config = createConfig(
-  getDefaultConfig({
-    appName: 'voter.wtf',
-    publicClient: publicClient,
-    walletConnectProjectId: '350569e85a7ff1842b079dc92cf87b48',
-  })
-);
+const { connectors } = getDefaultWallets({
+  appName: 'voter.wtf',
+  projectId: '350569e85a7ff1842b079dc92cf87b48',
+  chains,
+});
+
+export const config = createConfig({
+  autoConnect: true,
+  connectors,
+  publicClient,
+});
 
 export const viem = createPublicClient({
   chain: mainnet,
