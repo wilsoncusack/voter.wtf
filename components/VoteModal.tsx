@@ -121,7 +121,7 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
                   id="reason"
                   value={reason}
                   onChange={e => setReason(e.target.value)}
-                  className="p-2 block w-full bg-gray-700 text-white shadow-sm h-48"
+                  className="p-2 rounded-none block w-full bg-gray-700 text-white shadow-sm h-48"
                 ></textarea>
               )}
               {preview && (
