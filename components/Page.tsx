@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { FallbackProp } from '../lib/util/swr';
 import { SWRConfig } from 'swr';
 import React, { useState, useEffect } from 'react';
-import { ConnectKitButton } from 'connectkit';
 import HeadSVG from '../public/noun652head.svg';
 import Image from 'next/image';
 import Link from 'next/link';
