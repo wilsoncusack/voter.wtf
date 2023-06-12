@@ -1,4 +1,4 @@
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import { VoteDetailContext, VoteDetails } from '../contexts/VoteDetailsContext';
 import { SupportDetailed } from '../types/Vote';
 import { useVotableProposals } from '../hooks/useVotableProposals';
@@ -7,10 +7,17 @@ import { useVotableProposals } from '../hooks/useVotableProposals';
 export const VoteReasonProvider: FC = ({ children }) => {
   const proposals = useVotableProposals();
   const [voteDetail, setVoteDetail] = useState<VoteDetails>({
-    proposalId: proposals.length > 0 ? proposals[0].id.toString() : '',
+    proposalId: '',
     support: SupportDetailed.For,
     reason: '\n\n*sent from voter.wtf*',
   });
+
+  useEffect(() => {
+    setVoteDetail(prev => ({
+      ...prev,
+      proposalId: proposals.length > 0 ? proposals[0].id.toString() : '',
+    }));
+  }, [proposals]);
 
   const value = { voteDetail, setVoteDetail };
 

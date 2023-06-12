@@ -87,7 +87,6 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     const nVLikes: Like[] = [];
 
     for (const like of vote.likes) {
-      console.log('here');
       if (like.is_nouns_voter) {
         vLikes.push(like);
       } else {
