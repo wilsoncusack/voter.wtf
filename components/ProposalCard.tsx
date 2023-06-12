@@ -31,7 +31,7 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
           setSelectedProposal(proposal);
         }
       }}
-      className={`my-1 ml-2 p-4 w-48 rounded-lg md:w-full md:border-tiny md:m-0 md:rounded-none md:border-gray-700 ${
+      className={`my-1 ml-2 p-4 w-52 rounded-lg md:w-full md:border-tiny md:m-0 md:rounded-none md:border-gray-700 ${
         selectedProposal && selectedProposal.id === proposal.id
           ? 'bg-gray-600'
           : 'bg-gray-800'
