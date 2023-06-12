@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNounsDaoLogicV2CastRefundableVoteWithReason as vwr } from '../abis/generated/nounsDAOLogicV2';
 import { useActiveProposals } from '../hooks/useActiveProposals';
 import { useAccount } from 'wagmi';
@@ -8,15 +8,26 @@ import { SupportDetailed } from '../types/Vote';
 export function VoteModal({ cancel }: { cancel: () => void }) {
   const { proposals } = useActiveProposals();
   const { address: account } = useAccount();
-  const [selectedProposalId, setSelectedProposalId] = useState<string>(
-    proposals.length > 0 ? proposals[0].id : ''
-  );
+  const [selectedProposalId, setSelectedProposalId] = useState<string>('');
   const [support, setSupport] = useState<number>(SupportDetailed.For);
   const [reason, setReason] = useState<string>('\n\n*sent from voter.wtf*');
   const [preview, setPreview] = useState(false);
   const { isLoading, isSuccess, write } = vwr({
     args: [BigInt(selectedProposalId), support, reason],
   });
+
+  const filteredProposals = useMemo(() => {
+    return proposals.filter(
+      proposal =>
+        !proposal.votes.some(vote => vote.voter.id === account?.toLowerCase())
+    );
+  }, [proposals, account]);
+
+  useEffect(() => {
+    if (selectedProposalId == '') {
+      setSelectedProposalId(filteredProposals[0].id.toString());
+    }
+  }, [filteredProposals, selectedProposalId]);
 
   const handleVote = (support: number) => {
     setSupport(support);
@@ -61,21 +72,14 @@ export function VoteModal({ cancel }: { cancel: () => void }) {
                 onChange={e => setSelectedProposalId(e.target.value)}
                 className="mt-1 p-2 block w-full bg-gray-700 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2"
               >
-                {proposals
-                  .filter(
-                    proposal =>
-                      !proposal.votes.some(
-                        vote => vote.voter.id === account?.toLowerCase()
-                      )
-                  )
-                  .map(proposal => (
-                    <option
-                      key={proposal.id.toString()}
-                      value={proposal.id.toString()}
-                    >
-                      {proposal.title}
-                    </option>
-                  ))}
+                {filteredProposals.map(proposal => (
+                  <option
+                    key={proposal.id.toString()}
+                    value={proposal.id.toString()}
+                  >
+                    {proposal.title}
+                  </option>
+                ))}
               </select>
               <label
                 htmlFor="vote"
