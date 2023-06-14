@@ -37,6 +37,7 @@ export default function Home({
   const { proposalId } = router.query;
   const parsedProposalId = proposalId as string;
 
+  const [clearSelectedProposal, setClearSelectedProposal] = useState(false);
   const [proposals, setProposals] = useState<Proposal[]>(openProposals);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
@@ -45,24 +46,76 @@ export default function Home({
     ProposalsToggleType.Active
   );
 
+  const setSelectedProposalAndUpdateURL = useCallback(
+    (proposal: Proposal | null) => {
+      setSelectedProposal(proposal);
+
+      // If a proposal is selected, add it to the URL's query parameters.
+      // Otherwise, remove the 'proposalId' query parameter.
+      if (proposal) {
+        router.push(
+          {
+            pathname: router.pathname,
+            query: { ...router.query, proposalId: proposal.id.toString() },
+          },
+          undefined,
+          { shallow: true }
+        );
+      } else {
+        const { proposalId, ...rest } = router.query; // remove proposalId from query
+
+        router.push(
+          {
+            pathname: router.pathname,
+            query: rest,
+          },
+          undefined,
+          { shallow: true }
+        );
+        setClearSelectedProposal(true);
+      }
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    if (clearSelectedProposal) {
+      setClearSelectedProposal(false);
+    }
+  }, [proposalId, clearSelectedProposal]);
+
   const toggleProposalsType = useCallback(
     (type: ProposalsToggleType) => {
+      console.log(type);
       if (
+        type === ProposalsToggleType.Active &&
         proposalsType == ProposalsToggleType.All &&
         !openProposals.find(
           proposal => proposal.id.toString() === parsedProposalId
         )
       ) {
-        setSelectedProposal(null);
+        router.push('');
+        setSelectedProposalAndUpdateURL(null);
       }
 
       setProposalsType(type);
     },
-    [openProposals, parsedProposalId, proposalsType]
+    [
+      openProposals,
+      parsedProposalId,
+      proposalsType,
+      setSelectedProposalAndUpdateURL,
+      router,
+    ]
   );
 
   useEffect(() => {
-    if (parsedProposalId === undefined || selectedProposal) return;
+    if (
+      parsedProposalId === undefined ||
+      selectedProposal ||
+      clearSelectedProposal
+    )
+      return;
     const initialSelectedProposal =
       openProposals.find(
         proposal => proposal.id.toString() === parsedProposalId
@@ -72,7 +125,13 @@ export default function Home({
     } else {
       setSelectedProposal(initialSelectedProposal);
     }
-  }, [openProposals, parsedProposalId, proposalsType, selectedProposal]);
+  }, [
+    openProposals,
+    parsedProposalId,
+    proposalsType,
+    selectedProposal,
+    clearSelectedProposal,
+  ]);
 
   useEffect(() => {
     let isCancelled = false; // To prevent setting state if component unmounts
@@ -115,32 +174,6 @@ export default function Home({
       isCancelled = true; // If component unmounts, mark as cancelled
     };
   }, [proposalsType, openProposals, parsedProposalId, selectedProposal]);
-
-  const setSelectedProposalAndUpdateURL = (proposal: Proposal | null) => {
-    setSelectedProposal(proposal);
-
-    // If a proposal is selected, add it to the URL's query parameters.
-    // Otherwise, remove the 'proposalId' query parameter.
-    if (proposal) {
-      router.push(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, proposalId: proposal.id.toString() },
-        },
-        undefined,
-        { shallow: true }
-      );
-    } else {
-      router.push(
-        {
-          pathname: router.pathname,
-          query: '',
-        },
-        undefined,
-        { shallow: true }
-      );
-    }
-  };
 
   return (
     <Page title="Home" fallback={fallback}>
