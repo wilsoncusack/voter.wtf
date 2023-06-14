@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { ProposalCard } from './ProposalCard';
 import React from 'react';
 import { Proposal } from '../types/Proposal';
@@ -17,6 +17,14 @@ export function ProposalContainer({
   selectedProposalsToggle: ProposalsToggleType;
   toggleProposalsType: (type: ProposalsToggleType) => void;
 }) {
+  const proposalRefs = proposals.reduce(
+    (acc: { [key: string]: React.RefObject<HTMLDivElement> }, proposal) => {
+      acc[proposal.id] = React.createRef();
+      return acc;
+    },
+    {}
+  );
+
   // 1. Initialize state
   const [scrollDivHeight, setScrollDivHeight] = useState(0);
 
@@ -40,6 +48,16 @@ export function ProposalContainer({
       window.removeEventListener('resize', updateHeight);
     };
   }, []);
+
+  useLayoutEffect(() => {
+    if (selectedProposal && proposalRefs[selectedProposal.id]?.current) {
+      proposalRefs[selectedProposal.id]?.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+    }
+  }, [selectedProposal, proposalRefs]);
 
   const { width } = useWindowSize();
   const isMobile = width <= 768;
@@ -82,6 +100,7 @@ export function ProposalContainer({
         {proposals.map((proposal, i) => (
           <div key={i}>
             <ProposalCard
+              ref={proposalRefs[proposal.id]}
               proposal={proposal}
               selectedProposal={selectedProposal}
               setSelectedProposal={setSelectedProposal}

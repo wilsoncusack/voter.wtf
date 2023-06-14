@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
@@ -45,8 +45,24 @@ export default function Home({
     ProposalsToggleType.Active
   );
 
+  const toggleProposalsType = useCallback(
+    (type: ProposalsToggleType) => {
+      if (
+        proposalsType == ProposalsToggleType.All &&
+        !openProposals.find(
+          proposal => proposal.id.toString() === parsedProposalId
+        )
+      ) {
+        setSelectedProposal(null);
+      }
+
+      setProposalsType(type);
+    },
+    [openProposals, parsedProposalId, proposalsType]
+  );
+
   useEffect(() => {
-    if (parsedProposalId === undefined) return;
+    if (parsedProposalId === undefined || selectedProposal) return;
     const initialSelectedProposal =
       openProposals.find(
         proposal => proposal.id.toString() === parsedProposalId
@@ -56,7 +72,7 @@ export default function Home({
     } else {
       setSelectedProposal(initialSelectedProposal);
     }
-  }, [openProposals, parsedProposalId, proposalsType]);
+  }, [openProposals, parsedProposalId, proposalsType, selectedProposal]);
 
   useEffect(() => {
     let isCancelled = false; // To prevent setting state if component unmounts
@@ -78,7 +94,7 @@ export default function Home({
         });
         const allProposals = proposalsResp.data;
         if (!isCancelled) setProposals(allProposals);
-        if (parsedProposalId) {
+        if (parsedProposalId && !selectedProposal) {
           const initialSelectedProposal =
             allProposals.find(
               (proposal: Proposal) =>
@@ -98,10 +114,9 @@ export default function Home({
     return () => {
       isCancelled = true; // If component unmounts, mark as cancelled
     };
-  }, [proposalsType, openProposals, parsedProposalId]);
+  }, [proposalsType, openProposals, parsedProposalId, selectedProposal]);
 
   const setSelectedProposalAndUpdateURL = (proposal: Proposal | null) => {
-    console.log('oops');
     setSelectedProposal(proposal);
 
     // If a proposal is selected, add it to the URL's query parameters.
@@ -116,11 +131,10 @@ export default function Home({
         { shallow: true }
       );
     } else {
-      const { ...remainingQueries } = router.query;
       router.push(
         {
           pathname: router.pathname,
-          query: remainingQueries,
+          query: '',
         },
         undefined,
         { shallow: true }
@@ -137,7 +151,7 @@ export default function Home({
             selectedProposal={selectedProposal}
             setSelectedProposal={setSelectedProposalAndUpdateURL}
             selectedProposalsToggle={proposalsType}
-            toggleProposalsType={setProposalsType}
+            toggleProposalsType={toggleProposalsType}
           />
         </div>
         <div className="flex md:w-2/3 md:ml-auto relative">

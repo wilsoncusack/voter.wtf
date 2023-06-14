@@ -9,13 +9,13 @@ interface MobileProposalCardProps {
   proposal: Proposal;
   selectedProposal: Proposal | null;
   setSelectedProposal: (proposal: Proposal | null) => void;
+  ref: React.RefObject<HTMLDivElement>;
 }
 
-export const ProposalCard: React.FC<MobileProposalCardProps> = ({
-  proposal,
-  selectedProposal,
-  setSelectedProposal,
-}) => {
+export const ProposalCard = React.forwardRef<
+  HTMLDivElement,
+  MobileProposalCardProps
+>(({ proposal, selectedProposal, setSelectedProposal }, ref) => {
   const { address: account } = useAccount();
   // extract fields from proposal
   const { id, status, title, forVotes, againstVotes } = proposal;
@@ -23,6 +23,7 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
   const { data: blockNumber } = useBlockNumber();
   return (
     <div
+      ref={ref}
       key={proposal.id}
       onClick={() => {
         if (selectedProposal && selectedProposal.id === proposal.id) {
@@ -82,4 +83,6 @@ export const ProposalCard: React.FC<MobileProposalCardProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ProposalCard.displayName = 'ProposalCard';
