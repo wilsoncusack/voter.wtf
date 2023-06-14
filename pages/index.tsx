@@ -82,7 +82,7 @@ export default function Home({
     if (clearSelectedProposal) {
       setClearSelectedProposal(false);
     }
-  }, [proposalId, clearSelectedProposal]);
+  }, [proposalId]);
 
   const toggleProposalsType = useCallback(
     (type: ProposalsToggleType) => {
