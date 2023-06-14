@@ -2,17 +2,20 @@ import { useState, useEffect } from 'react';
 import { ProposalCard } from './ProposalCard';
 import React from 'react';
 import { Proposal } from '../types/Proposal';
+import { ProposalsToggleType } from '../pages';
 
 export function ProposalContainer({
   proposals,
   selectedProposal,
   setSelectedProposal,
+  selectedProposalsToggle,
   toggleProposalsType,
 }: {
   proposals: Proposal[];
   selectedProposal: Proposal | null;
   setSelectedProposal: (proposal: Proposal | null) => void;
-  toggleProposalsType: (type: 'active' | 'all') => void;
+  selectedProposalsToggle: ProposalsToggleType;
+  toggleProposalsType: (type: ProposalsToggleType) => void;
 }) {
   // 1. Initialize state
   const [scrollDivHeight, setScrollDivHeight] = useState(0);
@@ -41,19 +44,16 @@ export function ProposalContainer({
   const { width } = useWindowSize();
   const isMobile = width <= 768;
 
-  const [selectedSegment, setSelectedSegment] = useState('active');
-
   return (
     <div className="md:ml-5 mt-4 flex flex-col ">
       <div className="bg-gray-800 p-2 md:mb-2  rounded-lg shadow-md ">
         <div className="flex">
           <button
             onClick={() => {
-              toggleProposalsType('active');
-              setSelectedSegment('active');
+              toggleProposalsType(ProposalsToggleType.Active);
             }}
             className={`flex-1 py-2 px-4 rounded-lg ${
-              selectedSegment === 'active'
+              selectedProposalsToggle === ProposalsToggleType.Active
                 ? 'bg-gray-200 text-gray-800'
                 : 'bg-gray-800 text-white'
             }`}
@@ -62,11 +62,10 @@ export function ProposalContainer({
           </button>
           <button
             onClick={() => {
-              toggleProposalsType('all');
-              setSelectedSegment('all');
+              toggleProposalsType(ProposalsToggleType.All);
             }}
             className={`flex-1 py-2 px-4 rounded-lg ${
-              selectedSegment === 'all'
+              selectedProposalsToggle === ProposalsToggleType.All
                 ? 'bg-gray-200 text-gray-800'
                 : 'bg-gray-800 text-white'
             }`}

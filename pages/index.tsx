@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProposalContainer } from '../components/ProposalsContainer';
 import { SelectedProposalVoteView } from '../compositions/SelectedProposalVoteView';
 import { getKey, PaginatedVoteList } from '../compositions/PaginatedVoteList';
@@ -14,6 +14,7 @@ import StatsCard, { WeeklyStats } from '../components/StatsCard';
 import { weeklyStats } from '../lib/stats';
 import { getVotes, getVotesForProposal } from '../lib/votes';
 import { OrderDirection } from '../types/generated/nounsSubgraph';
+import { useRouter } from 'next/router';
 import '@rainbow-me/rainbowkit/styles.css';
 
 type HomePageProps = {
@@ -22,48 +23,109 @@ type HomePageProps = {
   stats: WeeklyStats;
 };
 
+export enum ProposalsToggleType {
+  Active = 'active',
+  All = 'all',
+}
+
 export default function Home({
   openProposals,
   fallback,
   stats,
 }: HomePageProps) {
-  const [propososals, setProposals] = useState<Proposal[]>(openProposals);
+  const router = useRouter();
+  const { proposalId } = router.query;
+  const parsedProposalId = proposalId as string;
+
+  const [proposals, setProposals] = useState<Proposal[]>(openProposals);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
     null
   );
+  const [proposalsType, setProposalsType] = useState<ProposalsToggleType>(
+    ProposalsToggleType.Active
+  );
 
-  const toggleProposalsType = async (type: 'active' | 'all') => {
-    let proposals: Proposal[] = [];
-    if (type == 'active') {
-      const block = await viem.getBlockNumber();
-      const proposalsResp = await axios.get('/api/proposals', {
-        params: {
-          currentBlock: block.toString(),
-          startBlockLimit: (block + BigInt(100000)).toString(),
-          endBlockLimit: block.toString(),
-          order: 'asc',
-          limit: 10,
-          offset: 0,
+  useEffect(() => {
+    if (parsedProposalId === undefined) return;
+    const initialSelectedProposal =
+      openProposals.find(
+        proposal => proposal.id.toString() === parsedProposalId
+      ) || null;
+    if (!initialSelectedProposal && proposalsType === 'active') {
+      setProposalsType(ProposalsToggleType.All);
+    } else {
+      setSelectedProposal(initialSelectedProposal);
+    }
+  }, [openProposals, parsedProposalId, proposalsType]);
+
+  useEffect(() => {
+    let isCancelled = false; // To prevent setting state if component unmounts
+
+    const fetchProposals = async () => {
+      if (proposalsType === ProposalsToggleType.Active) {
+        if (!isCancelled) setProposals(openProposals);
+      } else {
+        const block = await viem.getBlockNumber();
+        const proposalsResp = await axios.get('/api/proposals', {
+          params: {
+            currentBlock: block.toString(),
+            startBlockLimit: (block + BigInt(100000)).toString(),
+            endBlockLimit: 0,
+            order: 'desc',
+            limit: 400,
+            offset: 0,
+          },
+        });
+        const allProposals = proposalsResp.data;
+        if (!isCancelled) setProposals(allProposals);
+        if (parsedProposalId) {
+          const initialSelectedProposal =
+            allProposals.find(
+              (proposal: Proposal) =>
+                proposal.id.toString() === parsedProposalId
+            ) || null;
+          if (!initialSelectedProposal) {
+            setSelectedProposal(null);
+          } else {
+            setSelectedProposal(initialSelectedProposal);
+          }
+        }
+      }
+    };
+
+    fetchProposals(); // Call the async function
+
+    return () => {
+      isCancelled = true; // If component unmounts, mark as cancelled
+    };
+  }, [proposalsType, openProposals, parsedProposalId]);
+
+  const setSelectedProposalAndUpdateURL = (proposal: Proposal | null) => {
+    console.log('oops');
+    setSelectedProposal(proposal);
+
+    // If a proposal is selected, add it to the URL's query parameters.
+    // Otherwise, remove the 'proposalId' query parameter.
+    if (proposal) {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, proposalId: proposal.id.toString() },
         },
-      });
-      proposals = proposalsResp.data.filter(
-        (proposal: Proposal) => proposal.status != ProposalStatus.Cancelled
+        undefined,
+        { shallow: true }
       );
     } else {
-      const block = await viem.getBlockNumber();
-      const proposalsResp = await axios.get('/api/proposals', {
-        params: {
-          currentBlock: block.toString(),
-          startBlockLimit: (block + BigInt(100000)).toString(),
-          endBlockLimit: 0,
-          order: 'desc',
-          limit: 400,
-          offset: 0,
+      const { ...remainingQueries } = router.query;
+      router.push(
+        {
+          pathname: router.pathname,
+          query: remainingQueries,
         },
-      });
-      proposals = proposalsResp.data;
+        undefined,
+        { shallow: true }
+      );
     }
-    setProposals(proposals);
   };
 
   return (
@@ -71,10 +133,11 @@ export default function Home({
       <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
         <div className="md:fixed md:bottom-0 md:top-20 md:w-1/3 ">
           <ProposalContainer
-            proposals={propososals}
+            proposals={proposals}
             selectedProposal={selectedProposal}
-            setSelectedProposal={setSelectedProposal}
-            toggleProposalsType={toggleProposalsType}
+            setSelectedProposal={setSelectedProposalAndUpdateURL}
+            selectedProposalsToggle={proposalsType}
+            toggleProposalsType={setProposalsType}
           />
         </div>
         <div className="flex md:w-2/3 md:ml-auto relative">

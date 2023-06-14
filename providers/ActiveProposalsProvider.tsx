@@ -1,13 +1,13 @@
 import React, { useState, useEffect, FC } from 'react';
 import { useBlockNumber } from 'wagmi';
 import { subgraphService } from '../lib/services/nounsSubgraph.service';
-import { GetActiveProposalsQuery } from '../types/generated/nounsSubgraph';
+import { GetActiveProposalsWithVotesQuery } from '../types/generated/nounsSubgraph';
 import { ActiveProposalsContext } from '../contexts/ActiveProposalsContext';
 
 export const ActiveProposalsProvider: FC = ({ children }) => {
   const { data: blockNumber } = useBlockNumber();
   const [proposals, setProposals] = useState<
-    GetActiveProposalsQuery['proposals']
+    GetActiveProposalsWithVotesQuery['proposals']
   >([]);
   const [loading, setLoading] = useState(true);
 

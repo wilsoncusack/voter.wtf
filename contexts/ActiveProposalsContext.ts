@@ -1,8 +1,8 @@
 import { createContext } from 'react';
-import { GetActiveProposalsQuery } from '../types/generated/nounsSubgraph';
+import { GetActiveProposalsWithVotesQuery } from '../types/generated/nounsSubgraph';
 
 type ActiveProposalsContextType = {
-  proposals: GetActiveProposalsQuery['proposals'];
+  proposals: GetActiveProposalsWithVotesQuery['proposals'];
   loading: boolean;
 };
 
