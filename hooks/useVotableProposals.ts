@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { useActiveProposals } from './useActiveProposals';
 import {
-  GetActiveProposalsQuery,
+  GetActiveProposalsWithVotesQuery,
   ProposalStatus,
 } from '../types/generated/nounsSubgraph';
 
-export function useVotableProposals(): GetActiveProposalsQuery['proposals'] {
+export function useVotableProposals(): GetActiveProposalsWithVotesQuery['proposals'] {
   const { proposals } = useActiveProposals();
   const { address } = useAccount();
 

@@ -1,4 +1,4 @@
-query GetActiveProposals($currentBlock: BigInt) {
+query GetActiveProposalsWithVotes($currentBlock: BigInt) {
   proposals: proposals(
     where: { endBlock_gt: $currentBlock, startBlock_lte: $currentBlock }
     orderBy: endBlock

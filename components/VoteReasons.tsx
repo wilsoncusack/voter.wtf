@@ -182,7 +182,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                   setShowVoteModal(true);
                 }}
               >
-                {isVotable && (
+                {isVotable && account && (
                   <ArrowPathIcon className="h-5 w-5 text-gray-500 mr-2" />
                 )}
               </button>
@@ -241,6 +241,8 @@ function EnsImage({ url }: { url: string }) {
   const handleError = () => {
     setError(true);
   };
+
+  if (imageUrl == '') return null;
 
   return error ? (
     <div className="rounded-full w-12 h-12 bg-gray-700"></div>

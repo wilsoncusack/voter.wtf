@@ -3,7 +3,7 @@ import { SUBGRAPH_URL } from '../constants';
 import {
   GetVotesQuery,
   GetVotesForProposalQuery,
-  GetActiveProposalsQuery,
+  GetActiveProposalsWithVotesQuery,
 } from '../../types/generated/nounsSubgraph';
 import {
   GetProposalsDocument,
@@ -12,7 +12,7 @@ import {
   GetVotesDocument,
   GetVotesByVoterDocument,
   GetVotesForProposalDocument,
-  GetActiveProposalsDocument,
+  GetActiveProposalsWithVotesDocument,
 } from '../../types/generated/nounsSubgraph';
 
 export type FilterParams<T = object> = T & {
@@ -74,9 +74,9 @@ export class SubgraphService {
 
   public async getActiveProposals(
     currentBlock: string
-  ): Promise<GetActiveProposalsQuery['proposals']> {
+  ): Promise<GetActiveProposalsWithVotesQuery['proposals']> {
     const { data } = await this.client.query({
-      query: GetActiveProposalsDocument, // This is your GraphQL query
+      query: GetActiveProposalsWithVotesDocument, // This is your GraphQL query
       variables: { currentBlock },
       fetchPolicy: 'network-only',
     });

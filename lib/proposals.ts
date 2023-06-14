@@ -34,20 +34,24 @@ export const getProposals = async (
     offset
   )) as GqlProposal[];
 
-  return gqlProposals.map((gqlProposal: GqlProposal): Proposal => {
-    const dynamicQuorum = computeProposalQuorumVotes(gqlProposal);
-    const status = deriveProposalStatus(
-      currentBlock,
-      dynamicQuorum,
-      gqlProposal
-    );
+  return gqlProposals.map(
+    (gqlProposal: GqlProposal): Proposal =>
+      proposalFromGqlProposal(currentBlock, gqlProposal)
+  );
+};
 
-    return {
-      ...gqlProposal,
-      status,
-      dynamicQuorum,
-    };
-  });
+export const proposalFromGqlProposal = (
+  currentBlock: bigint,
+  gqlProposal: GqlProposal
+): Proposal => {
+  const dynamicQuorum = computeProposalQuorumVotes(gqlProposal);
+  const status = deriveProposalStatus(currentBlock, dynamicQuorum, gqlProposal);
+
+  return {
+    ...gqlProposal,
+    status,
+    dynamicQuorum,
+  };
 };
 
 export const computeProposalQuorumVotes = (proposal: GqlProposal): number => {

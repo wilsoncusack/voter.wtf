@@ -1,19 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { ProposalCard } from './ProposalCard';
 import React from 'react';
 import { Proposal } from '../types/Proposal';
+import { ProposalsToggleType } from '../pages';
 
 export function ProposalContainer({
   proposals,
   selectedProposal,
   setSelectedProposal,
+  selectedProposalsToggle,
   toggleProposalsType,
 }: {
   proposals: Proposal[];
   selectedProposal: Proposal | null;
   setSelectedProposal: (proposal: Proposal | null) => void;
-  toggleProposalsType: (type: 'active' | 'all') => void;
+  selectedProposalsToggle: ProposalsToggleType;
+  toggleProposalsType: (type: ProposalsToggleType) => void;
 }) {
+  const proposalRefs = proposals.reduce(
+    (acc: { [key: string]: React.RefObject<HTMLDivElement> }, proposal) => {
+      acc[proposal.id] = React.createRef();
+      return acc;
+    },
+    {}
+  );
+
   // 1. Initialize state
   const [scrollDivHeight, setScrollDivHeight] = useState(0);
 
@@ -38,10 +49,18 @@ export function ProposalContainer({
     };
   }, []);
 
+  useLayoutEffect(() => {
+    if (selectedProposal && proposalRefs[selectedProposal.id]?.current) {
+      proposalRefs[selectedProposal.id]?.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+    }
+  }, [selectedProposal, proposalRefs]);
+
   const { width } = useWindowSize();
   const isMobile = width <= 768;
-
-  const [selectedSegment, setSelectedSegment] = useState('active');
 
   return (
     <div className="md:ml-5 mt-4 flex flex-col ">
@@ -49,11 +68,10 @@ export function ProposalContainer({
         <div className="flex">
           <button
             onClick={() => {
-              toggleProposalsType('active');
-              setSelectedSegment('active');
+              toggleProposalsType(ProposalsToggleType.Active);
             }}
             className={`flex-1 py-2 px-4 rounded-lg ${
-              selectedSegment === 'active'
+              selectedProposalsToggle === ProposalsToggleType.Active
                 ? 'bg-gray-200 text-gray-800'
                 : 'bg-gray-800 text-white'
             }`}
@@ -62,11 +80,10 @@ export function ProposalContainer({
           </button>
           <button
             onClick={() => {
-              toggleProposalsType('all');
-              setSelectedSegment('all');
+              toggleProposalsType(ProposalsToggleType.All);
             }}
             className={`flex-1 py-2 px-4 rounded-lg ${
-              selectedSegment === 'all'
+              selectedProposalsToggle === ProposalsToggleType.All
                 ? 'bg-gray-200 text-gray-800'
                 : 'bg-gray-800 text-white'
             }`}
@@ -83,6 +100,7 @@ export function ProposalContainer({
         {proposals.map((proposal, i) => (
           <div key={i}>
             <ProposalCard
+              ref={proposalRefs[proposal.id]}
               proposal={proposal}
               selectedProposal={selectedProposal}
               setSelectedProposal={setSelectedProposal}
