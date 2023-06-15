@@ -16,6 +16,7 @@ import { getVotes, getVotesForProposal } from '../lib/votes';
 import { OrderDirection } from '../types/generated/nounsSubgraph';
 import { useRouter } from 'next/router';
 import '@rainbow-me/rainbowkit/styles.css';
+import PromoCard from '../components/PromoCard';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -216,6 +217,12 @@ export default function Home({
           {!selectedProposal && (
             <div className="hidden md:block fixed right-0 top-20">
               <StatsCard stats={stats} />
+              <PromoCard
+                description="mint and support voter.wtf"
+                imageUrl="public/noun652.svg"
+                url="https://zora.co/collect/eth:0xdaec0919ca4670e5823753588f3721ad6eaaf3f1"
+                buttonText="Mint and support voter.wtf!"
+              />
             </div>
           )}
         </div>
