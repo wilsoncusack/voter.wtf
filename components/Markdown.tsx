@@ -7,15 +7,15 @@ export function Markdown({ text }: { text: string }) {
       {' '}
       <ReactMarkdown
         components={{
-          a: ({ ...props }) => (
-            <a
-              style={{
-                wordBreak: 'break-word',
-                textDecoration: 'underline',
-              }}
-              {...props}
-            />
-          ),
+          // a: ({ ...props }) => (
+          //   <a
+          //     style={{
+          //       wordBreak: 'break-word',
+          //       textDecoration: 'underline',
+          //     }}
+          //     {...props}
+          //   />
+          // ),
           blockquote: ({ ...props }) => (
             <blockquote
               className="pl-4 border-l-4 border-gray-400 italic"
