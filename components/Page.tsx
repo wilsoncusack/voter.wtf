@@ -63,7 +63,6 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
           </Link>
         </header>
         {showVoteModal && <VoteModal />}
-
         <div className="bg-gray-900 min-h-screen text-white font-sans pt-20">
           {children}
         </div>
