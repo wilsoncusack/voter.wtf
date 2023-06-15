@@ -5,6 +5,7 @@ import { SupportDetailed } from '../types/Vote';
 import { useShowVoteModal } from '../hooks/useShowVoteModal';
 import { useVoteDetail } from '../hooks/useVoteDetail';
 import { useVotableProposals } from '../hooks/useVotableProposals';
+import { pirsch } from '../lib/pirsch';
 
 export function VoteModal() {
   const { setShowVoteModal } = useShowVoteModal();
@@ -26,6 +27,7 @@ export function VoteModal() {
 
   useEffect(() => {
     if (isSuccess) {
+      pirsch('voted', {});
       setShowVoteModal(false);
     }
   }, [isSuccess, setShowVoteModal]);

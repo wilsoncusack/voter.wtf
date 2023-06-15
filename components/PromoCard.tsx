@@ -17,7 +17,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
   buttonText,
 }) => {
   return (
-    <Link className="font-semibold" href={url}>
+    <Link className="font-semibold pirsch-event=Mint+Link+Clicked" href={url}>
       <div className="bg-gray-700 rounded-lg p-4 m-6">
         <div className="flex justify-center mb-4">
           <Image src={HeadSVG} alt={description} width={75} height={75} />
