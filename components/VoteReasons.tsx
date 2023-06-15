@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useWalletClient } from 'wagmi';
-import { getNounsLink, replaceURLsWithLink } from '../lib/util/link';
+import { getNounsLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
 import { TimeAgo } from './TimeAgo';
@@ -42,11 +42,6 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   const ensName = useMemo(
     () => (vote.voter.ensName ? vote.voter.ensName : vote.voter.id.slice(0, 8)),
     [vote.voter.id, vote.voter.ensName]
-  );
-
-  const reason = useMemo(
-    () => (vote.reason ? replaceURLsWithLink(vote.reason) : ''),
-    [vote.reason]
   );
 
   const handleLikeClick = async () => {
@@ -107,7 +102,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     <div>
       <div
         className={`flex  p-3 mb-2 ${
-          reason != '' ? 'bg-gray-800' : ''
+          vote.reason ? 'bg-gray-800' : ''
         } rounded-lg shadow-md`}
       >
         <div className="mr-2">
@@ -164,10 +159,10 @@ export function VoteReasons({ vote }: VoteReasonProps) {
           </a>
 
           <div className="mt-5 whitespace-pre-line break-words overflow-wrap mb-2 mt-2 text-gray-200">
-            <Markdown text={reason} />
+            <Markdown text={vote.reason || ''} />
           </div>
 
-          {reason != '' && (
+          {vote.reason && (
             <div className={'flex items-center justify-end mr-2'}>
               <button
                 onClick={() => {

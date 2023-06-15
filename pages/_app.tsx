@@ -17,6 +17,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div>
       <Head>
+        <script
+          defer
+          type="text/javascript"
+          src="https://api.pirsch.io/pirsch.js"
+          id="pirschjs"
+          data-code="ZkjPwIBXxVWpUau2IfbW0IkigCQBZlyw"
+        ></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
