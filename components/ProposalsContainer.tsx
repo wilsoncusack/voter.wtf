@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { ProposalCard } from './ProposalCard';
 import React from 'react';
 import { Proposal } from '../types/Proposal';
@@ -49,13 +49,21 @@ export function ProposalContainer({
     };
   }, []);
 
+  const lastScrolledProposal = useRef<string | null>(null);
+
   useLayoutEffect(() => {
-    if (selectedProposal && proposalRefs[selectedProposal.id]?.current) {
+    if (
+      selectedProposal &&
+      proposalRefs[selectedProposal.id]?.current &&
+      selectedProposal.id !== lastScrolledProposal.current
+    ) {
       proposalRefs[selectedProposal.id]?.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
         inline: 'start',
       });
+
+      lastScrolledProposal.current = selectedProposal.id;
     }
   }, [selectedProposal, proposalRefs]);
 
