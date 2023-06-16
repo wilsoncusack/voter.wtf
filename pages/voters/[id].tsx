@@ -63,7 +63,6 @@ export default function Voter({ fallback, address, ensName }: VoterPageProps) {
               Mogu
             </a>
           </div>
-
         </div>
         <div className="flex flex-col justify-center items-center w-full">
           <PaginatedVoteList voterId={address} />
