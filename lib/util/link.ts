@@ -2,6 +2,10 @@ export function getEtherscanLink(address: `0x${string}`, type = 'address') {
   return `https://etherscan.io/${type}/${address}`;
 }
 
+export function getMoguLink(address: `0x${string}`, type = 'address') {
+  return `https://mmmogu.com/${type}/${address}`;
+}
+
 export function getNounsLink(id: number | string, type = 'vote') {
   return `https://nouns.wtf/${type}/${id}`;
 }
