@@ -36,6 +36,11 @@ export function Page({ children, title: pageTitle, fallback = {} }: PageProps) {
           <title>{title}</title>
         </Head>
         <header className="bg-gray-900 md:bg-transparent z-10 fixed top-0 right-0 w-full">
+          <div className="flex text-white font-semibold justify-center items-center m-auto md:hidden w-full h-10 green">
+            <Link href="https://zora.co/collect/eth:0xdaec0919ca4670e5823753588f3721ad6eaaf3f1">
+              Mint and support voter.wtf!
+            </Link>
+          </div>
           <Link href="/" className="flex justify-between w-full">
             <div className="bg-gray-900 ml-8 justify-start">
               <Image

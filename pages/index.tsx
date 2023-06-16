@@ -17,6 +17,7 @@ import { OrderDirection } from '../types/generated/nounsSubgraph';
 import { useRouter } from 'next/router';
 import '@rainbow-me/rainbowkit/styles.css';
 import PromoCard from '../components/PromoCard';
+import Link from 'next/link';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -179,7 +180,7 @@ export default function Home({
   return (
     <Page title="Home" fallback={fallback}>
       <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
-        <div className="md:fixed md:bottom-0 md:top-20 md:w-1/3 ">
+        <div className="md:fixed md:bottom-0 md:top-100  md:w-1/3 mt-12">
           <ProposalContainer
             proposals={proposals}
             selectedProposal={selectedProposal}
