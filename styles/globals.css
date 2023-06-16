@@ -20,6 +20,10 @@ textarea:focus {
   scrollbar-width: none;
 }
 
+.green {
+  background-color: #8dd122;
+}
+
 .neon {
   color: #8dd122;
   text-shadow: 0 0 5px #8dd122, 0 0 10px #8dd122, 0 0 20px #8dd122,

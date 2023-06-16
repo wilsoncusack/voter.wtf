@@ -17,7 +17,6 @@ import { OrderDirection } from '../types/generated/nounsSubgraph';
 import { useRouter } from 'next/router';
 import '@rainbow-me/rainbowkit/styles.css';
 import PromoCard from '../components/PromoCard';
-import Link from 'next/link';
 
 type HomePageProps = {
   fallback: FallbackProp;
@@ -36,7 +35,7 @@ export default function Home({
   stats,
 }: HomePageProps) {
   const router = useRouter();
-  const { proposalId } = router.query;
+  const { id: proposalId } = router.query;
   const parsedProposalId = proposalId as string;
 
   const [clearSelectedProposal, setClearSelectedProposal] = useState(false);
@@ -52,28 +51,12 @@ export default function Home({
     (proposal: Proposal | null) => {
       setSelectedProposal(proposal);
 
-      // If a proposal is selected, add it to the URL's query parameters.
-      // Otherwise, remove the 'proposalId' query parameter.
+      // If a proposal is selected, change the URL to include the proposal id.
+      // Otherwise, remove the 'id' parameter from the URL.
       if (proposal) {
-        router.push(
-          {
-            pathname: router.pathname,
-            query: { ...router.query, proposalId: proposal.id.toString() },
-          },
-          undefined,
-          { shallow: true }
-        );
+        router.push(`/${proposal.id}`, undefined, { shallow: true });
       } else {
-        const { proposalId, ...rest } = router.query; // remove proposalId from query
-
-        router.push(
-          {
-            pathname: router.pathname,
-            query: rest,
-          },
-          undefined,
-          { shallow: true }
-        );
+        router.push('/', undefined, { shallow: true });
         setClearSelectedProposal(true);
       }
     },
@@ -180,7 +163,7 @@ export default function Home({
   return (
     <Page title="Home" fallback={fallback}>
       <div className="md:flex bg-gray-900 min-h-screen text-white font-sans">
-        <div className="md:fixed md:bottom-0 md:top-100  md:w-1/3 mt-12">
+        <div className="md:fixed md:bottom-0 md:top-20 md:w-1/3 ">
           <ProposalContainer
             proposals={proposals}
             selectedProposal={selectedProposal}
@@ -222,7 +205,7 @@ export default function Home({
                 description="mint and support voter.wtf"
                 imageUrl="public/noun652.svg"
                 url="https://zora.co/collect/eth:0xdaec0919ca4670e5823753588f3721ad6eaaf3f1"
-                buttonText="Mint and support voter.wtf!"
+                buttonText="Mint and Support voter.wtf!"
               />
             </div>
           )}
