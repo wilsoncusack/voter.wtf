@@ -25,19 +25,6 @@ export function PaginatedVoteList({ voterId }: VoteListOptions) {
   const { data, error, isLoading, isValidating, size, setSize } =
     useSWRInfinite((...args) => getKey(...args, voterId), fetcher);
 
-  const loadMoreRef = useCallback(
-    async (node: HTMLDivElement) => {
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver(async entries => {
-        if (entries[0].isIntersecting) {
-          await setSize(size + 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [setSize, size]
-  );
-
   const votes = useMemo(() => data?.flat() || [], [data]);
   const isLoadingMore = useMemo(
     () =>
@@ -52,6 +39,20 @@ export function PaginatedVoteList({ voterId }: VoteListOptions) {
   const isRefreshing = useMemo(
     () => isValidating && data && data.length === size,
     [data, isValidating, size]
+  );
+
+  const loadMoreRef = useCallback(
+    async (node: HTMLDivElement) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(async entries => {
+        if (entries[0].isIntersecting && !isLoadingMore && !isReachingEnd) {
+          console.log('intersecting');
+          await setSize(size + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [setSize, size, isLoadingMore, isReachingEnd]
   );
 
   if (!votes) {
