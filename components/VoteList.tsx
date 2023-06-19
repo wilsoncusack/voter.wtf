@@ -6,7 +6,7 @@ interface VoteListProps {
 }
 
 export const VoteList: React.FC<
-  VoteListProps & { loadMoreRef: React.RefObject<HTMLDivElement> }
+  VoteListProps & { loadMoreRef?: (node: HTMLDivElement) => void }
 > = ({ votes, loadMoreRef }) => {
   return (
     <div className="md:max-w-xl sm:max-w-full">

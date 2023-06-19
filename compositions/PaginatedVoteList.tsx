@@ -66,11 +66,7 @@ export function PaginatedVoteList({ voterId }: VoteListOptions) {
   return (
     <div className="flex flex-col justify-center items-center">
       <VoteList votes={votes} loadMoreRef={loadMoreRef} />
-      {isLoadingMore || isRefreshing ? (
-        <h6 className="text-gray-600 text-s">Loading...</h6>
-      ) : !isReachingEnd ? (
-        <div className="h-4" />
-      ) : null}
+      {isLoadingMore && <h6 className="text-gray-600 text-s">Loading...</h6>}
     </div>
   );
 }
