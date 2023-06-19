@@ -25,7 +25,7 @@ export function PaginatedVoteList({ voterId }: VoteListOptions) {
   const { data, error, isLoading, isValidating, size, setSize } =
     useSWRInfinite((...args) => getKey(...args, voterId), fetcher);
 
-  const lastVoteElementRef = useCallback(
+  const loadMoreRef = useCallback(
     async (node: HTMLDivElement) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(async entries => {
@@ -64,11 +64,11 @@ export function PaginatedVoteList({ voterId }: VoteListOptions) {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <VoteList votes={votes} />
+      <VoteList votes={votes} loadMoreRef={loadMoreRef} />
       {isLoadingMore || isRefreshing ? (
         <h6 className="text-gray-600 text-s">Loading...</h6>
       ) : !isReachingEnd ? (
-        <div ref={lastVoteElementRef} className="h-4" />
+        <div className="h-4" />
       ) : null}
     </div>
   );
