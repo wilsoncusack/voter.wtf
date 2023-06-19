@@ -39,13 +39,13 @@ export const ProposalCard = React.forwardRef<
       }`}
     >
       <div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm ">
           {blockNumber && proposal.endBlock > blockNumber ? (
             <div>
               {' '}
               {proposal.startBlock < blockNumber ? (
                 <div className="flex justify-between">
-                  <p className="">
+                  <p className="text-gray-500">
                     ends in{' '}
                     {formatDuration(BigInt(proposal.endBlock), blockNumber)}
                   </p>
@@ -57,14 +57,14 @@ export const ProposalCard = React.forwardRef<
                   )}
                 </div>
               ) : (
-                `starts in ${formatDuration(
-                  BigInt(proposal.startBlock),
-                  blockNumber
-                )}`
+                <p className="text-gray-500">
+                  starts in{' '}
+                  {formatDuration(BigInt(proposal.startBlock), blockNumber)}
+                </p>
               )}
             </div>
           ) : (
-            <p className={`${getStatusColor(proposal.status)}`}> {status} </p>
+            <p className={` ${getStatusColor(proposal.status)}`}> {status} </p>
           )}
         </div>
       </div>

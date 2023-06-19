@@ -83,7 +83,10 @@ export const deriveProposalStatus = (
   ) {
     return ProposalStatus.Voting;
   } else if (currentBlock > proposal.endBlock) {
-    if (proposal.forVotes >= dynamicQuorum) {
+    if (
+      proposal.forVotes >= dynamicQuorum &&
+      proposal.forVotes > proposal.againstVotes
+    ) {
       return ProposalStatus.Succeeded;
     } else {
       return ProposalStatus.Defeated;
@@ -98,7 +101,7 @@ export function getStatusColor(status: ProposalStatus) {
     case ProposalStatus.Voting:
       return 'text-green-400';
     case ProposalStatus.Succeeded:
-      return 'text-green-600';
+      return 'text-green-500';
     case ProposalStatus.Defeated:
       return 'text-red-500';
     default:

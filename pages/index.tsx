@@ -17,7 +17,6 @@ import { OrderDirection } from '../types/generated/nounsSubgraph';
 import { useRouter } from 'next/router';
 import '@rainbow-me/rainbowkit/styles.css';
 import PromoCard from '../components/PromoCard';
-import Link from 'next/link';
 
 type HomePageProps = {
   fallback: FallbackProp;
