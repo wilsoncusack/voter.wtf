@@ -3,7 +3,6 @@ import { ProposalCard } from './ProposalCard';
 import React from 'react';
 import { Proposal } from '../types/Proposal';
 import { ProposalsToggleType } from '../pages';
-import { useVotableProposals } from '../hooks/useVotableProposals';
 
 export function ProposalContainer({
   proposals,
