@@ -12,7 +12,7 @@ import {
   PaginatedVoteList,
 } from '../../compositions/PaginatedVoteList';
 import { unstable_serialize } from 'swr/infinite';
-import { getEtherscanLink } from '../../lib/util/link';
+import { getEtherscanLink, getMoguLink } from '../../lib/util/link';
 import { getVotes } from '../../lib/votes';
 import { OrderDirection } from '../../types/generated/nounsSubgraph';
 
@@ -45,14 +45,24 @@ export default function Voter({ fallback, address, ensName }: VoterPageProps) {
           <h1 className="text-3xl text-center font-semibold  mb-1 px-4">
             {name} Votes
           </h1>
-          <a
-            href={getEtherscanLink(address)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-center hover:text-gray-100 text-sm text-gray-500 underline"
-          >
-            View on Etherscan
-          </a>
+          <div className="flex flex-row justify-center space-x-4">
+            <a
+              href={getEtherscanLink(address)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center hover:text-gray-100 text-sm text-gray-500 underline"
+            >
+              Etherscan
+            </a>
+            <a
+              href={getMoguLink(address)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center hover:text-gray-100 text-sm text-gray-500 underline"
+            >
+              Mogu
+            </a>
+          </div>
         </div>
         <div className="flex flex-col justify-center items-center w-full">
           <PaginatedVoteList voterId={address} />
