@@ -37,7 +37,7 @@ export const ProposalCard = React.forwardRef<
           setSelectedProposal(proposal);
           if (voteableProposals.map(p => p.id).includes(proposal.id)) {
             setVoteDetail({
-              reason: '',
+              reason: '\n\n*sent from voter.wtf*',
               support: SupportDetailed.For,
               proposalId: proposal.id,
             });
