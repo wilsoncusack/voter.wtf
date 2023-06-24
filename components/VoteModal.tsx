@@ -37,7 +37,7 @@ export function VoteModal() {
       setVoteDetail({
         proposalId: proposalId,
         support: SupportDetailed.For,
-        reason: '',
+        reason: '\n\n*sent from voter.wtf*',
       });
       pirsch('voted', {});
       setShowVoteModal(false);
