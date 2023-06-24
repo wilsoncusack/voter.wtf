@@ -4,6 +4,9 @@ import { formatDuration } from '../lib/util/format';
 import { useBlockNumber, useAccount } from 'wagmi';
 import { VotingStatusIndicator } from './VotingStatusIndicator';
 import { getStatusColor } from '../lib/proposals';
+import { useVotableProposals } from '../hooks/useVotableProposals';
+import { useVoteDetail } from '../hooks/useVoteDetail';
+import { SupportDetailed } from '../types/Vote';
 
 interface MobileProposalCardProps {
   proposal: Proposal;
@@ -19,6 +22,8 @@ export const ProposalCard = React.forwardRef<
   const { address: account } = useAccount();
   // extract fields from proposal
   const { id, status, title, forVotes, againstVotes } = proposal;
+  const voteableProposals = useVotableProposals();
+  const { voteDetail, setVoteDetail } = useVoteDetail();
 
   const { data: blockNumber } = useBlockNumber();
   return (
@@ -30,6 +35,13 @@ export const ProposalCard = React.forwardRef<
           setSelectedProposal(null);
         } else {
           setSelectedProposal(proposal);
+          if (voteableProposals.map(p => p.id).includes(proposal.id)) {
+            setVoteDetail({
+              reason: '\n\n*sent from voter.wtf*',
+              support: SupportDetailed.For,
+              proposalId: proposal.id,
+            });
+          }
         }
       }}
       className={`my-1 ml-2 p-4 w-52 rounded-lg md:w-full md:border-tiny md:m-0 md:rounded-none md:border-gray-700 ${

@@ -27,10 +27,35 @@ export function VoteModal() {
 
   useEffect(() => {
     if (isSuccess) {
+      let proposalId = '';
+      const otherProposals = proposals.filter(
+        proposal => proposal.id.toString() != voteDetail.proposalId
+      );
+      if (otherProposals.length > 0) {
+        proposalId = otherProposals[0].id.toString();
+      }
+      setVoteDetail({
+        proposalId: proposalId,
+        support: SupportDetailed.For,
+        reason: '\n\n*sent from voter.wtf*',
+      });
       pirsch('voted', {});
       setShowVoteModal(false);
     }
   }, [isSuccess, setShowVoteModal]);
+
+  const supportColor = (support: SupportDetailed) => {
+    switch (support) {
+      case SupportDetailed.For:
+        return 'text-green-500';
+      case SupportDetailed.Abstain:
+        return 'text-gray-500';
+      case SupportDetailed.Against:
+        return 'text-red-500';
+      default:
+        return 'text-white-500';
+    }
+  };
 
   return (
     <div
@@ -90,7 +115,9 @@ export function VoteModal() {
                     support: Number(e.target.value),
                   })
                 }
-                className="mt-1 p-2 block w-full bg-gray-700 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2"
+                className={`mt-1 p-2 block w-full bg-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2 ${supportColor(
+                  voteDetail.support
+                )}`}
               >
                 <option value={SupportDetailed.For}>For</option>
                 <option value={SupportDetailed.Against}>Against</option>
