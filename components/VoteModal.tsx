@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNounsDaoLogicV2CastRefundableVoteWithReason as vwr } from '../abis/generated/nounsDAOLogicV2';
 import { Markdown } from './Markdown';
 import { SupportDetailed } from '../types/Vote';
@@ -44,8 +44,8 @@ export function VoteModal() {
     }
   }, [isSuccess, setShowVoteModal]);
 
-  const supportColor = (support: SupportDetailed) => {
-    switch (support) {
+  const supportColor = useMemo(() => {
+    switch (voteDetail.support) {
       case SupportDetailed.For:
         return 'text-green-500';
       case SupportDetailed.Abstain:
@@ -55,7 +55,7 @@ export function VoteModal() {
       default:
         return 'text-white-500';
     }
-  };
+  }, [voteDetail.support]);
 
   return (
     <div
@@ -109,15 +109,14 @@ export function VoteModal() {
               </label>
               <select
                 id="vote"
+                value={voteDetail.support}
                 onChange={e =>
                   setVoteDetail({
                     ...voteDetail,
                     support: Number(e.target.value),
                   })
                 }
-                className={`mt-1 p-2 block w-full bg-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2 ${supportColor(
-                  voteDetail.support
-                )}`}
+                className={`mt-1 p-2 block w-full bg-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 pr-2 ${supportColor}`}
               >
                 <option value={SupportDetailed.For}>For</option>
                 <option value={SupportDetailed.Against}>Against</option>
