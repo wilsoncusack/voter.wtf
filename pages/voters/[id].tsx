@@ -40,7 +40,7 @@ export default function Voter({ fallback, address, ensName }: VoterPageProps) {
 
   return (
     <Page title={`${name} Votes`} fallback={fallback}>
-      <section className="w-full">
+      <section className="w-full mt-12">
         <div className="flex flex-col mb-8">
           <h1 className="text-3xl text-center font-semibold  mb-1 px-4">
             {name} Votes

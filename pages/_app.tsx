@@ -10,6 +10,7 @@ import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { ShowVoteModalProvider } from '../providers/ShowVoteModalProvider';
 import { VoteReasonProvider } from '../providers/VoteDetailProvider';
+import '@rainbow-me/rainbowkit/styles.css';
 
 const refreshInterval = 1000 * 60; // 1 minute
 
