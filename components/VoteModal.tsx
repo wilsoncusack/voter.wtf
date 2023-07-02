@@ -42,7 +42,13 @@ export function VoteModal() {
       pirsch('voted', {});
       setShowVoteModal(false);
     }
-  }, [isSuccess, setShowVoteModal]);
+  }, [
+    isSuccess,
+    setShowVoteModal,
+    proposals,
+    setVoteDetail,
+    voteDetail.proposalId,
+  ]);
 
   const supportColor = useMemo(() => {
     switch (voteDetail.support) {

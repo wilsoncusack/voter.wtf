@@ -57,13 +57,9 @@ export function Markdown({ text }: { text: string }) {
               </code>
             );
           },
-          ul: ({ node, ...props }) => (
-            <ul className="list-disc ml-5" {...props} />
-          ),
-          ol: ({ node, ...props }) => (
-            <ol className="list-decimal ml-5" {...props} />
-          ),
-          li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+          ul: ({ ...props }) => <ul className="list-disc ml-5" {...props} />,
+          ol: ({ ...props }) => <ol className="list-decimal ml-5" {...props} />,
+          li: ({ ...props }) => <li className="mb-1" {...props} />,
         }}
       >
         {text}
