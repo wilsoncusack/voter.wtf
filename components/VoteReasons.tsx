@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAccount, usePublicClient } from 'wagmi';
-import { useWalletClient } from 'wagmi';
+import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 import { getNounsLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
@@ -15,7 +14,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { useVoteDetail } from '../hooks/useVoteDetail';
 import { useShowVoteModal } from '../hooks/useShowVoteModal';
 import { useVotableProposals } from '../hooks/useVotableProposals';
-import { slice, fromHex } from 'viem';
+import { resolveNnsName } from '../lib/nns';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -45,23 +44,11 @@ export function VoteReasons({ vote }: VoteReasonProps) {
 
   useEffect(() => {
     const getNnsName = async () => {
-      try {
-        const calldata = '55ea6c47000000000000000000000000' + vote.voter.id.substring(2);
-        const res = await publicClient.call({
-          data: `0x${calldata}`,
-          to: '0x849f92178950f6254db5d16d1ba265e70521ac1b',
-        });
-        const offset = Number(BigInt(slice(res.data!, 0, 32)));
-        const length = Number(BigInt(slice(res.data!, offset, offset + 32)));
-        const name = fromHex(slice(res.data!, offset + 32, offset + 32 + length), 'string') || null;
-        // console.log(name);
-        setNnsName(name);
-      } catch (error) {
-        // console.log('Error getting NNS name:', error);
-      }
+      const name = await resolveNnsName(vote.voter.id, publicClient);
+      setNnsName(name);
     };
     getNnsName();
-  }, []);
+  }, [vote.voter.id, publicClient]);
 
   const ensName = useMemo(
     () => (vote.voter.ensName ? vote.voter.ensName : vote.voter.id.slice(0, 8)),
@@ -125,8 +112,9 @@ export function VoteReasons({ vote }: VoteReasonProps) {
   return (
     <div>
       <div
-        className={`flex  p-3 mb-2 ${vote.reason ? 'bg-gray-800' : ''
-          } rounded-lg shadow-md`}
+        className={`flex  p-3 mb-2 ${
+          vote.reason ? 'bg-gray-800' : ''
+        } rounded-lg shadow-md`}
       >
         <div className="mr-2">
           <Link href={`/voters/${encodeURIComponent(vote.voter.id)}`}>
@@ -162,8 +150,8 @@ export function VoteReasons({ vote }: VoteReasonProps) {
               {vote.supportDetailed == 1
                 ? 'FOR'
                 : vote.supportDetailed == 0
-                  ? 'AGAINST'
-                  : 'ABSTAIN'}{' '}
+                ? 'AGAINST'
+                : 'ABSTAIN'}{' '}
             </span>
             <span className="text-gray-500 mx-1"> · </span>
             <TimeAgo
@@ -207,10 +195,11 @@ export function VoteReasons({ vote }: VoteReasonProps) {
               <button
                 onClick={handleLikeClick}
                 disabled={!walletClient || liked}
-                className={` ${liked
-                  ? ''
-                  : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
-                  }`}
+                className={` ${
+                  liked
+                    ? ''
+                    : 'transition duration-300 ease-in-out hover:bg-red-500 rounded-full'
+                }`}
               >
                 {liked ? (
                   <Image
@@ -229,10 +218,11 @@ export function VoteReasons({ vote }: VoteReasonProps) {
                 )}
               </button>
               <p
-                className={`ml-1 mb-1 font-semibold ${voterLikes.length + nonVoterLikes.length == 0
-                  ? 'text-gray-800'
-                  : 'text-gray-500'
-                  }`}
+                className={`ml-1 mb-1 font-semibold ${
+                  voterLikes.length + nonVoterLikes.length == 0
+                    ? 'text-gray-800'
+                    : 'text-gray-500'
+                }`}
               >
                 {voterLikes.length + nonVoterLikes.length}
               </p>
