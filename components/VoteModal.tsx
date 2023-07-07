@@ -6,7 +6,7 @@ import { useShowVoteModal } from '../hooks/useShowVoteModal';
 import { useVoteDetail } from '../hooks/useVoteDetail';
 import { useVotableProposals } from '../hooks/useVotableProposals';
 import { pirsch } from '../lib/pirsch';
-import { getFunctionSelector } from 'viem'
+import { getFunctionSelector } from 'viem';
 
 export function VoteModal() {
   const { setShowVoteModal } = useShowVoteModal();
@@ -21,7 +21,7 @@ export function VoteModal() {
     ],
     dataSuffix: getFunctionSelector('voter.wtf'),
   });
-  console.log(getFunctionSelector('voter.wtf'))
+  console.log(getFunctionSelector('voter.wtf'));
 
   const handleVote = () => {
     write();
