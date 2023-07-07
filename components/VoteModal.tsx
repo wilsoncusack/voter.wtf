@@ -6,12 +6,12 @@ import { useShowVoteModal } from '../hooks/useShowVoteModal';
 import { useVoteDetail } from '../hooks/useVoteDetail';
 import { useVotableProposals } from '../hooks/useVotableProposals';
 import { pirsch } from '../lib/pirsch';
+import { getFunctionSelector } from 'viem'
 
 export function VoteModal() {
   const { setShowVoteModal } = useShowVoteModal();
   const proposals = useVotableProposals();
   const { voteDetail, setVoteDetail } = useVoteDetail();
-  //   const [reason, setReason] = useState<string>(voteReason);
   const [preview, setPreview] = useState(false);
   const { isLoading, isSuccess, write } = vwr({
     args: [
@@ -19,7 +19,9 @@ export function VoteModal() {
       voteDetail.support,
       voteDetail.reason,
     ],
+    dataSuffix: getFunctionSelector('voter.wtf'),
   });
+  console.log(getFunctionSelector('voter.wtf'))
 
   const handleVote = () => {
     write();
