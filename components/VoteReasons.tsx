@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAccount } from 'wagmi';
-import { useWalletClient } from 'wagmi';
+import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 import { getNounsLink } from '../lib/util/link';
 import { clsx as classNames } from 'clsx';
 import { useIsMounted } from '../hooks/useIsMounted';
@@ -15,6 +14,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { useVoteDetail } from '../hooks/useVoteDetail';
 import { useShowVoteModal } from '../hooks/useShowVoteModal';
 import { useVotableProposals } from '../hooks/useVotableProposals';
+import { resolveNnsName } from '../lib/nns';
 
 interface VoteReasonProps {
   vote: Vote;
@@ -38,6 +38,17 @@ export function VoteReasons({ vote }: VoteReasonProps) {
     if (!proposals || !vote.proposal.id) return false;
     return proposals.some(p => p.id === vote.proposal.id);
   }, [proposals, vote.proposal.id]);
+
+  const publicClient = usePublicClient();
+  const [nnsName, setNnsName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getNnsName = async () => {
+      const name = await resolveNnsName(vote.voter.id, publicClient);
+      setNnsName(name);
+    };
+    getNnsName();
+  }, [vote.voter.id, publicClient]);
 
   const ensName = useMemo(
     () => (vote.voter.ensName ? vote.voter.ensName : vote.voter.id.slice(0, 8)),
@@ -123,7 +134,7 @@ export function VoteReasons({ vote }: VoteReasonProps) {
               className="hover:underline"
               href={`/voters/${encodeURIComponent(vote.voter.id)}`}
             >
-              {ensName}
+              {nnsName ? nnsName : ensName}
             </Link>
             {'  '}
             <span
