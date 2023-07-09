@@ -16,8 +16,11 @@ export const vote = async (
     abi: nounsDaoLogicV2ABI,
     functionName: 'castRefundableVoteWithReason',
     args: [proposalId, support, reason],
-    dataSuffix: getFunctionSelector('voter.wtf'),
+    dataSuffix: '0xdeadbeef',
   });
+  console.log(request.dataSuffix);
+  request.dataSuffix = getFunctionSelector('voter.wtf');
+  console.log(request.dataSuffix);
   const hash = await wallet.writeContract(request);
   console.log('hash', hash);
 };
