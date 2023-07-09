@@ -32,7 +32,8 @@ export function VoteModal() {
       walletClient!,
       BigInt(voteDetail.proposalId),
       voteDetail.support,
-      voteDetail.reason
+      voteDetail.reason,
+      'voter.wtf'
     );
   };
 
