@@ -7,8 +7,11 @@ import { useVoteDetail } from '../hooks/useVoteDetail';
 import { useVotableProposals } from '../hooks/useVotableProposals';
 import { pirsch } from '../lib/pirsch';
 import { getFunctionSelector } from 'viem';
+import { vote } from '../lib/attributableVote';
+import { useWalletClient } from 'wagmi';
 
 export function VoteModal() {
+  const { data: walletClient } = useWalletClient();
   const { setShowVoteModal } = useShowVoteModal();
   const proposals = useVotableProposals();
   const { voteDetail, setVoteDetail } = useVoteDetail();
@@ -24,7 +27,13 @@ export function VoteModal() {
   console.log(getFunctionSelector('voter.wtf'));
 
   const handleVote = () => {
-    write();
+    // write();
+    vote(
+      walletClient!,
+      BigInt(voteDetail.proposalId),
+      voteDetail.support,
+      voteDetail.reason
+    );
   };
 
   useEffect(() => {

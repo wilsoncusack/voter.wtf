@@ -6,7 +6,7 @@ export default defineConfig({
   out: 'abis/generated/nouns.ts',
   plugins: [
     etherscan({
-      apiKey: '4AXNFGHIUP1MB4XH9TH2C8KCCF471MUWMU',
+      apiKey: process.env.ETHERSCAN_API_KEY as string,
       chainId: mainnet.id,
       contracts: [
         {
