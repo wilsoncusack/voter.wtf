@@ -84,8 +84,8 @@ export const deriveProposalStatus = (
     return ProposalStatus.Voting;
   } else if (currentBlock > proposal.endBlock) {
     if (
-      proposal.forVotes >= dynamicQuorum &&
-      proposal.forVotes > proposal.againstVotes
+      parseInt(proposal.forVotes) >= dynamicQuorum &&
+      parseInt(proposal.forVotes) > parseInt(proposal.againstVotes)
     ) {
       return ProposalStatus.Succeeded;
     } else {
